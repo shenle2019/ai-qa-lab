@@ -53,6 +53,10 @@ def write_snapshot(version: str, date: str, tests: int, pages: int, modules: int
     for image in SHOTS.glob("*.png"):
         shutil.copy2(image, shot_out / image.name)
 
+    learning_src = DOCS / "learning"
+    if learning_src.exists():
+        shutil.copytree(learning_src, out / "learning", dirs_exist_ok=True)
+
     html = (DOCS / "index.html").read_text(encoding="utf-8")
     html = html.replace("portfolio/screenshots/", "screenshots/")
     banner = (
@@ -74,6 +78,7 @@ def write_snapshot(version: str, date: str, tests: int, pages: int, modules: int
         "replications": replications,
         "source_report": "docs/portfolio/project-report.md",
         "source_site": "docs/index.html",
+        "learning_guide": "learning/" if (out / "learning").exists() else None,
     }
     (out / "metrics.json").write_text(
         json.dumps(metrics, ensure_ascii=False, indent=2), encoding="utf-8"
@@ -87,6 +92,7 @@ def write_snapshot(version: str, date: str, tests: int, pages: int, modules: int
         f"- 模块：{modules}\n"
         f"- 复刻闭环：{replications}\n\n"
         "本目录是归档快照，不再修改。需要更正时新增 `corrections.md`，不要改历史文件。\n\n"
+        "学习手册快照：`learning/index.html`（若本次快照包含）。\n\n"
         "在线访问：`https://shenle2019.github.io/ai-qa-lab/reports/"
         f"{name}/`\n",
         encoding="utf-8",
