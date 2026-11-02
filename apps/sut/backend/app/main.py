@@ -21,6 +21,7 @@ app = FastAPI(title="AI Knowledge Ops SUT", version="0.1.0")
 app.include_router(workbench_router)
 
 FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
+LEARNING_DIR = Path(__file__).resolve().parents[4] / "docs" / "learning"
 
 
 def get_db():
@@ -91,3 +92,6 @@ def query_knowledge_base(payload: schemas.KBQuery) -> dict:
 
 if FRONTEND_DIST.exists():
     app.mount("/ui", StaticFiles(directory=str(FRONTEND_DIST), html=True), name="ui")
+
+if LEARNING_DIR.exists():
+    app.mount("/learning", StaticFiles(directory=str(LEARNING_DIR), html=True), name="learning")

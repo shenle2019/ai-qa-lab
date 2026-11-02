@@ -77,9 +77,21 @@ const endpoints = [
       <a class="quick-link" href="/docs" target="_blank" rel="noreferrer">OpenAPI</a>
       <RouterLink to="/portfolio" class="quick-link">模块验收</RouterLink>
       <RouterLink to="/workbench" class="quick-link">API 工作台</RouterLink>
-      <a class="quick-link" href="https://shenle2019.github.io/ai-qa-lab/learning/" target="_blank" rel="noreferrer">完整学习手册</a>
+      <a class="quick-link" href="/learning/" target="_blank" rel="noreferrer">完整学习手册</a>
       <a class="quick-link" href="https://shenle2019.github.io/ai-qa-lab/reports/" target="_blank" rel="noreferrer">历史报告归档</a>
     </div>
+
+    <article class="hero card">
+      <div>
+        <p class="eyebrow">BEGINNER WALKTHROUGH</p>
+        <h2>新手向完整拆解</h2>
+        <p class="muted">每一步做了什么、为什么、涉及哪些测试开发名词、原理是什么、效果是什么；含术语速查、简历写法和 10 道自测题。</p>
+      </div>
+      <div class="learning-actions">
+        <a class="btn" href="/learning/" target="_blank" rel="noreferrer">打开学习手册</a>
+        <a class="btn ghost" href="https://shenle2019.github.io/ai-qa-lab/learning/" target="_blank" rel="noreferrer">公网版</a>
+      </div>
+    </article>
 
     <article class="card">
       <div class="card-head">

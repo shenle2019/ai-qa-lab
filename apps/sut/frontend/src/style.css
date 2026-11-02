@@ -651,6 +651,13 @@ tbody tr:hover {
   gap: 22px;
 }
 
+.learning-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
 .hero-metrics div {
   min-width: 70px;
   text-align: center;
