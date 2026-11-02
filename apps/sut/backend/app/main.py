@@ -7,10 +7,12 @@ from sqlalchemy.orm import Session
 
 from . import models, schemas
 from .db import Base, SessionLocal, engine
+from .workbench import router as workbench_router
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="AI Knowledge Ops SUT", version="0.1.0")
+app.include_router(workbench_router)
 
 FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
 

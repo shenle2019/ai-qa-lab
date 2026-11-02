@@ -10,7 +10,7 @@ AI-powered full-stack QA portfolio. One runnable system under test (SUT), layere
 |---|---|
 | 01 质量工程方法论 | planned |
 | 02 Python 测试开发 | planned |
-| 03 接口自动化 | in progress — 22 tests + SUT console |
+| 03 接口自动化 | in progress — API Workbench v0.1 + 33 tests |
 | 07 测试平台 | in progress — SUT console live at /ui/ |
 | 04 Web 自动化 | planned |
 | 05 App 自动化 | planned |

@@ -27,7 +27,7 @@ const modules = [
     stars: '80,721',
     href: 'https://github.com/hoppscotch/hoppscotch',
     status: 'progress',
-    scope: '基础接口套件已完成（22 tests），API 工作台复刻待开始',
+    scope: '基础接口套件 22 tests 通过；Hoppscotch 风格 API 工作台 v0.1 已上线',
   },
   {
     id: '04',
@@ -104,6 +104,7 @@ const statusLabel = {
     <div class="quick-links">
       <RouterLink to="/" class="quick-link">仪表盘</RouterLink>
       <RouterLink to="/tickets" class="quick-link">工单管理</RouterLink>
+      <RouterLink to="/workbench" class="quick-link">API 工作台</RouterLink>
       <RouterLink to="/knowledge" class="quick-link">知识库问答</RouterLink>
       <a class="quick-link" href="/docs" target="_blank" rel="noreferrer">OpenAPI 文档</a>
       <a class="quick-link" href="https://github.com/shenle2019/ai-qa-lab" target="_blank" rel="noreferrer">GitHub 仓库</a>
