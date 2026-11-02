@@ -44,10 +44,11 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 
 def main() -> None:
     text = SOURCE.read_text(encoding="utf-8")
-    body = markdown.markdown(
-        "[TOC]\n\n" + text,
+    converter = markdown.Markdown(
         extensions=["tables", "fenced_code", "toc"],
+        extension_configs={"toc": {"toc_depth": "2"}},
     )
+    body = converter.convert("[TOC]\n\n" + text)
     html = f"""<!doctype html>
 <html lang="zh-CN">
 <head>
