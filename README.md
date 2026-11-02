@@ -57,6 +57,7 @@ cd ../../..
 
 ## Report archive
 
+- **Learning guide (beginner-friendly): https://shenle2019.github.io/ai-qa-lab/learning/**
 - Latest report: https://shenle2019.github.io/ai-qa-lab/
 - Archive index: https://shenle2019.github.io/ai-qa-lab/reports/
 - Rule: daily logs live in `docs/progress/`; milestone reports are immutable snapshots in `docs/reports/YYYY-MM-DD-vX.Y.Z/` (see `docs/reports/README.md`).

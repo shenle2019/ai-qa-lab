@@ -119,3 +119,10 @@ https://render.com/deploy?repo=https://github.com/shenle2019/ai-qa-lab
 - API 工作台只做 REST，不做 GraphQL/WebSocket/请求链路变量提取。
 - SQLite 适合演示，不适合多用户生产；后续切 PostgreSQL。
 - 下一项：模块 02 迷你 pytest（收集、fixture、参数化、报告）。
+
+## 7. 新手向完整拆解
+
+面向测试小白的逐步讲解已单独成页，包含：每一步做了什么、为什么、涉及的名词、原理、效果；术语速查表；简历写法；面试追问；10 道自测题。
+
+- 在线版：https://shenle2019.github.io/ai-qa-lab/learning/
+- 源文件：`docs/learning/project-walkthrough.md`

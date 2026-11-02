@@ -77,6 +77,7 @@ const endpoints = [
       <a class="quick-link" href="/docs" target="_blank" rel="noreferrer">OpenAPI</a>
       <RouterLink to="/portfolio" class="quick-link">模块验收</RouterLink>
       <RouterLink to="/workbench" class="quick-link">API 工作台</RouterLink>
+      <a class="quick-link" href="https://shenle2019.github.io/ai-qa-lab/learning/" target="_blank" rel="noreferrer">完整学习手册</a>
       <a class="quick-link" href="https://shenle2019.github.io/ai-qa-lab/reports/" target="_blank" rel="noreferrer">历史报告归档</a>
     </div>
 
@@ -232,6 +233,27 @@ docker run -p 8000:8000 ai-qa-lab
         <li>API 工作台只做 REST，不做 GraphQL/WebSocket/请求链路变量提取。</li>
         <li>SQLite 适合演示，不适合多用户生产；后续可切 PostgreSQL。</li>
         <li>下一项：模块 02 迷你 pytest（收集、fixture、参数化、报告）。</li>
+      </ul>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <div>
+          <h2>七、新手向：这个项目怎么一步步做出来</h2>
+          <p>每一步：做了什么 → 为什么 → 名词解释 → 原理 → 效果</p>
+        </div>
+      </div>
+      <p class="muted">完整拆解已单独成页，包含 10 个步骤、术语速查表、简历写法和 10 道自测题。</p>
+      <div class="quick-links" style="margin-top:16px">
+        <a class="quick-link" href="https://shenle2019.github.io/ai-qa-lab/learning/" target="_blank" rel="noreferrer">打开完整学习手册</a>
+        <a class="quick-link" href="https://shenle2019.github.io/ai-qa-lab/reports/" target="_blank" rel="noreferrer">历史报告归档</a>
+      </div>
+      <ul class="rules" style="margin-top:14px">
+        <li>第 1–2 步：定目标和验收标准、搭仓库与环境。</li>
+        <li>第 3–5 步：造 SUT、写冒烟测试、做接口自动化。</li>
+        <li>第 6–7 步：做 Vue 控制台、复刻 Hoppscotch API 工作台。</li>
+        <li>第 8–10 步：CI 与截图、报告归档、本地/远端部署。</li>
+        <li>核心原则：测试金字塔、测试隔离、黑盒/契约测试、CORS 代理、不可变快照。</li>
       </ul>
     </article>
   </section>
