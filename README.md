@@ -55,6 +55,19 @@ cd ../../..
 - API docs: http://127.0.0.1:8000/docs
 - Project report: `/ui/#/report` (local) · https://shenle2019.github.io/ai-qa-lab/ (public)
 
+## Report archive
+
+- Latest report: https://shenle2019.github.io/ai-qa-lab/
+- Archive index: https://shenle2019.github.io/ai-qa-lab/reports/
+- Rule: daily logs live in `docs/progress/`; milestone reports are immutable snapshots in `docs/reports/YYYY-MM-DD-vX.Y.Z/` (see `docs/reports/README.md`).
+- Create a snapshot:
+
+```bash
+.venv/Scripts/python.exe scripts/archive_report.py \
+  --version v0.3.0 --date 2026-11-03 \
+  --tests 40 --pages 6 --modules 8 --replications 2
+```
+
 ## Deploy
 
 > Status: deployment is deferred until all 8 modules are complete. Local-first for now; Docker / Render / HF configs are kept for later.

@@ -77,6 +77,7 @@ const endpoints = [
       <a class="quick-link" href="/docs" target="_blank" rel="noreferrer">OpenAPI</a>
       <RouterLink to="/portfolio" class="quick-link">模块验收</RouterLink>
       <RouterLink to="/workbench" class="quick-link">API 工作台</RouterLink>
+      <a class="quick-link" href="https://shenle2019.github.io/ai-qa-lab/reports/" target="_blank" rel="noreferrer">历史报告归档</a>
     </div>
 
     <article class="card">
