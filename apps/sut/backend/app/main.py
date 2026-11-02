@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from fastapi import Depends, FastAPI, HTTPException
@@ -10,6 +11,11 @@ from .db import Base, SessionLocal, engine
 from .workbench import router as workbench_router
 
 Base.metadata.create_all(bind=engine)
+
+if os.getenv("SEED_DEMO") == "1":
+    from .seed import seed_demo_data
+
+    seed_demo_data()
 
 app = FastAPI(title="AI Knowledge Ops SUT", version="0.1.0")
 app.include_router(workbench_router)

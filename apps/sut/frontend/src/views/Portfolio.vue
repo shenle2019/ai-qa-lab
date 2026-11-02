@@ -106,6 +106,7 @@ const statusLabel = {
       <RouterLink to="/tickets" class="quick-link">工单管理</RouterLink>
       <RouterLink to="/workbench" class="quick-link">API 工作台</RouterLink>
       <RouterLink to="/knowledge" class="quick-link">知识库问答</RouterLink>
+      <RouterLink to="/report" class="quick-link">项目报告</RouterLink>
       <a class="quick-link" href="/docs" target="_blank" rel="noreferrer">OpenAPI 文档</a>
       <a class="quick-link" href="https://github.com/shenle2019/ai-qa-lab" target="_blank" rel="noreferrer">GitHub 仓库</a>
     </div>

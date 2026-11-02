@@ -1,0 +1,11 @@
+.git
+.venv
+.env
+*.db
+node_modules
+apps/sut/frontend/node_modules
+apps/sut/frontend/dist
+docs
+suites/**/.tmp
+**/__pycache__
+**/.pytest_cache

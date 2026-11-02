@@ -1,0 +1,236 @@
+<script setup>
+const timeline = [
+  {
+    time: '17:02',
+    title: '项目启动',
+    detail: '在 E:\\ailearning\\ai-qa-lab 建立 monorepo、CLAUDE.md、目录约定和 Python 3.11 环境。',
+  },
+  {
+    time: '17:10',
+    title: 'SUT 后端最小闭环',
+    detail: 'FastAPI + SQLAlchemy + SQLite，健康检查、工单 CRUD、知识库 mock，6 个 pytest 用例通过。',
+  },
+  {
+    time: '17:13',
+    title: '公开仓库与 CI',
+    detail: '创建 shenle2019/ai-qa-lab，推送 main；GitHub Actions 跑 pytest。HTTPS 被阻断后改用 SSH 443。',
+  },
+  {
+    time: '17:30',
+    title: '接口自动化套件',
+    detail: 'suites/api 黑盒测试，覆盖健康检查、契约、CRUD、异常/边界、知识库 mock，22 个用例通过。',
+  },
+  {
+    time: '18:00',
+    title: '模块复刻规则与选型',
+    detail: '记录“最高星项目复刻 + 完整闭环 + 验收网页”规则，产出 8 模块选型矩阵。',
+  },
+  {
+    time: '18:20',
+    title: 'SUT 控制台',
+    detail: 'Vue 3 + Vite + Pinia + Router + ECharts，仪表盘、工单、知识库、模块验收 4 个页面。',
+  },
+  {
+    time: '18:40',
+    title: '模块 03 复刻 v0.1',
+    detail: 'Hoppscotch 风格 API 工作台：请求构建、环境变量、5 类断言、集合、批量运行与报告。',
+  },
+]
+
+const metrics = [
+  { value: '33', label: '自动化测试' },
+  { value: '5', label: '前端页面' },
+  { value: '8', label: '模块选型' },
+  { value: '1', label: '复刻闭环' },
+]
+
+const endpoints = [
+  ['GET', '/health', '健康检查'],
+  ['GET', '/api/tickets', '工单列表'],
+  ['POST', '/api/tickets', '创建工单'],
+  ['PATCH', '/api/tickets/{id}', '更新状态/优先级'],
+  ['POST', '/api/kb/query', '知识库问答（mock）'],
+  ['POST', '/api/workbench/send', 'API 工作台单请求'],
+  ['POST', '/api/workbench/run', 'API 工作台批量运行'],
+]
+</script>
+
+<template>
+  <section class="stack">
+    <article class="hero card">
+      <div>
+        <p class="eyebrow">PROJECT REPORT · 2026-11-02</p>
+        <h2>从零搭起一套可运行、可测试、可复刻的 AI 全栈测试工程</h2>
+        <p class="muted">
+          这份报告回答四个问题：做了什么、原理是什么、步骤是什么、最后成果是什么，以及它能否脱离本地在公网运行。
+        </p>
+      </div>
+      <div class="hero-metrics">
+        <div v-for="item in metrics" :key="item.label">
+          <strong>{{ item.value }}</strong><span>{{ item.label }}</span>
+        </div>
+      </div>
+    </article>
+
+    <div class="quick-links">
+      <a class="quick-link" href="https://github.com/shenle2019/ai-qa-lab" target="_blank" rel="noreferrer">GitHub 仓库</a>
+      <a class="quick-link" href="/docs" target="_blank" rel="noreferrer">OpenAPI</a>
+      <RouterLink to="/portfolio" class="quick-link">模块验收</RouterLink>
+      <RouterLink to="/workbench" class="quick-link">API 工作台</RouterLink>
+    </div>
+
+    <article class="card">
+      <div class="card-head">
+        <div>
+          <h2>一、我做了什么</h2>
+          <p>按时间线归档，每一步都有可验证产物</p>
+        </div>
+      </div>
+      <ol class="timeline">
+        <li v-for="item in timeline" :key="item.time">
+          <span class="timeline-time">{{ item.time }}</span>
+          <div>
+            <strong>{{ item.title }}</strong>
+            <p>{{ item.detail }}</p>
+          </div>
+        </li>
+      </ol>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <div>
+          <h2>二、原理是什么</h2>
+          <p>一条数据流，三个层次</p>
+        </div>
+      </div>
+      <pre class="report-diagram">Browser (Vue 3 SPA)
+  ├─ 仪表盘 / 工单 / 知识库 / API 工作台 / 项目报告
+  └─ fetch /api/*
+        │
+        ▼
+FastAPI (apps/sut/backend)
+  ├─ /health, /api/tickets, /api/kb/query
+  ├─ /api/workbench/send, /api/workbench/run
+  └─ /ui ← Vue 构建产物（同源托管）
+        │
+        ▼
+SQLAlchemy → SQLite</pre>
+      <ul class="rules">
+        <li><strong>统一被测系统：</strong>前端和后端都围绕同一套工单/知识库数据，接口测试与 UI 测试覆盖同一条链路。</li>
+        <li><strong>分层测试：</strong>后端冒烟、接口黑盒、工作台契约测试各自独立；测试库用临时 SQLite，数据随机后缀隔离。</li>
+        <li><strong>API 工作台：</strong>浏览器只负责编辑请求；FastAPI 用 httpx 代理发送，解决 CORS，统一超时和断言求值。</li>
+        <li><strong>复刻方法：</strong>先搜同主题最高星项目，记录 star/license/链接，再 clean-room 重写核心闭环，不 fork、不复制源码。</li>
+        <li><strong>同源部署：</strong>前端构建产物由 FastAPI 在 /ui 挂载，生产环境只需要一个容器/端口。</li>
+      </ul>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <div>
+          <h2>三、步骤是什么</h2>
+          <p>从零到验收的完整命令</p>
+        </div>
+      </div>
+      <div class="report-steps">
+        <div>
+          <h3>本地启动</h3>
+          <pre class="response-body">cd /e/ailearning/ai-qa-lab
+bash scripts/start_sut.sh</pre>
+        </div>
+        <div>
+          <h3>跑测试</h3>
+          <pre class="response-body">./.venv/Scripts/python.exe -m pytest apps/sut/backend suites/api -q</pre>
+        </div>
+        <div>
+          <h3>验收页面</h3>
+          <pre class="response-body">/ui/               仪表盘
+/ui/#/tickets      工单管理
+/ui/#/workbench    API 工作台
+/ui/#/report       本项目报告
+/ui/#/portfolio    模块验收</pre>
+        </div>
+        <div>
+          <h3>部署</h3>
+          <pre class="response-body">docker build -t ai-qa-lab .
+docker run -p 8000:8000 ai-qa-lab
+# 或 Render Blueprint：render.yaml</pre>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <div>
+          <h2>四、最后成果是什么</h2>
+          <p>代码、页面、测试、文档、部署配置</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>产物</th><th>位置</th><th>状态</th></tr></thead>
+          <tbody>
+            <tr><td>SUT 后端</td><td class="mono">apps/sut/backend</td><td>可运行，7 个接口</td></tr>
+            <tr><td>Vue 控制台</td><td class="mono">apps/sut/frontend</td><td>5 个页面，已构建</td></tr>
+            <tr><td>接口套件</td><td class="mono">suites/api</td><td>33 tests passing</td></tr>
+            <tr><td>API 工作台</td><td class="mono">/ui/#/workbench</td><td>闭环可用</td></tr>
+            <tr><td>复刻矩阵</td><td class="mono">docs/requirements/module-matrix.md</td><td>8 模块选型完成</td></tr>
+            <tr><td>验收材料</td><td class="mono">docs/portfolio</td><td>报告 + 截图</td></tr>
+            <tr><td>CI</td><td class="mono">.github/workflows/ci.yml</td><td>GitHub Actions</td></tr>
+            <tr><td>容器部署</td><td class="mono">Dockerfile / render.yaml</td><td>待平台授权</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="endpoint-grid">
+        <div v-for="item in endpoints" :key="item[1]" class="endpoint-item">
+          <span class="method-tag">{{ item[0] }}</span>
+          <span class="mono">{{ item[1] }}</span>
+          <span class="muted">{{ item[2] }}</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <div>
+          <h2>五、能否在远端公网访问运行</h2>
+          <p>能，但要区分“静态报告”和“完整后端”</p>
+        </div>
+      </div>
+      <div class="alert" style="border: 1px solid rgba(52, 211, 153, 0.28); color: #a7f3d0; background: rgba(52, 211, 153, 0.08)">
+        结论：完整项目可以部署到公网；GitHub Pages 只能托管静态报告，FastAPI 后端需要容器平台（Render / Hugging Face Spaces / 任何 Docker 主机）。
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>方式</th><th>能运行什么</th><th>是否需要账号</th><th>当前状态</th></tr></thead>
+          <tbody>
+            <tr><td>GitHub Pages</td><td>项目报告、截图、文档</td><td>已有 GitHub</td><td>可立即部署</td></tr>
+            <tr><td>Render Docker</td><td>完整 SUT + Vue + API 工作台</td><td>需要 Render 账号</td><td>配置已就绪，待授权</td></tr>
+            <tr><td>Hugging Face Spaces</td><td>完整 SUT + Vue + API 工作台</td><td>需要 HF 账号</td><td>备选方案</td></tr>
+            <tr><td>本地</td><td>全部功能</td><td>无</td><td>已运行</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="muted">
+        部署配置已写入仓库：<span class="mono">Dockerfile</span>、<span class="mono">render.yaml</span>、<span class="mono">.dockerignore</span>。
+        启动时通过 <span class="mono">SEED_DEMO=1</span> 自动写入演示工单；数据库为 SQLite，免费平台的临时磁盘在重启后会重置，适合作品集演示。
+      </p>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <div>
+          <h2>六、边界与下一步</h2>
+          <p>如实记录，不夸大</p>
+        </div>
+      </div>
+      <ul class="rules">
+        <li>当前没有登录/权限体系；模块 07 复刻 MeterSphere 时补。</li>
+        <li>知识库仍是 mock；模块 08 接入 DeepSeek + 真实检索与评测。</li>
+        <li>API 工作台只做 REST，不做 GraphQL/WebSocket/请求链路变量提取。</li>
+        <li>SQLite 适合演示，不适合多用户生产；后续可切 PostgreSQL。</li>
+        <li>下一项：模块 02 迷你 pytest（收集、fixture、参数化、报告）。</li>
+      </ul>
+    </article>
+  </section>
+</template>

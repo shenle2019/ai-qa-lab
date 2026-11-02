@@ -53,6 +53,22 @@ cd ../../..
 
 - UI: http://127.0.0.1:8000/ui/
 - API docs: http://127.0.0.1:8000/docs
+- Project report: `/ui/#/report` (local) · https://shenle2019.github.io/ai-qa-lab/ (public)
+
+## Deploy
+
+Full-stack (FastAPI + Vue) runs in one container:
+
+```bash
+docker build -t ai-qa-lab .
+docker run -p 8000:8000 ai-qa-lab
+```
+
+Render Blueprint is included in `render.yaml`. One-click:
+
+https://render.com/deploy?repo=https://github.com/shenle2019/ai-qa-lab
+
+GitHub Pages only hosts the static report under `docs/`; it cannot run the Python backend.
 
 ## License
 
