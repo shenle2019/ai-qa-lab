@@ -200,6 +200,7 @@ docker run -p 8000:8000 ai-qa-lab
       <div class="alert" style="border: 1px solid rgba(52, 211, 153, 0.28); color: #a7f3d0; background: rgba(52, 211, 153, 0.08)">
         结论：完整项目可以部署到公网；GitHub Pages 只能托管静态报告，FastAPI 后端需要容器平台（Render / Hugging Face Spaces / 任何 Docker 主机）。
       </div>
+      <p class="muted">当前决策：先本地开发，等 8 个模块全部完成后再统一上云；Docker / HF / Render 配置保留在仓库，不阻塞开发。</p>
       <div class="table-wrap">
         <table>
           <thead><tr><th>方式</th><th>能运行什么</th><th>是否需要账号</th><th>当前状态</th></tr></thead>

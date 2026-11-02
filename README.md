@@ -57,6 +57,8 @@ cd ../../..
 
 ## Deploy
 
+> Status: deployment is deferred until all 8 modules are complete. Local-first for now; Docker / Render / HF configs are kept for later.
+
 Full-stack (FastAPI + Vue) runs in one container:
 
 ```bash

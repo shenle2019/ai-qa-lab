@@ -97,6 +97,8 @@ docker run -p 8000:8000 ai-qa-lab
 | Hugging Face Spaces | 完整 SUT + Vue + API 工作台 | HF 账号 | 备选 |
 | 本地 | 全部功能 | 无 | 已运行 |
 
+**当前决策：先本地开发，等 8 个模块全部完成后再统一上云。** 部署配置保留，不阻塞开发。
+
 GitHub Pages 不能运行 Python 后端，所以完整可运行版本必须部署到容器平台。仓库已提供：
 
 - `Dockerfile`：Node 构建前端 → Python 运行 FastAPI
