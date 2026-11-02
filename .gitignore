@@ -16,6 +16,7 @@ test_sut.db
 .env
 .env.*
 !.env.example
+.hf_token
 
 # Node / frontend
 node_modules/

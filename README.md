@@ -70,6 +70,29 @@ https://render.com/deploy?repo=https://github.com/shenle2019/ai-qa-lab
 
 GitHub Pages only hosts the static report under `docs/`; it cannot run the Python backend.
 
+### Hugging Face Spaces
+
+The Space files are in `deploy/huggingface/` (README metadata + Dockerfile). The Dockerfile clones this public repo at build time, builds the Vue frontend, and starts FastAPI on port 7860.
+
+**Web UI (no token needed):**
+
+1. Open https://huggingface.co/new-space
+2. SDK: Docker, template: Blank, name: `ai-qa-lab`, visibility: Public
+3. Replace the Space `README.md` with `deploy/huggingface/README.md`
+4. Add `deploy/huggingface/Dockerfile` at the Space root
+5. Commit; the Space builds automatically
+6. App URL: `https://<username>-ai-qa-lab.hf.space`
+
+**Automated (recommended):**
+
+```bash
+.venv/Scripts/python.exe -m pip install -r requirements-deploy.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+# put a HF write token in .hf_token (never commit it)
+.venv/Scripts/python.exe scripts/deploy_hf.py
+```
+
+The script creates the Space, uploads the two files, and prints the public URL. After pushing new commits to GitHub, use "Factory rebuild" in the Space settings to pick them up.
+
 ## License
 
 MIT

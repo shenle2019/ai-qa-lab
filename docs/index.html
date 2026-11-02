@@ -174,7 +174,11 @@ docker run -p 8000:8000 ai-qa-lab
     <p style="margin-top:16px;color:var(--muted);font-size:12.5px">
       仓库已包含 <code>Dockerfile</code>、<code>render.yaml</code>、<code>.dockerignore</code>。容器启动时 <code>SEED_DEMO=1</code> 自动写入演示工单；SQLite 在免费平台重启后会重置，适合演示。
     </p>
-    <a class="btn" href="https://render.com/deploy?repo=https://github.com/shenle2019/ai-qa-lab" target="_blank" rel="noreferrer">Deploy full-stack to Render</a>
+    <p style="margin-top:16px;color:var(--muted);font-size:12.5px">
+      Hugging Face Spaces 配置在 <code>deploy/huggingface/</code>：创建 Docker Space 后上传 README.md 和 Dockerfile 即可；Dockerfile 会在构建时克隆本仓库、构建前端并启动 FastAPI。
+    </p>
+    <a class="btn" href="https://huggingface.co/new-space" target="_blank" rel="noreferrer">Create HF Docker Space</a>
+    <a class="btn ghost" href="https://render.com/deploy?repo=https://github.com/shenle2019/ai-qa-lab" target="_blank" rel="noreferrer">Deploy to Render</a>
     <a class="btn ghost" href="https://github.com/shenle2019/ai-qa-lab" target="_blank" rel="noreferrer">查看源码</a>
   </section>
 
