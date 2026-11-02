@@ -1,4 +1,8 @@
+from pathlib import Path
+
 from fastapi import Depends, FastAPI, HTTPException
+from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
 from . import models, schemas
@@ -7,6 +11,8 @@ from .db import Base, SessionLocal, engine
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="AI Knowledge Ops SUT", version="0.1.0")
+
+FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
 
 
 def get_db():
@@ -20,6 +26,11 @@ def get_db():
 @app.get("/health")
 def health() -> dict:
     return {"status": "ok", "service": "sut", "version": app.version}
+
+
+@app.get("/", include_in_schema=False)
+def root():
+    return RedirectResponse(url="/ui/")
 
 
 @app.get("/api/tickets", response_model=list[schemas.TicketOut])
@@ -68,3 +79,7 @@ def query_knowledge_base(payload: schemas.KBQuery) -> dict:
         "sources": [],
         "top_k": payload.top_k,
     }
+
+
+if FRONTEND_DIST.exists():
+    app.mount("/ui", StaticFiles(directory=str(FRONTEND_DIST), html=True), name="ui")

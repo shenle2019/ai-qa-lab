@@ -10,7 +10,8 @@ AI-powered full-stack QA portfolio. One runnable system under test (SUT), layere
 |---|---|
 | 01 质量工程方法论 | planned |
 | 02 Python 测试开发 | planned |
-| 03 接口自动化 | in progress — 22 tests passing |
+| 03 接口自动化 | in progress — 22 tests + SUT console |
+| 07 测试平台 | in progress — SUT console live at /ui/ |
 | 04 Web 自动化 | planned |
 | 05 App 自动化 | planned |
 | 06 性能测试 | planned |
@@ -37,14 +38,21 @@ py -3.11 -m venv .venv
 # Dependencies (Tsinghua mirror)
 .venv\Scripts\python.exe -m pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 
-# Run SUT
+# Frontend build
+cd apps/sut/frontend
+npm install
+npm run build
+cd ../../..
+
+# Run SUT (serves API + UI)
 .venv\Scripts\python.exe -m uvicorn app.main:app --app-dir apps/sut/backend --port 8000 --reload
 
 # Tests
-.venv\Scripts\python.exe -m pytest apps/sut/backend -q
+.venv\Scripts\python.exe -m pytest apps/sut/backend suites/api -q
 ```
 
-API docs: http://127.0.0.1:8000/docs
+- UI: http://127.0.0.1:8000/ui/
+- API docs: http://127.0.0.1:8000/docs
 
 ## License
 
