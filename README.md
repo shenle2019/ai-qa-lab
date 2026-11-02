@@ -31,8 +31,8 @@ docs/progress   Daily progress log
 ## Quick start
 
 ```bash
-# Python 3.11 (portable)
-C:\Users\Administrator\.claude\tools\python311\python.exe -m venv .venv
+# Python 3.11 (workbuddy install; the portable .claude\tools copy lacks venv)
+py -3.11 -m venv .venv
 
 # Dependencies (Tsinghua mirror)
 .venv\Scripts\python.exe -m pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple

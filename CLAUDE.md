@@ -20,7 +20,7 @@
 - 报告 Allure；CI 用 GitHub Actions
 
 ## 环境与命令（在仓库根目录执行）
-- 建环境：`C:\Users\Administrator\.claude\tools\python311\python.exe -m venv .venv`
+- 建环境：`py -3.11 -m venv .venv`（便携版 `.claude\tools\python311` 缺 venv 模块，不能用它建环境）
 - 装依赖：`.venv\Scripts\python.exe -m pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple`
 - 启动 SUT：`.venv\Scripts\python.exe -m uvicorn app.main:app --app-dir apps/sut/backend --port 8000 --reload`
 - 跑测试：`.venv\Scripts\python.exe -m pytest apps/sut/backend -q`
