@@ -45,13 +45,18 @@ const timeline = [
     title: '模块 04 迷你 Playwright',
     detail: 'CDP 驱动 Edge、选择器、自动等待、断言、截图；6 个元测试 + 5 个 SUT UI 用例。',
   },
+  {
+    time: '11-03',
+    title: '模块 05 迷你 Appium',
+    detail: 'ADB/UIAutomator 驱动 Android Settings：元素定位、点击、等待、截图；5 个元测试 + 3 个演示用例。',
+  },
 ]
 
 const metrics = [
-  { value: '72', label: 'pytest 用例' },
-  { value: '25', label: '迷你演示' },
+  { value: '77', label: 'pytest 用例' },
+  { value: '28', label: '迷你演示' },
   { value: '8', label: '模块选型' },
-  { value: '3', label: '复刻闭环' },
+  { value: '4', label: '复刻闭环' },
 ]
 
 const endpoints = [
@@ -119,7 +124,7 @@ const faqs = [
       <div>
         <p class="eyebrow">BEGINNER WALKTHROUGH</p>
         <h2>新手向完整拆解</h2>
-        <p class="muted">每一步做了什么、为什么、涉及哪些测试开发名词、原理是什么、效果是什么；含术语速查、简历写法和 13 道自测题。</p>
+        <p class="muted">每一步做了什么、为什么、涉及哪些测试开发名词、原理是什么、效果是什么；含术语速查、简历写法和 17 道自测题。</p>
       </div>
       <div class="learning-actions">
         <a class="btn" href="/learning/" target="_blank" rel="noreferrer">打开学习手册</a>
@@ -223,6 +228,7 @@ docker run -p 8000:8000 ai-qa-lab
             <tr><td>接口套件</td><td class="mono">suites/api</td><td>33 tests passing</td></tr>
             <tr><td>API 工作台</td><td class="mono">/ui/#/workbench</td><td>闭环可用</td></tr>
             <tr><td>迷你 Playwright</td><td class="mono">libs/miniplaywright</td><td>6 元测试 + 5 个 SUT UI 用例</td></tr>
+            <tr><td>迷你 Appium</td><td class="mono">libs/miniappium</td><td>5 元测试 + 3 个 Settings 用例</td></tr>
             <tr><td>复刻矩阵</td><td class="mono">docs/requirements/module-matrix.md</td><td>8 模块选型完成</td></tr>
             <tr><td>验收材料</td><td class="mono">docs/portfolio</td><td>报告 + 截图</td></tr>
             <tr><td>CI</td><td class="mono">.github/workflows/ci.yml</td><td>GitHub Actions</td></tr>
@@ -293,7 +299,7 @@ docker run -p 8000:8000 ai-qa-lab
         <li>知识库仍是 mock；模块 08 接入 DeepSeek + 真实检索与评测。</li>
         <li>API 工作台只做 REST，不做 GraphQL/WebSocket/请求链路变量提取。</li>
         <li>SQLite 适合演示，不适合多用户生产；后续可切 PostgreSQL。</li>
-        <li>下一项：模块 05 App 自动化（迷你 Appium）。</li>
+        <li>下一项：模块 06 性能测试（迷你压测引擎）。</li>
       </ul>
     </article>
 

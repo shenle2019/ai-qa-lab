@@ -46,8 +46,9 @@ const modules = [
     reference: 'appium/appium',
     stars: '22,174',
     href: 'https://github.com/appium/appium',
-    status: 'planned',
-    scope: '会话管理、元素定位、手势、模拟器驱动',
+    status: 'progress',
+    scope: 'miniappium v0.1：ADB/UIAutomator、元素定位、点击、等待、截图；5 元测试 + 3 个 Settings 用例',
+    report: '/portfolio/module-05-appium-report.html',
   },
   {
     id: '06',

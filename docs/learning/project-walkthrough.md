@@ -598,6 +598,83 @@ libs/miniplaywright/demo/         SUT UI 用例
 
 ---
 
+## 7.7 模块 05 复刻：迷你 Appium
+
+### 做了什么
+
+- 在 `libs/miniappium` 里自己写了一个 Android UI 自动化客户端；
+- 用 ADB + UIAutomator 驱动 Android 模拟器；
+- 支持设备发现、启动 App、元素定位、点击、滑动、输入、返回、截图；
+- 用真实 pytest 写了 5 个元测试；
+- 用迷你 pytest 跑了 3 个 Settings 演示用例。
+
+### 为什么
+
+面试里说“会 Appium”，如果只会 `driver.find_element()`，说不出 Appium 底层怎么和手机通信，还是只会用工具。自己用 ADB/UIAutomator 驱动一遍，就能解释“设备怎么连、控件树怎么来、点击坐标怎么算、等待在等什么”。
+
+### 涉及的名词
+
+- **ADB**：Android Debug Bridge，电脑和 Android 设备之间的命令通道。
+- **UIAutomator**：Android 自带的 UI 控件树导出工具。
+- **resource-id**：控件 ID，最稳的定位方式。
+- **content-desc**：无障碍描述，图标按钮常用。
+- **bounds**：控件在屏幕上的坐标范围。
+- **headless 模拟器**：没有窗口的模拟器，适合自动化。
+
+### 原理
+
+#### 1. 连接设备
+
+`adb devices` 列出已连接设备。模拟器启动后通常叫 `emulator-5554`。
+
+#### 2. 启动 App
+
+```bash
+adb shell am force-stop com.android.settings
+adb shell am start -a android.settings.SETTINGS
+```
+
+先强制停止，避免 Settings 恢复到上次打开的页面。
+
+#### 3. 导出控件树
+
+```bash
+adb shell uiautomator dump /sdcard/window.xml
+adb exec-out cat /sdcard/window.xml
+```
+
+XML 里每个节点有 `text`、`resource-id`、`content-desc`、`bounds`。
+
+#### 4. 定位和点击
+
+按 text 或 resource-id 找到节点，取 `bounds` 中心，`adb shell input tap x y`。
+
+#### 5. 自动等待
+
+页面跳转有动画。`wait_for(text="Internet")` 会反复 dump + 查找，直到出现或超时。
+
+#### 6. 截图
+
+`adb exec-out screencap -p` 返回 PNG 二进制，写到文件。
+
+### 效果
+
+- 5 个框架元测试通过；
+- 3 个 Settings 演示通过；
+- 真实打开 Settings、点击 Network & internet、返回首页；
+- 截图：`docs/portfolio/screenshots/module-05-settings.png`；
+- 报告：`docs/portfolio/module-05-appium-report.html`。
+
+### 关键文件
+
+```
+libs/miniappium/device.py     ADB、UIAutomator dump、定位、点击、截图
+libs/miniappium/assertions.py expect 断言
+libs/miniappium/demo/         Settings 演示用例
+```
+
+---
+
 ## 8. 第八步：把测试跑成“证据”
 
 ### 做了什么
@@ -773,6 +850,7 @@ Docker 构建：Node 构建前端 → 复制 dist → Python 安装依赖 → �
 - 设计并实现 66 个真实 pytest 用例：33 个业务/接口契约 + 33 个迷你 pytest 框架元测试，覆盖 404/422/边界/非法枚举。
 - clean-room 复刻 pytest 核心：收集、fixture、参数化、marker、断言内省、重试、JSON/HTML 报告；20 个演示用例。
 - 自研 CDP Web 自动化：启动 Edge/Chrome、选择器、自动等待、断言、截图；6 个元测试 + 5 个 SUT UI 用例。
+- 自研 ADB/UIAutomator Android 自动化：设备发现、元素定位、点击、等待、截图；5 个元测试 + 3 个 Settings 用例。
 - 使用 Vue 3 + Vite + Pinia + Router + ECharts 构建 6 页测试控制台，覆盖仪表盘、工单、知识库、API 工作台、报告与模块验收。
 - clean-room 复刻 Hoppscotch 核心 API 工作台：请求构建、环境变量、5 类断言、集合保存、批量运行与报告；新增 5 个契约测试。
 - 建立“日报 + 里程碑快照”的报告归档机制，Git tag 与静态站点可追溯。
@@ -802,7 +880,7 @@ Docker 构建：Node 构建前端 → 复制 dist → Python 安装依赖 → �
 
 ## 13. 下一步怎么学
 
-模块 02 和模块 04 已完成。下一项是**模块 05：App 自动化（迷你 Appium）**。
+模块 02、04、05 已完成。下一项是**模块 06：性能测试（迷你压测引擎）**。
 
 先把模块 02 的七个机制过一遍：
 
@@ -843,8 +921,10 @@ Docker 构建：Node 构建前端 → 复制 dist → Python 安装依赖 → �
 13. 断言内省和普通 `assert` 的区别是什么？为什么失败位置要跳过框架自身文件？
 14. CDP 是什么？测试脚本怎么通过它控制浏览器？
 15. 自动等待解决什么问题？为什么不能页面一打开就断言？
+16. ADB 和 UIAutomator 分别负责什么？控件树里的 bounds 怎么变成点击坐标？
+17. 为什么移动端自动化要先 `force-stop` 再启动 App？
 
-如果这 15 题你能用自己的话答出来，这个项目就可以写进简历并接受面试追问了。
+如果这 17 题你能用自己的话答出来，这个项目就可以写进简历并接受面试追问了。
 
 ---
 

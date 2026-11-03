@@ -17,6 +17,7 @@
 | 18:40 | 模块 03 复刻 v0.1 | Hoppscotch 风格 API 工作台，5 个契约测试，全量 33 passed |
 | 11-03 12:26 | 模块 02 复刻 v0.1 | 迷你 pytest：收集、fixture、参数化、marker、断言内省、重试、JSON/HTML 报告；33 元测试 + 20 演示 |
 | 11-03 16:42 | 模块 04 复刻 v0.1 | 迷你 Playwright：CDP 驱动、选择器、自动等待、断言、截图；6 元测试 + 5 个 SUT UI 用例 |
+| 11-03 16:48 | 模块 05 复刻 v0.1 | 迷你 Appium：ADB/UIAutomator、元素定位、点击、等待、截图；5 元测试 + 3 个 Settings 用例 |
 
 ## 2. 原理
 
@@ -41,6 +42,7 @@ SQLAlchemy → SQLite
 - **复刻方法**：先搜同主题最高星项目，记录 star/license/链接，再 clean-room 重写核心闭环，不 fork、不复制源码。
 - **同源部署**：前端构建产物由 FastAPI 在 `/ui` 挂载，生产环境只需要一个容器/端口。
 - **Web 自动化**：miniplaywright 通过 Chrome DevTools Protocol 驱动 Edge/Chrome，不依赖 Playwright 库。
+- **App 自动化**：miniappium 通过 ADB + UIAutomator 驱动 Android 模拟器，不依赖 Appium Server。
 
 ## 3. 步骤
 
@@ -54,7 +56,7 @@ bash scripts/start_sut.sh
 ### 跑测试
 
 ```bash
-./.venv/Scripts/python.exe -m pytest apps/sut/backend suites/api libs/minipytest/tests libs/miniplaywright/tests -q
+./.venv/Scripts/python.exe -m pytest apps/sut/backend suites/api libs/minipytest/tests libs/miniplaywright/tests libs/miniappium/tests -q
 ```
 
 ### 验收页面
@@ -78,11 +80,11 @@ docker run -p 8000:8000 ai-qa-lab
 
 ## 4. 最后成果
 
-- 72 个真实 pytest 用例全部通过（33 现有 + 33 迷你 pytest 元测试 + 6 迷你 Playwright 元测试）
-- 25 个迷你演示用例：20 个迷你 pytest + 5 个迷你 Playwright SUT UI
+- 77 个真实 pytest 用例全部通过（33 现有 + 33 迷你 pytest + 6 迷你 Playwright + 5 迷你 Appium）
+- 28 个迷你演示用例：20 个迷你 pytest + 5 个迷你 Playwright + 3 个迷你 Appium
 - 6 个前端页面，构建成功
 - 8 个模块的 GitHub 最高星项目选型矩阵
-- 3 个可运行的复刻闭环：模块 03 API 工作台、模块 02 迷你 pytest、模块 04 迷你 Playwright
+- 4 个可运行的复刻闭环：模块 03 API 工作台、模块 02 迷你 pytest、模块 04 迷你 Playwright、模块 05 迷你 Appium
 - 公开仓库、CI、验收截图、Docker/Render 部署配置
 
 详细验收：
@@ -90,6 +92,7 @@ docker run -p 8000:8000 ai-qa-lab
 - `docs/portfolio/sut-console.md`
 - `docs/portfolio/module-02-mini-pytest.md`
 - `docs/portfolio/module-04-mini-playwright.md`
+- `docs/portfolio/module-05-mini-appium.md`
 - `docs/portfolio/module-03-api-workbench.md`
 - `docs/requirements/module-matrix.md`
 
@@ -125,7 +128,7 @@ https://render.com/deploy?repo=https://github.com/shenle2019/ai-qa-lab
 - 知识库仍是 mock，模块 08 接入 DeepSeek + 真实检索与评测。
 - API 工作台只做 REST，不做 GraphQL/WebSocket/请求链路变量提取。
 - SQLite 适合演示，不适合多用户生产；后续切 PostgreSQL。
-- 下一项：模块 05 App 自动化（迷你 Appium）。
+- 下一项：模块 06 性能测试（迷你压测引擎）。
 
 ## 7. 五个常见问题（2026-11-03）
 
