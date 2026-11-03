@@ -35,23 +35,52 @@ const timeline = [
     title: '模块 03 复刻 v0.1',
     detail: 'Hoppscotch 风格 API 工作台：请求构建、环境变量、5 类断言、集合、批量运行与报告。',
   },
+  {
+    time: '11-03',
+    title: '模块 02 迷你 pytest',
+    detail: '自研收集器、fixture、参数化、marker、断言内省、重试、JSON/HTML 报告；33 个元测试 + 20 个演示用例。',
+  },
 ]
 
 const metrics = [
-  { value: '33', label: '自动化测试' },
-  { value: '5', label: '前端页面' },
+  { value: '66', label: 'pytest 用例' },
+  { value: '20', label: '迷你演示' },
   { value: '8', label: '模块选型' },
-  { value: '1', label: '复刻闭环' },
+  { value: '2', label: '复刻闭环' },
 ]
 
 const endpoints = [
   ['GET', '/health', '健康检查'],
   ['GET', '/api/tickets', '工单列表'],
   ['POST', '/api/tickets', '创建工单'],
+  ['GET', '/api/tickets/{id}', '查询单个工单'],
   ['PATCH', '/api/tickets/{id}', '更新状态/优先级'],
   ['POST', '/api/kb/query', '知识库问答（mock）'],
   ['POST', '/api/workbench/send', 'API 工作台单请求'],
   ['POST', '/api/workbench/run', 'API 工作台批量运行'],
+]
+
+const faqs = [
+  {
+    q: '1. 学习页标题为什么改了？',
+    a: '从 “AI QA Lab” 改成 “AI全栈测试开发平台-shenle”，只改显示名，内容和仓库名不变。',
+  },
+  {
+    q: '2. SUT 在哪里，我能看见吗？',
+    a: '代码在 apps/sut/backend 和 apps/sut/frontend；界面看 /ui/，接口看 /docs，现在共 8 个 HTTP 接口。',
+  },
+  {
+    q: '3. 模块 03 接口自动化学的是什么？',
+    a: '参考 Hoppscotch，复刻了请求、环境变量、5 种断言、集合、批量运行和报告；入口 /ui/#/workbench。',
+  },
+  {
+    q: '4. 模块 01 方法论是什么？',
+    a: '参考 awesome-test-automation，先确定 8 个模块、最高星参考项目和复刻规则；产物是选型矩阵和 CLAUDE.md。',
+  },
+  {
+    q: '5. 模块 07 测试平台现在有什么？',
+    a: '有 Vue 控制台 + FastAPI 后端的雏形；还缺用例管理、计划、执行历史、缺陷、权限和 CI 闭环。',
+  },
 ]
 </script>
 
@@ -184,7 +213,7 @@ docker run -p 8000:8000 ai-qa-lab
         <table>
           <thead><tr><th>产物</th><th>位置</th><th>状态</th></tr></thead>
           <tbody>
-            <tr><td>SUT 后端</td><td class="mono">apps/sut/backend</td><td>可运行，7 个接口</td></tr>
+            <tr><td>SUT 后端</td><td class="mono">apps/sut/backend</td><td>可运行，8 个接口（6 业务 + 2 工作台）</td></tr>
             <tr><td>Vue 控制台</td><td class="mono">apps/sut/frontend</td><td>5 个页面，已构建</td></tr>
             <tr><td>接口套件</td><td class="mono">suites/api</td><td>33 tests passing</td></tr>
             <tr><td>API 工作台</td><td class="mono">/ui/#/workbench</td><td>闭环可用</td></tr>
@@ -235,7 +264,21 @@ docker run -p 8000:8000 ai-qa-lab
     <article class="card">
       <div class="card-head">
         <div>
-          <h2>六、边界与下一步</h2>
+          <h2>六、五个常见问题</h2>
+          <p>2026-11-03 验收问答</p>
+        </div>
+      </div>
+      <ul class="rules">
+        <li v-for="item in faqs" :key="item.q">
+          <strong>{{ item.q }}</strong> {{ item.a }}
+        </li>
+      </ul>
+    </article>
+
+    <article class="card">
+      <div class="card-head">
+        <div>
+          <h2>七、边界与下一步</h2>
           <p>如实记录，不夸大</p>
         </div>
       </div>
@@ -244,18 +287,18 @@ docker run -p 8000:8000 ai-qa-lab
         <li>知识库仍是 mock；模块 08 接入 DeepSeek + 真实检索与评测。</li>
         <li>API 工作台只做 REST，不做 GraphQL/WebSocket/请求链路变量提取。</li>
         <li>SQLite 适合演示，不适合多用户生产；后续可切 PostgreSQL。</li>
-        <li>下一项：模块 02 迷你 pytest（收集、fixture、参数化、报告）。</li>
+        <li>下一项：模块 04 Web 自动化（迷你 Playwright）。</li>
       </ul>
     </article>
 
     <article class="card">
       <div class="card-head">
         <div>
-          <h2>七、新手向：这个项目怎么一步步做出来</h2>
+          <h2>八、新手向：这个项目怎么一步步做出来</h2>
           <p>每一步：做了什么 → 为什么 → 名词解释 → 原理 → 效果</p>
         </div>
       </div>
-      <p class="muted">完整拆解已单独成页，包含 10 个步骤、术语速查表、简历写法和 10 道自测题。</p>
+      <p class="muted">完整拆解已单独成页，包含 10+ 个步骤、术语速查表、简历写法和 13 道自测题。</p>
       <div class="quick-links" style="margin-top:16px">
         <a class="quick-link" href="https://shenle2019.github.io/ai-qa-lab/learning/" target="_blank" rel="noreferrer">打开完整学习手册</a>
         <a class="quick-link" href="https://shenle2019.github.io/ai-qa-lab/reports/" target="_blank" rel="noreferrer">历史报告归档</a>

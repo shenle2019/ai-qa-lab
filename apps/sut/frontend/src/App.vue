@@ -6,7 +6,7 @@ import { api } from './api/client'
 const route = useRoute()
 const online = ref(false)
 const checking = ref(true)
-const title = computed(() => route.meta.title || 'AI QA Lab')
+const title = computed(() => route.meta.title || 'AI全栈测试开发平台-shenle')
 
 async function checkHealth() {
   checking.value = true
@@ -29,8 +29,8 @@ onMounted(checkHealth)
       <div class="brand">
         <div class="brand-mark">QA</div>
         <div>
-          <strong>AI QA Lab</strong>
-          <span>Knowledge Ops SUT</span>
+          <strong>AI全栈测试开发平台</strong>
+          <span style="text-transform:none;letter-spacing:0">shenle</span>
         </div>
       </div>
 

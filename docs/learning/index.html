@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>AI QA Lab · 项目学习手册</title>
+<title>AI全栈测试开发平台-shenle · 项目学习手册</title>
 <style>
 :root { --bg:#070b14; --panel:#0e1728; --line:rgba(148,163,184,.16); --text:#e6edf7; --muted:#9fb0c9; --accent:#38bdf8; --green:#34d399; --amber:#fbbf24; }
 * { box-sizing:border-box; }
@@ -36,7 +36,7 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <body>
 <div class="wrap">
   <div class="top">
-    <span>AI QA Lab · 项目学习手册 · v0.2.0</span>
+    <span>AI全栈测试开发平台-shenle · 项目学习手册 · v0.3.0</span>
     <span>
       <a href="../">最新报告</a> ·
       <a href="../reports/">归档索引</a> ·
@@ -46,7 +46,7 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
   <div class="banner">这是给测试小白看的完整拆解：每一步做什么、为什么、涉及哪些名词、原理是什么、效果是什么。</div>
   <div class="toc">
 <ul>
-<li><a href="#ai-qa-lab">项目学习手册：AI QA Lab 是怎么一步步做出来的</a><ul>
+<li><a href="#ai-shenle">项目学习手册：AI全栈测试开发平台-shenle 是怎么一步步做出来的</a><ul>
 <li><a href="#0">0. 先搞清楚：你在做一个什么项目</a></li>
 <li><a href="#1">1. 第一步：定目标和验收标准</a></li>
 <li><a href="#2">2. 第二步：搭仓库和环境</a></li>
@@ -55,6 +55,7 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <li><a href="#5">5. 第五步：接口自动化（黑盒测试）</a></li>
 <li><a href="#6-vue">6. 第六步：做 Vue 控制台</a></li>
 <li><a href="#7-03-api">7. 第七步：模块 03 复刻——API 工作台</a></li>
+<li><a href="#75-02-pytest">7.5 模块 02 复刻：迷你 pytest</a></li>
 <li><a href="#8">8. 第八步：把测试跑成“证据”</a></li>
 <li><a href="#9">9. 第九步：报告与归档</a></li>
 <li><a href="#10">10. 第十步：本地与远端部署</a></li>
@@ -62,11 +63,12 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <li><a href="#12">12. 简历上怎么写（只写真实做过的）</a></li>
 <li><a href="#13">13. 下一步怎么学</a></li>
 <li><a href="#14">14. 自测题</a></li>
+<li><a href="#15-2026-11-03">15. 五个常见问题（2026-11-03）</a></li>
 </ul>
 </li>
 </ul>
 </div>
-<h1 id="ai-qa-lab">项目学习手册：AI QA Lab 是怎么一步步做出来的</h1>
+<h1 id="ai-shenle">项目学习手册：AI全栈测试开发平台-shenle 是怎么一步步做出来的</h1>
 <blockquote>
 <p>版本：v0.2.0（2026-11-02）
 读者：刚接触测试开发、需要把项目写进简历并能在面试中讲清楚的人
@@ -167,7 +169,7 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <tr>
 <td>3</td>
 <td>自建 SUT（FastAPI + SQLite）</td>
-<td>7 个接口，<code>/docs</code> 可看</td>
+<td>8 个接口（6 业务 + 2 工作台），<code>/docs</code> 可看</td>
 </tr>
 <tr>
 <td>4</td>
@@ -441,17 +443,122 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <h3 id="_34">效果</h3>
 <p>单请求实测 PASS；批量运行 2/2 PASS；新增 5 个工作台契约测试；全量 33 passed。截图和验收说明已归档。</p>
 <hr />
-<h2 id="8">8. 第八步：把测试跑成“证据”</h2>
+<h2 id="75-02-pytest">7.5 模块 02 复刻：迷你 pytest</h2>
 <h3 id="_35">做了什么</h3>
+<ul>
+<li>在 <code>libs/minipytest</code> 里自己写了一个 pytest-like 测试执行器；</li>
+<li>支持用例收集、fixture、参数化、marker、断言内省、失败重试、JSON/HTML 报告；</li>
+<li>用真实 pytest 写了 33 个元测试，证明引擎行为正确；</li>
+<li>用迷你 pytest 跑了 20 个验收演示和 9 个故意失败演示；</li>
+<li>生成了一份断网也能打开的 HTML 报告，并挂到 SUT 控制台的 <code>/portfolio</code> 下。</li>
+</ul>
+<h3 id="_36">为什么</h3>
+<p>面试官问“你熟悉 pytest 吗”，如果你只能回答“会写 <code>@pytest.mark.parametrize</code>”，那只是会用工具。能解释“用例怎么被发现、fixture 怎么注入、参数化怎么展开、失败位置怎么定位、报告怎么生成”，才说明你理解测试框架。</p>
+<p>这个模块还有一个实际作用：后续 Web、App、性能、LLM 评测模块都要复用同一套测试基础设施。先把 runner 做出来，后面不用重复造轮子。</p>
+<h3 id="_37">涉及的名词</h3>
+<ul>
+<li><strong>收集（collection）</strong>：框架扫描目录，找出哪些函数是测试用例。</li>
+<li><strong>fixture</strong>：测试前准备数据、测试后清理资源的函数。</li>
+<li><strong>作用域（scope）</strong>：fixture 多久重建一次，function 每条用例、module 每个文件、session 整轮。</li>
+<li><strong>参数化（parametrize）</strong>：一份测试代码，喂多组输入，生成多条用例。</li>
+<li><strong>marker</strong>：给用例打标签，比如 <code>smoke</code>、<code>skip</code>、<code>xfail</code>、<code>retry</code>。</li>
+<li><strong>断言内省</strong>：断言失败时，框架能告诉你期望值、实际值和差异。</li>
+<li><strong>retry</strong>：失败后自动重跑，用来识别不稳定用例（flaky）。</li>
+<li><strong>node ID</strong>：每条用例的唯一名字，例如 <code>test_api.py::test_login[admin]</code>。</li>
+</ul>
+<h3 id="_38">原理</h3>
+<h4 id="1_1">1. 收集</h4>
+<p>框架从你给的路径开始，找 <code>test_*.py</code>。打开文件后：</p>
+<ul>
+<li>模块里名字以 <code>test_</code> 开头的函数，收；</li>
+<li>名字以 <code>Test</code> 开头的类，类里 <code>test_</code> 开头的方法，收；</li>
+<li>其他函数（helper、fixture）不收。</li>
+</ul>
+<p>收集时按源码行号排序，保证执行顺序和文件里写的一致。</p>
+<h4 id="2-fixture">2. fixture</h4>
+<p>测试函数的参数名就是 fixture 名：</p>
+<pre><code class="language-python">@fixture(scope=&quot;session&quot;)
+def api():
+    client = make_client()
+    yield client
+    client.close()
+
+def test_health(api):
+    assert api.get(&quot;/health&quot;).status_code == 200
+</code></pre>
+<p>执行器看到 <code>test_health</code> 需要 <code>api</code>，就去 fixture 表里找 <code>api</code>，调用它。<code>yield</code> 前是准备，<code>yield</code> 后是清理。</p>
+<p>作用域决定复用：</p>
+<ul>
+<li><code>function</code>：每条用例都新建，最干净，也最慢；</li>
+<li><code>module</code>：同一个文件内共用；</li>
+<li><code>session</code>：整轮测试共用，适合启动一次服务。</li>
+</ul>
+<h4 id="3">3. 参数化</h4>
+<pre><code class="language-python">@parametrize(&quot;role&quot;, [&quot;admin&quot;, &quot;viewer&quot;])
+@parametrize(&quot;status&quot;, [&quot;open&quot;, &quot;closed&quot;])
+def test_permission(role, status):
+    ...
+</code></pre>
+<p>收集器把两组值做笛卡尔积，生成 4 条 case：</p>
+<pre><code>test_permission[admin-open]
+test_permission[admin-closed]
+test_permission[viewer-open]
+test_permission[viewer-closed]
+</code></pre>
+<p>每条 case 单独执行、单独记结果。</p>
+<h4 id="4-marker">4. marker</h4>
+<p><code>@mark.skip</code> 直接跳过，不跑 fixture；<code>@mark.xfail</code> 表示“我知道它会失败”，失败记 xfailed，意外通过记 xpassed；<code>@mark.retry(2)</code> 表示最多跑两次。</p>
+<p><code>-m "smoke and not slow"</code> 是一个小型表达式，执行器只跑符合条件的 case。</p>
+<h4 id="5_1">5. 断言内省</h4>
+<p>普通 <code>assert 1 == 2</code> 失败时只告诉你“断言失败”。迷你 pytest 用链式断言：</p>
+<pre><code class="language-python">assert_that({&quot;status&quot;: &quot;closed&quot;}).is_equal_to({&quot;status&quot;: &quot;open&quot;})
+</code></pre>
+<p>失败时输出：</p>
+<pre><code>expected: {'status': 'open'}
+actual:   {'status': 'closed'}
+--- expected
++++ actual
+-{'status': 'open'}
++{'status': 'closed'}
+</code></pre>
+<p>还会定位到测试文件的具体行号，而不是框架内部。</p>
+<h4 id="6">6. 重试</h4>
+<p>执行器记录每次尝试：</p>
+<ul>
+<li>第 1 次失败，记 attempt 1；</li>
+<li>第 2 次通过，最终状态 passed，但标记 retried / flaky。</li>
+</ul>
+<p>这样你不会因为一次网络抖动就误判，也能在报告里看到“这条用例曾经失败过”。</p>
+<h4 id="7">7. 报告</h4>
+<p>JSON 适合机器读，HTML 适合人看。HTML 是单文件，CSS/JS 都内嵌，不依赖 CDN，断网也能打开。报告里有 summary、失败详情、断言 diff、每次 attempt、fixture 耗时。</p>
+<h3 id="_39">效果</h3>
+<ul>
+<li>真实 pytest：66 passed（33 现有 + 33 框架元测试）；</li>
+<li>迷你 pytest：20 cases，17 passed、1 skipped、1 xfailed、1 xpassed，exit 0；</li>
+<li>故意失败演示：9 cases，7 failed、2 errors，exit 1；</li>
+<li>报告：<code>docs/portfolio/module-02-minipytest-report.html</code>；</li>
+<li>控制台入口：<code>/portfolio/module-02-minipytest-report.html</code>。</li>
+</ul>
+<h3 id="_40">关键文件</h3>
+<pre><code>libs/minipytest/collect.py     收集、参数化展开
+libs/minipytest/fixtures.py    fixture 依赖注入
+libs/minipytest/runner.py      执行、重试、退出码
+libs/minipytest/assertions.py  断言与 diff
+libs/minipytest/reporting.py   JSON / HTML
+libs/minipytest/cli.py         命令行入口
+</code></pre>
+<hr />
+<h2 id="8">8. 第八步：把测试跑成“证据”</h2>
+<h3 id="_41">做了什么</h3>
 <ul>
 <li>用 pytest 跑全量 33 个测试；</li>
 <li>用无头 Chrome 截图验收页面；</li>
 <li>配置 GitHub Actions，每次 push 跑 pytest；</li>
 <li>把截图、报告、验收说明写进仓库。</li>
 </ul>
-<h3 id="_36">为什么</h3>
+<h3 id="_42">为什么</h3>
 <p>简历和面试需要<strong>证据</strong>，不是口头说“我做了”。CI 还能防止你改坏已有功能。</p>
-<h3 id="_37">涉及的名词</h3>
+<h3 id="_43">涉及的名词</h3>
 <ul>
 <li><strong>CI（持续集成）</strong>：每次提交自动构建/跑测试，尽早发现问题。</li>
 <li><strong>GitHub Actions</strong>：GitHub 的 CI 服务；<code>workflow</code> 是配置文件。</li>
@@ -460,17 +567,17 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <li><strong>Artifact</strong>：CI 产出的文件，如测试报告、截图。</li>
 <li><strong>回归测试</strong>：改代码后重跑旧测试，确认没把旧功能改坏。</li>
 </ul>
-<h3 id="_38">原理</h3>
+<h3 id="_44">原理</h3>
 <pre><code>push 代码 → GitHub Actions 启动 Ubuntu → 安装依赖 → 跑 pytest → 记录成功/失败
 </code></pre>
-<h3 id="_39">效果</h3>
+<h3 id="_45">效果</h3>
 <p>GitHub 上能看到 CI 记录；本地 33 passed；验收截图可追溯。</p>
 <blockquote>
 <p>注意：当前 CI 只跑后端测试，还没有把 <code>suites/api</code> 和前端构建加进去；这是下一步可以补的。</p>
 </blockquote>
 <hr />
 <h2 id="9">9. 第九步：报告与归档</h2>
-<h3 id="_40">做了什么</h3>
+<h3 id="_46">做了什么</h3>
 <ul>
 <li>最新报告：<code>docs/index.html</code> 和 Vue <code>/ui/#/report</code>；</li>
 <li>日报：<code>docs/progress/YYYY-MM-DD.md</code>；</li>
@@ -479,7 +586,7 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <li>归档脚本：<code>scripts/archive_report.py</code>；</li>
 <li>Git tag：<code>v0.2.0</code>、<code>v0.2.0-archive</code>。</li>
 </ul>
-<h3 id="_41">为什么</h3>
+<h3 id="_47">为什么</h3>
 <p>代码每天变，如果报告也每天覆盖，历史就丢了；如果每天生成一个新报告，又会变成噪声。所以：</p>
 <ul>
 <li>日报记录“过程”；</li>
@@ -487,7 +594,7 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <li>根报告永远是最新状态；</li>
 <li>快照不可变，面试时能回看“我当时做到了什么”。</li>
 </ul>
-<h3 id="_42">涉及的名词</h3>
+<h3 id="_48">涉及的名词</h3>
 <ul>
 <li><strong>快照（Snapshot）</strong>：某一时刻的完整副本。</li>
 <li><strong>不可变（Immutable）</strong>：归档后不再修改，保证可信。</li>
@@ -496,9 +603,9 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <li><strong>里程碑（Milestone）</strong>：一个阶段目标，如“完成模块 03”。</li>
 <li><strong>Changelog</strong>：变更记录，说明每个版本改了什么。</li>
 </ul>
-<h3 id="_43">原理</h3>
+<h3 id="_49">原理</h3>
 <p><strong>单一信源 + 自动生成 + 不可变归档</strong>：报告从当前仓库生成快照，脚本复制截图、改写路径、写 <code>metrics.json</code>，再生成索引；历史快照只读。</p>
-<h3 id="_44">效果</h3>
+<h3 id="_50">效果</h3>
 <p>公网可访问：</p>
 <ul>
 <li>最新报告：https://shenle2019.github.io/ai-qa-lab/</li>
@@ -507,7 +614,7 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 </ul>
 <hr />
 <h2 id="10">10. 第十步：本地与远端部署</h2>
-<h3 id="_45">做了什么</h3>
+<h3 id="_51">做了什么</h3>
 <ul>
 <li>本地：FastAPI 同时提供 <code>/api</code> 和 <code>/ui</code>，一条命令启动；</li>
 <li>容器：写 <code>Dockerfile</code>，Node 构建前端，Python 跑后端；</li>
@@ -515,9 +622,9 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <li>Hugging Face Spaces：<code>deploy/huggingface/</code>；</li>
 <li>决策：<strong>先本地开发，8 个模块全部完成后再上云</strong>。</li>
 </ul>
-<h3 id="_46">为什么</h3>
+<h3 id="_52">为什么</h3>
 <p>GitHub Pages 只能托管静态文件，不能运行 Python 后端；完整系统需要容器平台。现在上云会打断学习节奏，所以暂缓。</p>
-<h3 id="_47">涉及的名词</h3>
+<h3 id="_53">涉及的名词</h3>
 <ul>
 <li><strong>Docker</strong>：把应用和依赖打包成镜像，保证环境一致。</li>
 <li><strong>镜像（Image）/容器（Container）</strong>：镜像是模板，容器是运行实例。</li>
@@ -526,11 +633,11 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <li><strong>冷启动（Cold Start）</strong>：免费实例休眠后，第一次访问要等它启动。</li>
 <li><strong>临时存储（Ephemeral Storage）</strong>：重启后数据丢失；SQLite 在免费平台就是这个特性。</li>
 </ul>
-<h3 id="_48">原理</h3>
+<h3 id="_54">原理</h3>
 <pre><code>Docker 构建：Node 构建前端 → 复制 dist → Python 安装依赖 → 启动 uvicorn
 运行：浏览器 → 容器 8000/7860 → FastAPI → SQLite
 </code></pre>
-<h3 id="_49">效果</h3>
+<h3 id="_55">效果</h3>
 <p>本地完整可用；云部署配置保留，后续直接使用。</p>
 <hr />
 <h2 id="11">11. 术语速查表</h2>
@@ -726,15 +833,16 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 </table>
 <hr />
 <h2 id="12">12. 简历上怎么写（只写真实做过的）</h2>
-<h3 id="_50">可以写的</h3>
+<h3 id="_56">可以写的</h3>
 <ul>
-<li>独立搭建可运行的 AI 工单/知识库 SUT：FastAPI + SQLAlchemy + SQLite，7 个 HTTP 接口，自动生成 OpenAPI 文档。</li>
-<li>设计并实现 33 个自动化测试：后端冒烟 + 接口黑盒 + 工具契约，覆盖 404/422/边界/非法枚举，CI 全绿。</li>
+<li>独立搭建可运行的 AI 工单/知识库 SUT：FastAPI + SQLAlchemy + SQLite，8 个 HTTP 接口（6 个业务 + 2 个工作台），自动生成 OpenAPI 文档。</li>
+<li>设计并实现 66 个真实 pytest 用例：33 个业务/接口契约 + 33 个迷你 pytest 框架元测试，覆盖 404/422/边界/非法枚举。</li>
+<li>clean-room 复刻 pytest 核心：收集、fixture、参数化、marker、断言内省、重试、JSON/HTML 报告；20 个演示用例。</li>
 <li>使用 Vue 3 + Vite + Pinia + Router + ECharts 构建 6 页测试控制台，覆盖仪表盘、工单、知识库、API 工作台、报告与模块验收。</li>
 <li>clean-room 复刻 Hoppscotch 核心 API 工作台：请求构建、环境变量、5 类断言、集合保存、批量运行与报告；新增 5 个契约测试。</li>
 <li>建立“日报 + 里程碑快照”的报告归档机制，Git tag 与静态站点可追溯。</li>
 </ul>
-<h3 id="_51">面试可能追问</h3>
+<h3 id="_57">面试可能追问</h3>
 <ol>
 <li>为什么先做接口测试，而不是 UI 自动化？</li>
 <li>接口快、稳定、ROI 高；UI 慢且易碎，适合覆盖关键路径。</li>
@@ -749,7 +857,7 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <li>这个项目最大的边界是什么？</li>
 <li>没做登录/RBAC、真实 RAG、Playwright/Appium/性能/LLM 评测；SQLite 只适合演示。</li>
 </ol>
-<h3 id="_52">不要写的</h3>
+<h3 id="_58">不要写的</h3>
 <ul>
 <li>不要写“精通 Playwright/Appium/k6/LLM 评测”——这些模块还没做。</li>
 <li>不要写“生产级高可用”——当前是本地演示。</li>
@@ -757,13 +865,18 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 </ul>
 <hr />
 <h2 id="13">13. 下一步怎么学</h2>
-<p>下一项是<strong>模块 02：迷你 pytest</strong>，先学三个核心机制：</p>
+<p>模块 02 已完成。下一项是<strong>模块 04：Web 自动化（迷你 Playwright）</strong>。</p>
+<p>先把模块 02 的七个机制过一遍：</p>
 <ol>
-<li><strong>用例收集</strong>：pytest 怎么找到 <code>test_*.py</code> 里的函数；</li>
+<li><strong>用例收集</strong>：框架怎么找到 <code>test_*.py</code> 里的函数；</li>
 <li><strong>fixture</strong>：怎么准备/清理依赖，怎么按作用域复用；</li>
-<li><strong>参数化</strong>：一组输入怎么生成多条用例。</li>
+<li><strong>参数化</strong>：一组输入怎么生成多条用例；</li>
+<li><strong>marker</strong>：skip / xfail / retry / tag 怎么生效；</li>
+<li><strong>断言内省</strong>：失败时怎么给出 expected / actual / diff；</li>
+<li><strong>失败重试</strong>：怎么记录 attempt，怎么识别 flaky；</li>
+<li><strong>报告</strong>：JSON 和离线 HTML 怎么生成。</li>
 </ol>
-<p>然后再学断言内省、marker、失败重试、报告。学完这一模块，你就能解释“为什么 pytest 能成为 Python 测试事实标准”。</p>
+<p>学完这些，你就能解释“为什么 pytest 能成为 Python 测试事实标准”，也能把同样的思路迁移到 Web、App、性能测试。</p>
 <p>每天的节奏固定为：</p>
 <pre><code>读一点 → 写一点 → 跑测试 → 讲清楚 → 归档
 </code></pre>
@@ -781,8 +894,72 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <li>为什么要做测试数据隔离？随机后缀有什么用？</li>
 <li>CI 在什么时机跑？它解决了什么问题？</li>
 <li>报告归档为什么要“日报 + 里程碑快照”两层？</li>
+<li>fixture 的 function / module / session 作用域分别什么时候创建、什么时候销毁？</li>
+<li>参数化为什么要先生成 case 再执行？一条 case 的 node ID 由什么组成？</li>
+<li>断言内省和普通 <code>assert</code> 的区别是什么？为什么失败位置要跳过框架自身文件？</li>
 </ol>
-<p>如果这 10 题你能用自己的话答出来，这个项目就可以写进简历并接受面试追问了。</p>
+<p>如果这 13 题你能用自己的话答出来，这个项目就可以写进简历并接受面试追问了。</p>
+<hr />
+<h2 id="15-2026-11-03">15. 五个常见问题（2026-11-03）</h2>
+<h3 id="151">15.1 学习页标题为什么改了</h3>
+<p>学习页原来叫 “AI QA Lab”，现在改成 “AI全栈测试开发平台-shenle”。改的是浏览器标签、页面顶部和一级标题，内容不变。控制台侧边栏也同步换成了这个显示名，仓库名 <code>ai-qa-lab</code> 没变。</p>
+<h3 id="152-sut">15.2 SUT 在哪里，我能看见吗</h3>
+<p>SUT 就是被测系统，英文 System Under Test，意思是“被测试的那套系统”。</p>
+<p>代码在两个地方：</p>
+<ul>
+<li><code>apps/sut/backend</code>：FastAPI + SQLAlchemy + SQLite，负责接口和数据；</li>
+<li><code>apps/sut/frontend</code>：Vue 3，负责页面。</li>
+</ul>
+<p>启动后有两个入口：</p>
+<ul>
+<li><code>http://127.0.0.1:8000/ui/</code>：用户界面，能看仪表盘、工单、知识库、API 工作台、报告、模块验收；</li>
+<li><code>http://127.0.0.1:8000/docs</code>：接口文档，能直接点 “Try it out” 发请求。</li>
+</ul>
+<p>现在实际有 8 个 HTTP 接口：</p>
+<ol>
+<li><code>GET /health</code>：健康检查；</li>
+<li><code>GET /api/tickets</code>：工单列表；</li>
+<li><code>POST /api/tickets</code>：创建工单；</li>
+<li><code>GET /api/tickets/{ticket_id}</code>：查单个工单；</li>
+<li><code>PATCH /api/tickets/{ticket_id}</code>：更新工单状态/优先级；</li>
+<li><code>POST /api/kb/query</code>：知识库问答（mock）；</li>
+<li><code>POST /api/workbench/send</code>：API 工作台单请求；</li>
+<li><code>POST /api/workbench/run</code>：API 工作台批量运行。</li>
+</ol>
+<p>之前报告写 7 个，是旧口径，已经更正为 8 个。</p>
+<h3 id="153-03">15.3 模块 03 接口自动化是什么</h3>
+<p>参考 Hoppscotch（80,721 星），它是一个开源的 Postman 类 API 工具，能发请求、管集合、管环境、做断言。</p>
+<p>我们没复制源码，只复刻核心闭环：</p>
+<ul>
+<li>请求构建：方法、URL、Header、Body；</li>
+<li>环境变量：把 <code>{{base_url}}</code> 换成真实地址；</li>
+<li>5 种断言：状态码、最大耗时、响应包含、JSON 路径存在、JSON 路径相等；</li>
+<li>集合保存：把多条请求存起来；</li>
+<li>批量运行：一次跑一组请求；</li>
+<li>报告：看哪条通过、哪条失败。</li>
+</ul>
+<p>入口是 <code>/ui/#/workbench</code>。它解决的是“接口测试不只是发请求”，还要有环境、断言、批量、报告。v0.1 不做 GraphQL、WebSocket、脚本和团队协作。</p>
+<h3 id="154-01">15.4 模块 01 方法论是什么</h3>
+<p>参考 awesome-test-automation（7,208 星），它是一个测试工具清单和地图，不是可运行程序。</p>
+<p>我们用它来确定：</p>
+<ul>
+<li>8 个模块分别考什么；</li>
+<li>每个模块选哪个 GitHub 最高星项目做参考；</li>
+<li>复刻规则：clean-room 重写、完整闭环、验收页、截图、原理说明。</li>
+</ul>
+<p>产物是 <code>docs/requirements/module-matrix.md</code> 和 <code>CLAUDE.md</code> 里的规则。模块 01 排在最后，因为它要把整个项目总结成一张知识地图和选型决策页，不适合一开始就写。</p>
+<h3 id="155-07">15.5 模块 07 测试平台现在有什么</h3>
+<p>参考 MeterSphere（13,600 星），它是一个持续测试平台，管理项目、用例、计划、执行、缺陷、报表。</p>
+<p>现在有 Vue 控制台 + FastAPI 后端，能看仪表盘、工单、知识库、API 工作台、报告、模块验收，所以叫“控制台雏形”。</p>
+<p>还缺：</p>
+<ul>
+<li>测试用例管理；</li>
+<li>测试计划和执行历史；</li>
+<li>缺陷跟踪；</li>
+<li>用户、角色、权限；</li>
+<li>和 CI 的完整集成。</li>
+</ul>
+<p>这些是模块 07 要补的完整闭环，不是现在这一版的交付范围。</p>
 </div>
 </body>
 </html>

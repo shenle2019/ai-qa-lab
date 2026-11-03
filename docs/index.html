@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>AI QA Lab · 项目报告</title>
+<title>AI全栈测试开发平台-shenle · 项目报告</title>
 <style>
   :root { --bg:#070b14; --panel:#0e1728; --line:rgba(148,163,184,.16); --text:#e6edf7; --muted:#8fa1ba; --accent:#38bdf8; --green:#34d399; --amber:#fbbf24; }
   * { box-sizing:border-box; }
@@ -56,13 +56,14 @@
 <body>
 <div class="wrap">
   <header class="top">
-    <div class="brand"><div class="mark">QA</div><div><strong>AI QA Lab</strong><span>Project Report</span></div></div>
+    <div class="brand"><div class="mark">QA</div><div><strong>AI全栈测试开发平台-shenle</strong><span>Project Report</span></div></div>
     <nav>
       <a href="#done">做了什么</a>
       <a href="#how">原理</a>
       <a href="#steps">步骤</a>
       <a href="#result">成果</a>
       <a href="#remote">远端运行</a>
+      <a href="#faq">常见问题</a>
       <a href="learning/">学习手册</a>
       <a href="reports/">历史归档</a>
       <a href="https://github.com/shenle2019/ai-qa-lab" target="_blank" rel="noreferrer">GitHub</a>
@@ -70,15 +71,15 @@
   </header>
 
   <div class="hero">
-    <p class="eyebrow">PROJECT REPORT · 2026-11-02</p>
+    <p class="eyebrow">PROJECT REPORT · 2026-11-03</p>
     <h1>从零搭起一套可运行、可测试、可复刻的 AI 全栈测试工程</h1>
     <p class="lead">这份报告回答：我做了什么、原理是什么、步骤是什么、最终成果是什么，以及它能否脱离本地在公网运行。</p>
     <p style="margin-top:14px"><a class="btn" href="learning/">新手向完整拆解：每一步做什么、为什么、名词、原理、效果 →</a></p>
     <div class="metrics">
-      <div class="metric"><strong>33</strong><span>自动化测试</span></div>
-      <div class="metric"><strong>5</strong><span>前端页面</span></div>
-      <div class="metric"><strong>8</strong><span>模块选型</span></div>
-      <div class="metric"><strong>1</strong><span>复刻闭环</span></div>
+      <div class="metric"><strong>66</strong><span>pytest 用例</span></div>
+      <div class="metric"><strong>20</strong><span>迷你演示</span></div>
+      <div class="metric"><strong>6</strong><span>前端页面</span></div>
+      <div class="metric"><strong>2</strong><span>复刻闭环</span></div>
     </div>
   </div>
 
@@ -93,6 +94,7 @@
       <li><span class="time">18:00</span><div><strong>模块复刻规则与选型</strong><p>确定“最高星项目 + 完整闭环 + 验收网页”规则，产出 8 模块选型矩阵。</p></div></li>
       <li><span class="time">18:20</span><div><strong>SUT 控制台</strong><p>Vue 3 + Vite + Pinia + Router + ECharts，含仪表盘、工单、知识库、API 工作台、项目报告、模块验收。</p></div></li>
       <li><span class="time">18:40</span><div><strong>模块 03 复刻 v0.1</strong><p>以 Hoppscotch（80,721★）为参考，复刻 API 工作台：请求、环境变量、5 类断言、集合、批量运行与报告。</p></div></li>
+      <li><span class="time">11-03</span><div><strong>模块 02 复刻 v0.1</strong><p>以 pytest（14,661★）为参考，自研迷你 pytest：收集、fixture、参数化、marker、断言内省、重试、JSON/HTML 报告；33 元测试 + 20 演示。</p></div></li>
     </ol>
   </section>
 
@@ -127,7 +129,11 @@ SQLAlchemy → SQLite</pre>
       <div><h3>本地启动</h3><pre>cd /e/ailearning/ai-qa-lab
 bash scripts/start_sut.sh</pre></div>
       <div><h3>跑测试</h3><pre>./.venv/Scripts/python.exe -m pytest \
-  apps/sut/backend suites/api -q</pre></div>
+  apps/sut/backend suites/api \
+  libs/minipytest/tests -q
+
+./.venv/Scripts/python.exe -m libs.minipytest \
+  libs/minipytest/demo/acceptance -v</pre></div>
       <div><h3>验收页面</h3><pre>/ui/               仪表盘
 /ui/#/tickets      工单管理
 /ui/#/workbench    API 工作台
@@ -145,9 +151,10 @@ docker run -p 8000:8000 ai-qa-lab
     <table>
       <thead><tr><th>产物</th><th>位置</th><th>状态</th></tr></thead>
       <tbody>
-        <tr><td>SUT 后端</td><td><code>apps/sut/backend</code></td><td>可运行，7 个接口</td></tr>
+        <tr><td>SUT 后端</td><td><code>apps/sut/backend</code></td><td>可运行，8 个接口（6 业务 + 2 工作台）</td></tr>
         <tr><td>Vue 控制台</td><td><code>apps/sut/frontend</code></td><td>6 个页面，已构建</td></tr>
         <tr><td>接口套件</td><td><code>suites/api</code></td><td>33 tests passing</td></tr>
+        <tr><td>迷你 pytest</td><td><code>libs/minipytest</code></td><td>33 元测试 + 20 演示；离线 HTML 报告</td></tr>
         <tr><td>API 工作台</td><td><code>/ui/#/workbench</code></td><td>闭环可用</td></tr>
         <tr><td>复刻矩阵</td><td><code>docs/requirements/module-matrix.md</code></td><td>8 模块选型完成</td></tr>
         <tr><td>验收材料</td><td><code>docs/portfolio</code></td><td>报告 + 截图</td></tr>
@@ -157,6 +164,7 @@ docker run -p 8000:8000 ai-qa-lab
     </table>
     <div class="shots">
       <figure><img src="portfolio/screenshots/sut-dashboard.png" alt="仪表盘" /><figcaption>仪表盘：工单统计与状态分布</figcaption></figure>
+      <figure><img src="portfolio/screenshots/module-02-minipytest.png" alt="迷你 pytest 报告" /><figcaption>模块 02：迷你 pytest 离线报告</figcaption></figure>
       <figure><img src="portfolio/screenshots/module-03-workbench.png" alt="API 工作台" /><figcaption>模块 03：API 工作台闭环</figcaption></figure>
     </div>
   </section>
@@ -186,19 +194,35 @@ docker run -p 8000:8000 ai-qa-lab
     <a class="btn ghost" href="https://github.com/shenle2019/ai-qa-lab" target="_blank" rel="noreferrer">查看源码</a>
   </section>
 
+  <section id="faq">
+    <h2>六、五个常见问题</h2>
+    <p class="sub">2026-11-03 验收时问的 5 个问题。</p>
+    <h3>1. 学习页标题为什么改了</h3>
+    <p>学习页原来叫 “AI QA Lab”，现在改成 “AI全栈测试开发平台-shenle”。改的是浏览器标签、页面顶部和一级标题，内容不变。控制台侧边栏也同步换成了这个显示名，仓库名 <code>ai-qa-lab</code> 没变。</p>
+    <h3>2. SUT 在哪里，我能看见吗</h3>
+    <p>SUT 就是被测系统（System Under Test）。代码在 <code>apps/sut/backend</code>（FastAPI + SQLite）和 <code>apps/sut/frontend</code>（Vue3）。启动后看两个地方：<code>/ui/</code> 是用户界面，<code>/docs</code> 是接口文档，能直接点 “Try it out” 发请求。</p>
+    <p>现在实际有 8 个 HTTP 接口：健康检查、工单列表、创建工单、查单个工单、更新工单、知识库问答，加 2 个工作台接口。之前报告写 7 个，是旧口径，已更正。</p>
+    <h3>3. 模块 03 接口自动化是什么</h3>
+    <p>参考 Hoppscotch（80,721 星），一个开源的 Postman 类 API 工具。我们没复制源码，只复刻核心闭环：发请求、环境变量、5 种断言、集合保存、批量运行、报告。入口是 <code>/ui/#/workbench</code>。v0.1 不做 GraphQL、WebSocket、脚本和团队协作。</p>
+    <h3>4. 模块 01 方法论是什么</h3>
+    <p>参考 awesome-test-automation（7,208 星），一个测试工具清单和地图，不是可运行程序。我们用它来确定 8 个模块、每个模块的最高星参考项目和复刻规则。产物是 <code>docs/requirements/module-matrix.md</code> 和 <code>CLAUDE.md</code> 里的规则。模块 01 排在最后，因为它要把整个项目总结成知识地图和选型决策页。</p>
+    <h3>5. 模块 07 测试平台现在有什么</h3>
+    <p>参考 MeterSphere（13,600 星），一个持续测试平台，管理项目、用例、计划、执行、缺陷、报表。现在有 Vue 控制台 + FastAPI 后端，能看仪表盘、工单、知识库、API 工作台、报告、模块验收，所以叫“控制台雏形”。还缺用例管理、测试计划、执行历史、缺陷跟踪、权限和 CI 集成。</p>
+  </section>
+
   <section>
-    <h2>六、边界与下一步</h2>
+    <h2>七、边界与下一步</h2>
     <ul>
       <li>当前没有登录/权限体系；模块 07 复刻 MeterSphere 时补。</li>
       <li>知识库仍是 mock；模块 08 接入 DeepSeek + 真实检索与评测。</li>
       <li>API 工作台只做 REST，不做 GraphQL/WebSocket/请求链路变量提取。</li>
       <li>SQLite 适合演示，不适合多用户生产；后续可切 PostgreSQL。</li>
-      <li>下一项：模块 02 迷你 pytest（收集、fixture、参数化、报告）。</li>
+      <li>下一项：模块 04 Web 自动化（迷你 Playwright）。</li>
     </ul>
   </section>
 
   <footer>
-    <span>AI QA Lab · 2026-11-02 · commit 9595d5d</span>
+    <span>AI全栈测试开发平台-shenle · 2026-11-03 · local build</span>
     <span><a href="https://github.com/shenle2019/ai-qa-lab">github.com/shenle2019/ai-qa-lab</a></span>
   </footer>
 </div>

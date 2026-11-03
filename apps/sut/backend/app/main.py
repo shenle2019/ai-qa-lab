@@ -22,6 +22,7 @@ app.include_router(workbench_router)
 
 FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
 LEARNING_DIR = Path(__file__).resolve().parents[4] / "docs" / "learning"
+PORTFOLIO_DIR = Path(__file__).resolve().parents[4] / "docs" / "portfolio"
 
 
 def get_db():
@@ -95,3 +96,6 @@ if FRONTEND_DIST.exists():
 
 if LEARNING_DIR.exists():
     app.mount("/learning", StaticFiles(directory=str(LEARNING_DIR), html=True), name="learning")
+
+if PORTFOLIO_DIR.exists():
+    app.mount("/portfolio", StaticFiles(directory=str(PORTFOLIO_DIR), html=True), name="portfolio")

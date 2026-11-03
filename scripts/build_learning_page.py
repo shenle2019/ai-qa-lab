@@ -54,13 +54,13 @@ def main() -> None:
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>AI QA Lab · 项目学习手册</title>
+<title>AI全栈测试开发平台-shenle · 项目学习手册</title>
 <style>{CSS}</style>
 </head>
 <body>
 <div class="wrap">
   <div class="top">
-    <span>AI QA Lab · 项目学习手册 · v0.2.0</span>
+    <span>AI全栈测试开发平台-shenle · 项目学习手册 · v0.3.0</span>
     <span>
       <a href="../">最新报告</a> ·
       <a href="../reports/">归档索引</a> ·

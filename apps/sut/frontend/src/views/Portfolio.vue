@@ -17,8 +17,9 @@ const modules = [
     reference: 'pytest-dev/pytest',
     stars: '14,661',
     href: 'https://github.com/pytest-dev/pytest',
-    status: 'planned',
-    scope: '迷你 pytest：收集、fixture、参数化、报告',
+    status: 'progress',
+    scope: '迷你 pytest v0.1：收集、fixture、参数化、marker、断言、重试、JSON/HTML 报告；33 元测试 + 20 演示',
+    report: '/portfolio/module-02-minipytest-report.html',
   },
   {
     id: '03',
@@ -123,7 +124,12 @@ const statusLabel = {
           <a :href="item.href" target="_blank" rel="noreferrer">{{ item.reference }}</a>
           <span>★ {{ item.stars }}</span>
         </div>
-        <p class="module-foot">验收页：{{ item.status === 'planned' ? '待上线' : '当前模块页' }}</p>
+        <p class="module-foot">
+          <template v-if="item.report">
+            验收页：<a :href="item.report" target="_blank" rel="noreferrer">打开报告</a>
+          </template>
+          <template v-else>验收页：{{ item.status === 'planned' ? '待上线' : '当前模块页' }}</template>
+        </p>
       </article>
     </div>
 

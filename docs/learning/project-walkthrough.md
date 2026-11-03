@@ -1,4 +1,4 @@
-# 项目学习手册：AI QA Lab 是怎么一步步做出来的
+# 项目学习手册：AI全栈测试开发平台-shenle 是怎么一步步做出来的
 
 > 版本：v0.2.0（2026-11-02）
 > 读者：刚接触测试开发、需要把项目写进简历并能在面试中讲清楚的人
@@ -49,7 +49,7 @@
 |---|---|---|
 | 1 | 定目标、规则、验收标准 | CLAUDE.md、模块矩阵 |
 | 2 | 建 monorepo、Python 环境、依赖 | `E:\ailearning\ai-qa-lab` |
-| 3 | 自建 SUT（FastAPI + SQLite） | 7 个接口，`/docs` 可看 |
+| 3 | 自建 SUT（FastAPI + SQLite） | 8 个接口（6 业务 + 2 工作台），`/docs` 可看 |
 | 4 | 后端冒烟测试 | 6 个用例 |
 | 5 | 接口自动化套件 | 22 个黑盒用例 |
 | 6 | Vue 控制台 | 6 个页面 |
@@ -363,6 +363,149 @@ Vue 请求编辑器
 
 ---
 
+## 7.5 模块 02 复刻：迷你 pytest
+
+### 做了什么
+
+- 在 `libs/minipytest` 里自己写了一个 pytest-like 测试执行器；
+- 支持用例收集、fixture、参数化、marker、断言内省、失败重试、JSON/HTML 报告；
+- 用真实 pytest 写了 33 个元测试，证明引擎行为正确；
+- 用迷你 pytest 跑了 20 个验收演示和 9 个故意失败演示；
+- 生成了一份断网也能打开的 HTML 报告，并挂到 SUT 控制台的 `/portfolio` 下。
+
+### 为什么
+
+面试官问“你熟悉 pytest 吗”，如果你只能回答“会写 `@pytest.mark.parametrize`”，那只是会用工具。能解释“用例怎么被发现、fixture 怎么注入、参数化怎么展开、失败位置怎么定位、报告怎么生成”，才说明你理解测试框架。
+
+这个模块还有一个实际作用：后续 Web、App、性能、LLM 评测模块都要复用同一套测试基础设施。先把 runner 做出来，后面不用重复造轮子。
+
+### 涉及的名词
+
+- **收集（collection）**：框架扫描目录，找出哪些函数是测试用例。
+- **fixture**：测试前准备数据、测试后清理资源的函数。
+- **作用域（scope）**：fixture 多久重建一次，function 每条用例、module 每个文件、session 整轮。
+- **参数化（parametrize）**：一份测试代码，喂多组输入，生成多条用例。
+- **marker**：给用例打标签，比如 `smoke`、`skip`、`xfail`、`retry`。
+- **断言内省**：断言失败时，框架能告诉你期望值、实际值和差异。
+- **retry**：失败后自动重跑，用来识别不稳定用例（flaky）。
+- **node ID**：每条用例的唯一名字，例如 `test_api.py::test_login[admin]`。
+
+### 原理
+
+#### 1. 收集
+
+框架从你给的路径开始，找 `test_*.py`。打开文件后：
+
+- 模块里名字以 `test_` 开头的函数，收；
+- 名字以 `Test` 开头的类，类里 `test_` 开头的方法，收；
+- 其他函数（helper、fixture）不收。
+
+收集时按源码行号排序，保证执行顺序和文件里写的一致。
+
+#### 2. fixture
+
+测试函数的参数名就是 fixture 名：
+
+```python
+@fixture(scope="session")
+def api():
+    client = make_client()
+    yield client
+    client.close()
+
+def test_health(api):
+    assert api.get("/health").status_code == 200
+```
+
+执行器看到 `test_health` 需要 `api`，就去 fixture 表里找 `api`，调用它。`yield` 前是准备，`yield` 后是清理。
+
+作用域决定复用：
+
+- `function`：每条用例都新建，最干净，也最慢；
+- `module`：同一个文件内共用；
+- `session`：整轮测试共用，适合启动一次服务。
+
+#### 3. 参数化
+
+```python
+@parametrize("role", ["admin", "viewer"])
+@parametrize("status", ["open", "closed"])
+def test_permission(role, status):
+    ...
+```
+
+收集器把两组值做笛卡尔积，生成 4 条 case：
+
+```
+test_permission[admin-open]
+test_permission[admin-closed]
+test_permission[viewer-open]
+test_permission[viewer-closed]
+```
+
+每条 case 单独执行、单独记结果。
+
+#### 4. marker
+
+`@mark.skip` 直接跳过，不跑 fixture；`@mark.xfail` 表示“我知道它会失败”，失败记 xfailed，意外通过记 xpassed；`@mark.retry(2)` 表示最多跑两次。
+
+`-m "smoke and not slow"` 是一个小型表达式，执行器只跑符合条件的 case。
+
+#### 5. 断言内省
+
+普通 `assert 1 == 2` 失败时只告诉你“断言失败”。迷你 pytest 用链式断言：
+
+```python
+assert_that({"status": "closed"}).is_equal_to({"status": "open"})
+```
+
+失败时输出：
+
+```
+expected: {'status': 'open'}
+actual:   {'status': 'closed'}
+--- expected
++++ actual
+-{'status': 'open'}
++{'status': 'closed'}
+```
+
+还会定位到测试文件的具体行号，而不是框架内部。
+
+#### 6. 重试
+
+执行器记录每次尝试：
+
+- 第 1 次失败，记 attempt 1；
+- 第 2 次通过，最终状态 passed，但标记 retried / flaky。
+
+这样你不会因为一次网络抖动就误判，也能在报告里看到“这条用例曾经失败过”。
+
+#### 7. 报告
+
+JSON 适合机器读，HTML 适合人看。HTML 是单文件，CSS/JS 都内嵌，不依赖 CDN，断网也能打开。报告里有 summary、失败详情、断言 diff、每次 attempt、fixture 耗时。
+
+### 效果
+
+- 真实 pytest：66 passed（33 现有 + 33 框架元测试）；
+- 迷你 pytest：20 cases，17 passed、1 skipped、1 xfailed、1 xpassed，exit 0；
+- 故意失败演示：9 cases，7 failed、2 errors，exit 1；
+- 报告：`docs/portfolio/module-02-minipytest-report.html`；
+- 控制台入口：`/portfolio/module-02-minipytest-report.html`。
+
+### 关键文件
+
+```
+libs/minipytest/collect.py     收集、参数化展开
+libs/minipytest/fixtures.py    fixture 依赖注入
+libs/minipytest/runner.py      执行、重试、退出码
+libs/minipytest/assertions.py  断言与 diff
+libs/minipytest/reporting.py   JSON / HTML
+libs/minipytest/cli.py         命令行入口
+```
+
+---
+
 ## 8. 第八步：把测试跑成“证据”
 
 ### 做了什么
@@ -534,8 +677,9 @@ Docker 构建：Node 构建前端 → 复制 dist → Python 安装依赖 → �
 
 ### 可以写的
 
-- 独立搭建可运行的 AI 工单/知识库 SUT：FastAPI + SQLAlchemy + SQLite，7 个 HTTP 接口，自动生成 OpenAPI 文档。
-- 设计并实现 33 个自动化测试：后端冒烟 + 接口黑盒 + 工具契约，覆盖 404/422/边界/非法枚举，CI 全绿。
+- 独立搭建可运行的 AI 工单/知识库 SUT：FastAPI + SQLAlchemy + SQLite，8 个 HTTP 接口（6 个业务 + 2 个工作台），自动生成 OpenAPI 文档。
+- 设计并实现 66 个真实 pytest 用例：33 个业务/接口契约 + 33 个迷你 pytest 框架元测试，覆盖 404/422/边界/非法枚举。
+- clean-room 复刻 pytest 核心：收集、fixture、参数化、marker、断言内省、重试、JSON/HTML 报告；20 个演示用例。
 - 使用 Vue 3 + Vite + Pinia + Router + ECharts 构建 6 页测试控制台，覆盖仪表盘、工单、知识库、API 工作台、报告与模块验收。
 - clean-room 复刻 Hoppscotch 核心 API 工作台：请求构建、环境变量、5 类断言、集合保存、批量运行与报告；新增 5 个契约测试。
 - 建立“日报 + 里程碑快照”的报告归档机制，Git tag 与静态站点可追溯。
@@ -565,13 +709,19 @@ Docker 构建：Node 构建前端 → 复制 dist → Python 安装依赖 → �
 
 ## 13. 下一步怎么学
 
-下一项是**模块 02：迷你 pytest**，先学三个核心机制：
+模块 02 已完成。下一项是**模块 04：Web 自动化（迷你 Playwright）**。
 
-1. **用例收集**：pytest 怎么找到 `test_*.py` 里的函数；
+先把模块 02 的七个机制过一遍：
+
+1. **用例收集**：框架怎么找到 `test_*.py` 里的函数；
 2. **fixture**：怎么准备/清理依赖，怎么按作用域复用；
-3. **参数化**：一组输入怎么生成多条用例。
+3. **参数化**：一组输入怎么生成多条用例；
+4. **marker**：skip / xfail / retry / tag 怎么生效；
+5. **断言内省**：失败时怎么给出 expected / actual / diff；
+6. **失败重试**：怎么记录 attempt，怎么识别 flaky；
+7. **报告**：JSON 和离线 HTML 怎么生成。
 
-然后再学断言内省、marker、失败重试、报告。学完这一模块，你就能解释“为什么 pytest 能成为 Python 测试事实标准”。
+学完这些，你就能解释“为什么 pytest 能成为 Python 测试事实标准”，也能把同样的思路迁移到 Web、App、性能测试。
 
 每天的节奏固定为：
 
@@ -595,5 +745,86 @@ Docker 构建：Node 构建前端 → 复制 dist → Python 安装依赖 → �
 8. 为什么要做测试数据隔离？随机后缀有什么用？
 9. CI 在什么时机跑？它解决了什么问题？
 10. 报告归档为什么要“日报 + 里程碑快照”两层？
+11. fixture 的 function / module / session 作用域分别什么时候创建、什么时候销毁？
+12. 参数化为什么要先生成 case 再执行？一条 case 的 node ID 由什么组成？
+13. 断言内省和普通 `assert` 的区别是什么？为什么失败位置要跳过框架自身文件？
 
-如果这 10 题你能用自己的话答出来，这个项目就可以写进简历并接受面试追问了。
+如果这 13 题你能用自己的话答出来，这个项目就可以写进简历并接受面试追问了。
+
+---
+
+## 15. 五个常见问题（2026-11-03）
+
+### 15.1 学习页标题为什么改了
+
+学习页原来叫 “AI QA Lab”，现在改成 “AI全栈测试开发平台-shenle”。改的是浏览器标签、页面顶部和一级标题，内容不变。控制台侧边栏也同步换成了这个显示名，仓库名 `ai-qa-lab` 没变。
+
+### 15.2 SUT 在哪里，我能看见吗
+
+SUT 就是被测系统，英文 System Under Test，意思是“被测试的那套系统”。
+
+代码在两个地方：
+
+- `apps/sut/backend`：FastAPI + SQLAlchemy + SQLite，负责接口和数据；
+- `apps/sut/frontend`：Vue 3，负责页面。
+
+启动后有两个入口：
+
+- `http://127.0.0.1:8000/ui/`：用户界面，能看仪表盘、工单、知识库、API 工作台、报告、模块验收；
+- `http://127.0.0.1:8000/docs`：接口文档，能直接点 “Try it out” 发请求。
+
+现在实际有 8 个 HTTP 接口：
+
+1. `GET /health`：健康检查；
+2. `GET /api/tickets`：工单列表；
+3. `POST /api/tickets`：创建工单；
+4. `GET /api/tickets/{ticket_id}`：查单个工单；
+5. `PATCH /api/tickets/{ticket_id}`：更新工单状态/优先级；
+6. `POST /api/kb/query`：知识库问答（mock）；
+7. `POST /api/workbench/send`：API 工作台单请求；
+8. `POST /api/workbench/run`：API 工作台批量运行。
+
+之前报告写 7 个，是旧口径，已经更正为 8 个。
+
+### 15.3 模块 03 接口自动化是什么
+
+参考 Hoppscotch（80,721 星），它是一个开源的 Postman 类 API 工具，能发请求、管集合、管环境、做断言。
+
+我们没复制源码，只复刻核心闭环：
+
+- 请求构建：方法、URL、Header、Body；
+- 环境变量：把 `{{base_url}}` 换成真实地址；
+- 5 种断言：状态码、最大耗时、响应包含、JSON 路径存在、JSON 路径相等；
+- 集合保存：把多条请求存起来；
+- 批量运行：一次跑一组请求；
+- 报告：看哪条通过、哪条失败。
+
+入口是 `/ui/#/workbench`。它解决的是“接口测试不只是发请求”，还要有环境、断言、批量、报告。v0.1 不做 GraphQL、WebSocket、脚本和团队协作。
+
+### 15.4 模块 01 方法论是什么
+
+参考 awesome-test-automation（7,208 星），它是一个测试工具清单和地图，不是可运行程序。
+
+我们用它来确定：
+
+- 8 个模块分别考什么；
+- 每个模块选哪个 GitHub 最高星项目做参考；
+- 复刻规则：clean-room 重写、完整闭环、验收页、截图、原理说明。
+
+产物是 `docs/requirements/module-matrix.md` 和 `CLAUDE.md` 里的规则。模块 01 排在最后，因为它要把整个项目总结成一张知识地图和选型决策页，不适合一开始就写。
+
+### 15.5 模块 07 测试平台现在有什么
+
+参考 MeterSphere（13,600 星），它是一个持续测试平台，管理项目、用例、计划、执行、缺陷、报表。
+
+现在有 Vue 控制台 + FastAPI 后端，能看仪表盘、工单、知识库、API 工作台、报告、模块验收，所以叫“控制台雏形”。
+
+还缺：
+
+- 测试用例管理；
+- 测试计划和执行历史；
+- 缺陷跟踪；
+- 用户、角色、权限；
+- 和 CI 的完整集成。
+
+这些是模块 07 要补的完整闭环，不是现在这一版的交付范围。

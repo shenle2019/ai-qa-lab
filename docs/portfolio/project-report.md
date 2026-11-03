@@ -1,6 +1,6 @@
-# AI QA Lab 项目报告
+# AI全栈测试开发平台-shenle 项目报告
 
-> 日期：2026-11-02
+> 日期：2026-11-03
 > 仓库：https://github.com/shenle2019/ai-qa-lab
 > 公网报告页：https://shenle2019.github.io/ai-qa-lab/
 
@@ -15,6 +15,7 @@
 | 18:00 | 复刻规则与选型 | 8 模块最高星参考矩阵 |
 | 18:20 | Vue 控制台 | 仪表盘、工单、知识库、API 工作台、项目报告、模块验收 |
 | 18:40 | 模块 03 复刻 v0.1 | Hoppscotch 风格 API 工作台，5 个契约测试，全量 33 passed |
+| 11-03 12:26 | 模块 02 复刻 v0.1 | 迷你 pytest：收集、fixture、参数化、marker、断言内省、重试、JSON/HTML 报告；33 元测试 + 20 演示 |
 
 ## 2. 原理
 
@@ -51,7 +52,7 @@ bash scripts/start_sut.sh
 ### 跑测试
 
 ```bash
-./.venv/Scripts/python.exe -m pytest apps/sut/backend suites/api -q
+./.venv/Scripts/python.exe -m pytest apps/sut/backend suites/api libs/minipytest/tests -q
 ```
 
 ### 验收页面
@@ -62,6 +63,7 @@ bash scripts/start_sut.sh
 /ui/#/workbench    API 工作台
 /ui/#/report       项目报告
 /ui/#/portfolio    模块验收
+/portfolio/module-02-minipytest-report.html  模块 02 报告
 ```
 
 ### 容器部署
@@ -74,15 +76,17 @@ docker run -p 8000:8000 ai-qa-lab
 
 ## 4. 最后成果
 
-- 33 个自动化测试全部通过
+- 66 个真实 pytest 用例全部通过（33 现有 + 33 框架元测试）
+- 20 个迷你 pytest 演示用例：17 passed、1 skipped、1 xfailed、1 xpassed
 - 6 个前端页面，构建成功
 - 8 个模块的 GitHub 最高星项目选型矩阵
-- 1 个可运行的复刻闭环：模块 03 API 工作台
+- 2 个可运行的复刻闭环：模块 03 API 工作台、模块 02 迷你 pytest
 - 公开仓库、CI、验收截图、Docker/Render 部署配置
 
 详细验收：
 
 - `docs/portfolio/sut-console.md`
+- `docs/portfolio/module-02-mini-pytest.md`
 - `docs/portfolio/module-03-api-workbench.md`
 - `docs/requirements/module-matrix.md`
 
@@ -118,11 +122,44 @@ https://render.com/deploy?repo=https://github.com/shenle2019/ai-qa-lab
 - 知识库仍是 mock，模块 08 接入 DeepSeek + 真实检索与评测。
 - API 工作台只做 REST，不做 GraphQL/WebSocket/请求链路变量提取。
 - SQLite 适合演示，不适合多用户生产；后续切 PostgreSQL。
-- 下一项：模块 02 迷你 pytest（收集、fixture、参数化、报告）。
+- 下一项：模块 04 Web 自动化（迷你 Playwright）。
 
-## 7. 新手向完整拆解
+## 7. 五个常见问题（2026-11-03）
 
-面向测试小白的逐步讲解已单独成页，包含：每一步做了什么、为什么、涉及的名词、原理、效果；术语速查表；简历写法；面试追问；10 道自测题。
+### 7.1 学习页标题为什么改了
+
+学习页原来叫 “AI QA Lab”，现在改成 “AI全栈测试开发平台-shenle”。改的是浏览器标签、页面顶部和一级标题，内容不变。控制台侧边栏也同步换成了这个显示名，仓库名 `ai-qa-lab` 没变。
+
+### 7.2 SUT 在哪里，我能看见吗
+
+SUT 就是被测系统（System Under Test）。代码在 `apps/sut/backend`（FastAPI + SQLite）和 `apps/sut/frontend`（Vue3）。启动后有两个入口：
+
+- `http://127.0.0.1:8000/ui/`：用户界面，能看仪表盘、工单、知识库、API 工作台、报告、模块验收。
+- `http://127.0.0.1:8000/docs`：接口文档，能直接点 “Try it out” 发请求。
+
+现在实际有 8 个 HTTP 接口：健康检查、工单列表、创建工单、查单个工单、更新工单、知识库问答，加 2 个工作台接口。之前报告写 7 个，是旧口径，已更正。
+
+### 7.3 模块 03 接口自动化是什么
+
+参考 Hoppscotch（80,721 星），它是一个开源的 Postman 类 API 工具。我们没复制源码，只复刻核心闭环：发请求、环境变量、5 种断言、集合保存、批量运行、报告。入口是 `/ui/#/workbench`。
+
+它解决的是“接口测试不只是发请求”，还要有环境、断言、批量、报告。v0.1 不做 GraphQL、WebSocket、脚本和团队协作。
+
+### 7.4 模块 01 方法论是什么
+
+参考 awesome-test-automation（7,208 星），它是一个测试工具清单和地图，不是可运行程序。我们用它来确定 8 个模块、每个模块的最高星参考项目和复刻规则。
+
+产物是 `docs/requirements/module-matrix.md` 和 `CLAUDE.md` 里的规则：先选最高星项目、clean-room 复刻、完整闭环、验收页。模块 01 排在最后，因为它要把整个项目总结成知识地图和选型决策页。
+
+### 7.5 模块 07 测试平台现在有什么
+
+参考 MeterSphere（13,600 星），它是一个持续测试平台，管理项目、用例、计划、执行、缺陷、报表。现在有 Vue 控制台 + FastAPI 后端，能看仪表盘、工单、知识库、API 工作台、报告、模块验收，所以叫“控制台雏形”。
+
+还缺用例管理、测试计划、执行历史、缺陷跟踪、权限和 CI 集成。这些是模块 07 要补的完整闭环。
+
+## 8. 新手向完整拆解
+
+面向测试小白的逐步讲解已单独成页，包含：每一步做了什么、为什么、涉及的名词、原理、效果；术语速查表；简历写法；面试追问；13 道自测题。
 
 - 在线版：https://shenle2019.github.io/ai-qa-lab/learning/
 - 源文件：`docs/learning/project-walkthrough.md`

@@ -53,6 +53,12 @@ def write_snapshot(version: str, date: str, tests: int, pages: int, modules: int
     for image in SHOTS.glob("*.png"):
         shutil.copy2(image, shot_out / image.name)
 
+    portfolio_out = out / "portfolio"
+    portfolio_out.mkdir(exist_ok=True)
+    for pattern in ("module-*.md", "module-*.html", "module-*.json"):
+        for artifact in (DOCS / "portfolio").glob(pattern):
+            shutil.copy2(artifact, portfolio_out / artifact.name)
+
     learning_src = DOCS / "learning"
     if learning_src.exists():
         shutil.copytree(learning_src, out / "learning", dirs_exist_ok=True)

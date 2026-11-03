@@ -6,6 +6,8 @@
 ## 目录约定
 - `apps/sut`：被测系统（FastAPI + Vue3 + SQLite），后端在 `apps/sut/backend`
 - `apps/platform`：测试平台（FastAPI + Vue3 + Allure）
+- `libs`：跨模块复用的 Python 库，不放业务应用
+  - `libs/minipytest`：模块 02 的自研测试框架；包名不得为 `pytest`，不得覆盖真实 pytest
 - `suites/api|web|app|perf|agent`：各层测试套件，按模块归档
 - `docs/notes`：对外笔记，仓库是唯一信源
 - `docs/portfolio`：作品集站点内容
@@ -24,6 +26,8 @@
 - 装依赖：`.venv\Scripts\python.exe -m pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple`
 - 启动 SUT：`.venv\Scripts\python.exe -m uvicorn app.main:app --app-dir apps/sut/backend --port 8000 --reload`
 - 跑测试：`.venv\Scripts\python.exe -m pytest apps/sut/backend -q`
+- 框架元测试：`.venv\Scripts\python.exe -m pytest libs/minipytest/tests -q`
+- 迷你 pytest 演示：`.venv\Scripts\python.exe -m libs.minipytest libs/minipytest/demo/acceptance -v`
 - 所有虚拟环境和依赖放 E 盘，禁止装到 C 盘。
 
 ## 编码约定
