@@ -1,0 +1,12 @@
+{
+  "version": "v0.8.0",
+  "date": "2026-11-03",
+  "git_commit": "42cba8e",
+  "tests": 93,
+  "pages": 7,
+  "modules": 8,
+  "replications": 7,
+  "source_report": "docs/portfolio/project-report.md",
+  "source_site": "docs/index.html",
+  "learning_guide": "learning/"
+}
