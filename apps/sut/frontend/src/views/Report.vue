@@ -323,7 +323,7 @@ docker run -p 8000:8000 ai-qa-lab
         <li>知识库仍是 mock；模块 08 接入 DeepSeek + 真实检索与评测。</li>
         <li>API 工作台只做 REST，不做 GraphQL/WebSocket/请求链路变量提取。</li>
         <li>SQLite 适合演示，不适合多用户生产；后续可切 PostgreSQL。</li>
-        <li>下一步：v1.0.0 最终归档与部署。</li>
+        <li>已完成 v1.0.0 归档与推送；完整应用部署待 Render/HF 账号授权。</li>
       </ul>
     </article>
 

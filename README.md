@@ -80,7 +80,7 @@ cd ../../..
 
 ## Deploy
 
-> Status: all 8 modules are complete (v0.1). Local-first; Docker / Render / HF configs are ready for deployment.
+> Status: all 8 modules are complete (v0.1) and archived as v1.0.0. The static report site is live; the full FastAPI + Vue app is deployment-ready and needs a Render/HF account authorization.
 
 Full-stack (FastAPI + Vue) runs in one container:
 
