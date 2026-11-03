@@ -14,7 +14,7 @@ AI-powered full-stack QA portfolio. One runnable system under test (SUT), layere
 | 04 Web 自动化 | in progress — miniplaywright v0.1 + 6 meta tests + 5 SUT UI cases |
 | 05 App 自动化 | in progress — miniappium v0.1 + 5 meta tests + 3 Settings cases |
 | 06 性能测试 | in progress — miniload v0.1 + 5 meta tests + SUT load run |
-| 07 测试平台 | in progress — SUT console live at /ui/ |
+| 07 测试平台 | in progress — platform v0.1 with projects/cases/plans/executions/defects |
 | 08 Agent / LLM 评测 | planned |
 
 ## Structure
@@ -50,7 +50,7 @@ cd ../../..
 # Run SUT (serves API + UI)
 .venv\Scripts\python.exe -m uvicorn app.main:app --app-dir apps/sut/backend --port 8000 --reload
 
-# Tests (82 real pytest cases)
+# Tests (88 real pytest cases)
 .venv\Scripts\python.exe -m pytest apps/sut/backend suites/api libs/minipytest/tests libs/miniplaywright/tests libs/miniappium/tests libs/miniload/tests -q
 
 # Mini pytest acceptance demo (20 cases, starts a temporary SUT)

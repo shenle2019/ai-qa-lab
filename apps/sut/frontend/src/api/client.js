@@ -27,4 +27,22 @@ export const api = {
     request(`/api/tickets/${id}`, { method: 'PATCH', body: JSON.stringify(payload) }),
   queryKnowledge: (payload) =>
     request('/api/kb/query', { method: 'POST', body: JSON.stringify(payload) }),
+
+  platformSummary: () => request('/api/platform/summary'),
+  platformProjects: () => request('/api/platform/projects'),
+  createPlatformProject: (payload) =>
+    request('/api/platform/projects', { method: 'POST', body: JSON.stringify(payload) }),
+  platformCases: () => request('/api/platform/cases'),
+  createPlatformCase: (payload) =>
+    request('/api/platform/cases', { method: 'POST', body: JSON.stringify(payload) }),
+  platformPlans: () => request('/api/platform/plans'),
+  createPlatformPlan: (payload) =>
+    request('/api/platform/plans', { method: 'POST', body: JSON.stringify(payload) }),
+  platformExecutions: () => request('/api/platform/executions'),
+  platformDefects: () => request('/api/platform/defects'),
+  createPlatformDefect: (payload) =>
+    request('/api/platform/defects', { method: 'POST', body: JSON.stringify(payload) }),
+  updatePlatformDefect: (id, payload) =>
+    request(`/api/platform/defects/${id}`, { method: 'PATCH', body: JSON.stringify(payload) }),
+  seedPlatform: () => request('/api/platform/seed', { method: 'POST' }),
 }

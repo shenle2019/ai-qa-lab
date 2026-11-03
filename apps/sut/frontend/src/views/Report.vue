@@ -55,13 +55,18 @@ const timeline = [
     title: '模块 06 迷你压测',
     detail: 'VU 并发、ramp-up、P95/P99、错误率、阈值判定、离线 HTML；8239 次请求，1371 RPS，P95 21ms。',
   },
+  {
+    time: '11-03',
+    title: '模块 07 测试平台',
+    detail: '项目、用例、计划、执行、缺陷、报表闭环；13 个 API，支持导入迷你 pytest 报告。',
+  },
 ]
 
 const metrics = [
-  { value: '82', label: 'pytest 用例' },
+  { value: '88', label: 'pytest 用例' },
   { value: '29', label: '迷你演示' },
   { value: '8', label: '模块选型' },
-  { value: '5', label: '复刻闭环' },
+  { value: '6', label: '复刻闭环' },
 ]
 
 const endpoints = [
@@ -229,12 +234,13 @@ docker run -p 8000:8000 ai-qa-lab
           <thead><tr><th>产物</th><th>位置</th><th>状态</th></tr></thead>
           <tbody>
             <tr><td>SUT 后端</td><td class="mono">apps/sut/backend</td><td>可运行，8 个接口（6 业务 + 2 工作台）</td></tr>
-            <tr><td>Vue 控制台</td><td class="mono">apps/sut/frontend</td><td>6 个页面，已构建</td></tr>
+            <tr><td>Vue 控制台</td><td class="mono">apps/sut/frontend</td><td>7 个页面，已构建</td></tr>
             <tr><td>接口套件</td><td class="mono">suites/api</td><td>33 tests passing</td></tr>
             <tr><td>API 工作台</td><td class="mono">/ui/#/workbench</td><td>闭环可用</td></tr>
             <tr><td>迷你 Playwright</td><td class="mono">libs/miniplaywright</td><td>6 元测试 + 5 个 SUT UI 用例</td></tr>
             <tr><td>迷你 Appium</td><td class="mono">libs/miniappium</td><td>5 元测试 + 3 个 Settings 用例</td></tr>
             <tr><td>迷你压测</td><td class="mono">libs/miniload</td><td>5 元测试 + 1 次 SUT 压测；P95 21ms</td></tr>
+            <tr><td>测试平台</td><td class="mono">/ui/#/platform</td><td>项目/用例/计划/执行/缺陷/报表闭环</td></tr>
             <tr><td>复刻矩阵</td><td class="mono">docs/requirements/module-matrix.md</td><td>8 模块选型完成</td></tr>
             <tr><td>验收材料</td><td class="mono">docs/portfolio</td><td>报告 + 截图</td></tr>
             <tr><td>CI</td><td class="mono">.github/workflows/ci.yml</td><td>GitHub Actions</td></tr>
@@ -305,7 +311,7 @@ docker run -p 8000:8000 ai-qa-lab
         <li>知识库仍是 mock；模块 08 接入 DeepSeek + 真实检索与评测。</li>
         <li>API 工作台只做 REST，不做 GraphQL/WebSocket/请求链路变量提取。</li>
         <li>SQLite 适合演示，不适合多用户生产；后续可切 PostgreSQL。</li>
-        <li>下一项：模块 07 测试平台（项目/用例/计划/执行/缺陷/报表）。</li>
+        <li>下一项：模块 08 LLM 评测（数据集、裁判、指标、报告）。</li>
       </ul>
     </article>
 

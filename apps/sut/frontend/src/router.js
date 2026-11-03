@@ -5,6 +5,7 @@ import Knowledge from './views/Knowledge.vue'
 import Workbench from './views/Workbench.vue'
 import Report from './views/Report.vue'
 import Portfolio from './views/Portfolio.vue'
+import Platform from './views/Platform.vue'
 
 export default createRouter({
   history: createWebHashHistory(),
@@ -15,5 +16,6 @@ export default createRouter({
     { path: '/workbench', component: Workbench, meta: { title: 'API 工作台' } },
     { path: '/report', component: Report, meta: { title: '项目报告' } },
     { path: '/portfolio', component: Portfolio, meta: { title: '模块验收' } },
+    { path: '/platform', component: Platform, meta: { title: '测试平台' } },
   ],
 })

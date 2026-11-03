@@ -67,7 +67,8 @@ const modules = [
     stars: '13,600',
     href: 'https://github.com/metersphere/metersphere',
     status: 'progress',
-    scope: '当前 SUT 控制台已上线，平台闭环待扩展',
+    scope: '测试平台 v0.1：项目/用例/计划/执行/缺陷/报表闭环；SQLite 持久化',
+    report: '/ui/#/platform',
   },
   {
     id: '08',
