@@ -1,0 +1,1087 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI全栈测试开发平台-shenle · 项目学习手册</title>
+<style>
+:root { --bg:#070b14; --panel:#0e1728; --line:rgba(148,163,184,.16); --text:#e6edf7; --muted:#9fb0c9; --accent:#38bdf8; --green:#34d399; --amber:#fbbf24; }
+* { box-sizing:border-box; }
+body { margin:0; color:var(--text); background:radial-gradient(1100px 700px at 15% -10%, rgba(56,189,248,.16), transparent 60%), var(--bg); font-family:"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif; line-height:1.8; }
+.wrap { max-width:980px; margin:0 auto; padding:32px 22px 80px; }
+.top { display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; padding-bottom:18px; border-bottom:1px solid var(--line); font-size:12.5px; }
+.top a { color:var(--accent); text-decoration:none; }
+.banner { margin:18px 0 8px; padding:12px 16px; border:1px solid rgba(251,191,36,.32); border-radius:12px; color:#fde68a; background:rgba(251,191,36,.08); font-size:12.5px; }
+h1 { margin:26px 0 10px; font-size:34px; line-height:1.25; letter-spacing:-.03em; }
+h2 { margin:38px 0 12px; padding-top:18px; border-top:1px solid var(--line); font-size:23px; letter-spacing:-.02em; }
+h3 { margin:24px 0 8px; font-size:16px; color:#bae6fd; }
+h4 { margin:18px 0 6px; font-size:14px; color:#cbd5e1; }
+p, li { color:#c9d6e8; font-size:14px; }
+a { color:var(--accent); }
+blockquote { margin:16px 0; padding:12px 16px; border-left:3px solid var(--accent); color:var(--muted); background:rgba(56,189,248,.06); }
+code { padding:2px 6px; border-radius:6px; color:#bae6fd; background:rgba(56,189,248,.1); font-family:"Cascadia Code",Consolas,monospace; font-size:12px; }
+pre { padding:16px; overflow:auto; border:1px solid var(--line); border-radius:12px; background:rgba(4,8,16,.65); }
+pre code { padding:0; background:transparent; font-size:12px; line-height:1.65; }
+table { width:100%; border-collapse:collapse; margin:16px 0; font-size:12.5px; }
+th, td { padding:9px 10px; border-bottom:1px solid rgba(148,163,184,.12); text-align:left; vertical-align:top; }
+th { color:var(--muted); font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; }
+.toc { margin:18px 0 26px; padding:16px 18px; border:1px solid var(--line); border-radius:12px; background:rgba(148,163,184,.04); }
+.toc ul { margin:0; padding-left:18px; }
+.toc li { margin:4px 0; font-size:12.5px; }
+.toc a { text-decoration:none; }
+hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
+@media (max-width:700px) { h1 { font-size:26px; } h2 { font-size:20px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <span>AI全栈测试开发平台-shenle · 项目学习手册 · v0.3.0</span>
+    <span>
+      <a href="../">最新报告</a> ·
+      <a href="../reports/">归档索引</a> ·
+      <a href="https://github.com/shenle2019/ai-qa-lab">GitHub</a>
+    </span>
+  </div>
+  <div class="banner">这是给测试小白看的完整拆解：每一步做什么、为什么、涉及哪些名词、原理是什么、效果是什么。</div>
+  <div class="toc">
+<ul>
+<li><a href="#ai-shenle">项目学习手册：AI全栈测试开发平台-shenle 是怎么一步步做出来的</a><ul>
+<li><a href="#0">0. 先搞清楚：你在做一个什么项目</a></li>
+<li><a href="#1">1. 第一步：定目标和验收标准</a></li>
+<li><a href="#2">2. 第二步：搭仓库和环境</a></li>
+<li><a href="#3-sut">3. 第三步：造一个被测系统（SUT）</a></li>
+<li><a href="#4">4. 第四步：写后端冒烟测试</a></li>
+<li><a href="#5">5. 第五步：接口自动化（黑盒测试）</a></li>
+<li><a href="#6-vue">6. 第六步：做 Vue 控制台</a></li>
+<li><a href="#7-03-api">7. 第七步：模块 03 复刻——API 工作台</a></li>
+<li><a href="#75-02-pytest">7.5 模块 02 复刻：迷你 pytest</a></li>
+<li><a href="#76-04-playwright">7.6 模块 04 复刻：迷你 Playwright</a></li>
+<li><a href="#77-05-appium">7.7 模块 05 复刻：迷你 Appium</a></li>
+<li><a href="#8">8. 第八步：把测试跑成“证据”</a></li>
+<li><a href="#9">9. 第九步：报告与归档</a></li>
+<li><a href="#10">10. 第十步：本地与远端部署</a></li>
+<li><a href="#11">11. 术语速查表</a></li>
+<li><a href="#12">12. 简历上怎么写（只写真实做过的）</a></li>
+<li><a href="#13">13. 下一步怎么学</a></li>
+<li><a href="#14">14. 自测题</a></li>
+<li><a href="#15-2026-11-03">15. 五个常见问题（2026-11-03）</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h1 id="ai-shenle">项目学习手册：AI全栈测试开发平台-shenle 是怎么一步步做出来的</h1>
+<blockquote>
+<p>版本：v0.2.0（2026-11-02）
+读者：刚接触测试开发、需要把项目写进简历并能在面试中讲清楚的人
+目标：看完这份手册，你能回答“这个项目是什么、每一步做了什么、为什么这么做、涉及哪些名词、原理是什么、效果是什么”。</p>
+</blockquote>
+<hr />
+<h2 id="0">0. 先搞清楚：你在做一个什么项目</h2>
+<h3 id="01-demo">0.1 它不是“一个 demo”</h3>
+<p>你做的不是“随便写个页面 + 跑两个测试”的 Demo，而是一个<strong>可展示、可运行、可复刻的测试开发作品集</strong>：</p>
+<ul>
+<li>有一套<strong>被测系统</strong>（SUT），有真实接口和数据；</li>
+<li>有<strong>分层自动化测试</strong>（后端冒烟 + 接口黑盒 + 工具契约测试）；</li>
+<li>有一个<strong>测试控制台/平台</strong>（Vue 前端）；</li>
+<li>有一个<strong>对标行业工具的复刻</strong>（模块 03：Hoppscotch 风格 API 工作台）；</li>
+<li>有<strong>项目报告、验收截图、版本归档、CI</strong>。</li>
+</ul>
+<p>一句话：它证明的不是“我会写代码”，而是“我能搭系统、能设计测试、能做工具、能留下证据”。</p>
+<h3 id="02">0.2 “复刻”是什么意思</h3>
+<p>本项目要求每个模块先找 GitHub 上同主题 <strong>star 最高</strong>的项目，然后<strong>理解它的核心机制，自己重写一个可运行的子集</strong>。</p>
+<p>这叫 <strong>clean-room 复刻</strong>：看文档、看行为、看公开接口，然后自己实现；不直接复制源码。这样做的好处：</p>
+<ol>
+<li>能真正理解原理，面试能讲；</li>
+<li>避开了“fork 一个仓库就说是自己做的”的简历风险；</li>
+<li>许可证上更安全（我们仍然会记录 license）。</li>
+</ol>
+<h3 id="03-8">0.3 8 个模块和参考项目</h3>
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>参考项目（2026-11-02 star）</th>
+<th>本次状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>01 方法论</td>
+<td>atinfo/awesome-test-automation（7,208）</td>
+<td>规则与知识地图已记录</td>
+</tr>
+<tr>
+<td>02 Python 测试开发</td>
+<td>pytest-dev/pytest（14,661）</td>
+<td>下一步</td>
+</tr>
+<tr>
+<td>03 接口自动化</td>
+<td>hoppscotch/hoppscotch（80,721）</td>
+<td><strong>v0.1 已复刻</strong></td>
+</tr>
+<tr>
+<td>04 Web 自动化</td>
+<td>microsoft/playwright（99,087）</td>
+<td>待开始</td>
+</tr>
+<tr>
+<td>05 App 自动化</td>
+<td>appium/appium（22,174）</td>
+<td>待开始</td>
+</tr>
+<tr>
+<td>06 性能测试</td>
+<td>grafana/k6（32,102）</td>
+<td>待开始</td>
+</tr>
+<tr>
+<td>07 测试平台</td>
+<td>metersphere/metersphere（13,600）</td>
+<td>控制台雏形</td>
+</tr>
+<tr>
+<td>08 LLM 评测</td>
+<td>confident-ai/deepeval（19,242）</td>
+<td>待开始</td>
+</tr>
+</tbody>
+</table>
+<h3 id="04-v020">0.4 本次（v0.2.0）到底做了什么</h3>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>内容</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>定目标、规则、验收标准</td>
+<td>CLAUDE.md、模块矩阵</td>
+</tr>
+<tr>
+<td>2</td>
+<td>建 monorepo、Python 环境、依赖</td>
+<td><code>E:\ailearning\ai-qa-lab</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>自建 SUT（FastAPI + SQLite）</td>
+<td>8 个接口（6 业务 + 2 工作台），<code>/docs</code> 可看</td>
+</tr>
+<tr>
+<td>4</td>
+<td>后端冒烟测试</td>
+<td>6 个用例</td>
+</tr>
+<tr>
+<td>5</td>
+<td>接口自动化套件</td>
+<td>22 个黑盒用例</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Vue 控制台</td>
+<td>6 个页面</td>
+</tr>
+<tr>
+<td>7</td>
+<td>模块 03 复刻：API 工作台</td>
+<td>5 类断言 + 集合 + 批量报告</td>
+</tr>
+<tr>
+<td>8</td>
+<td>工具契约测试</td>
+<td>5 个用例，全量 33 passed</td>
+</tr>
+<tr>
+<td>9</td>
+<td>证据与 CI</td>
+<td>截图、GitHub Actions</td>
+</tr>
+<tr>
+<td>10</td>
+<td>报告与归档</td>
+<td>报告站 + v0.2.0 快照</td>
+</tr>
+<tr>
+<td>11</td>
+<td>部署准备</td>
+<td>Docker/Render/HF 配置（暂缓上云）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="1">1. 第一步：定目标和验收标准</h2>
+<h3 id="_1">做了什么</h3>
+<p>先明确：目标是杭州 30K+ 的测试开发（AI 质量方向）岗位；项目要覆盖 8 个模块；每个模块必须有“可运行代码 + 验收网页 + 原理说明 + 使用步骤 + 效果”。然后写进 <code>CLAUDE.md</code> 和 <code>docs/requirements/</code>。</p>
+<h3 id="_2">为什么</h3>
+<p>如果不先定义“什么算完成”，后面很容易变成堆功能：今天写个页面，明天加个按钮，最后没有一条完整证据链。面试官看的是“你能不能交付”，不是“你写了多少行”。</p>
+<h3 id="_3">涉及的名词</h3>
+<ul>
+<li><strong>作品集</strong>：用真实项目证明能力，而不只是简历上写“熟悉 pytest”。</li>
+<li><strong>验收标准</strong>：可检查的完成条件，比如“33 个测试通过、页面能打开、报告有截图”。</li>
+<li><strong>MVP</strong>：最小可用版本，先做核心闭环，再加功能。</li>
+<li><strong>clean-room 复刻</strong>：理解后重写，不复制源码。</li>
+</ul>
+<h3 id="_4">原理</h3>
+<p><strong>以终为始</strong>：先定义最终要展示什么，再反推每一步要产出什么。每个产物都能追溯到目标，避免“为了写代码而写代码”。</p>
+<h3 id="_5">效果</h3>
+<p>你得到了一张路线图：8 个模块、参考项目、复刻范围、验收标准。后面每一步都在填这张图，而不是盲目开发。</p>
+<hr />
+<h2 id="2">2. 第二步：搭仓库和环境</h2>
+<h3 id="_6">做了什么</h3>
+<p>建立 <code>E:\ailearning\ai-qa-lab</code>，划分 <code>apps/sut</code>、<code>apps/platform</code>、<code>suites/*</code>、<code>docs/*</code>、<code>scripts</code>；用 Python 3.11 建 <code>.venv</code>；写 <code>requirements.txt</code>、<code>.gitignore</code>、<code>README.md</code>、<code>CLAUDE.md</code>；初始化 Git。</p>
+<h3 id="_7">为什么</h3>
+<ol>
+<li><strong>可复现</strong>：换一台机器，按命令能跑起来；</li>
+<li><strong>隔离</strong>：项目依赖装在 <code>.venv</code>，不污染系统 Python；</li>
+<li><strong>可回滚</strong>：Git 记录每次改动，出错能退回；</li>
+<li><strong>可协作/可展示</strong>：别人能看懂目录结构。</li>
+</ol>
+<h3 id="_8">涉及的名词</h3>
+<ul>
+<li><strong>monorepo</strong>：一个仓库放多个应用/包（这里是 SUT、平台、测试套件、文档）。</li>
+<li><strong>虚拟环境（venv）</strong>：项目专用的 Python 环境，依赖互不干扰。</li>
+<li><strong>依赖（dependency）</strong>：项目用到的第三方库，如 FastAPI、pytest。</li>
+<li><strong>lockfile</strong>：锁定依赖版本的文件（前端是 <code>package-lock.json</code>），保证每次安装一致。</li>
+<li><strong>Git commit</strong>：一次代码快照；<strong>remote</strong>：远程仓库；<strong>tag</strong>：给某个提交打版本标签。</li>
+<li><strong>.gitignore</strong>：告诉 Git 哪些文件不提交（<code>.venv</code>、<code>node_modules</code>、<code>.env</code>、数据库文件）。</li>
+<li><strong>环境变量</strong>：不写死在代码里的配置，如数据库地址、API key。</li>
+</ul>
+<h3 id="_9">原理</h3>
+<p><strong>隔离 + 单一信源 + 版本控制</strong>：</p>
+<ul>
+<li>依赖隔离，避免“你机器能跑、我机器不能跑”；</li>
+<li>代码、文档、测试都在一个仓库，避免多份真相；</li>
+<li>每次改动有提交记录，出问题能定位。</li>
+</ul>
+<h3 id="_10">效果</h3>
+<p>一条命令可以建环境、装依赖、启动项目；密钥和虚拟环境不会进 Git；后面所有模块都复用它。</p>
+<pre><code class="language-bash">py -3.11 -m venv .venv
+.venv\Scripts\python.exe -m pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+</code></pre>
+<hr />
+<h2 id="3-sut">3. 第三步：造一个被测系统（SUT）</h2>
+<h3 id="_11">做了什么</h3>
+<p>用 FastAPI + SQLAlchemy + SQLite 写了一个“AI 知识库工单系统”：</p>
+<ul>
+<li><code>GET /health</code>：健康检查</li>
+<li><code>GET /api/tickets</code>：工单列表</li>
+<li><code>POST /api/tickets</code>：创建工单</li>
+<li><code>GET /api/tickets/{id}</code>：查询单条</li>
+<li><code>PATCH /api/tickets/{id}</code>：更新状态/优先级</li>
+<li><code>POST /api/kb/query</code>：知识库问答（当前 mock）</li>
+</ul>
+<h3 id="_12">为什么</h3>
+<p><strong>测试必须有被测对象。</strong> 如果只写测试脚本，没有系统，测试就是空中楼阁。自建 SUT 的好处：</p>
+<ol>
+<li>数据可控，能主动造正常/异常场景；</li>
+<li>后续 API、Web、App、性能、Agent 测试都能围绕它展开；</li>
+<li>能展示“我不仅能测，还能造一个可测的系统”。</li>
+</ol>
+<h3 id="_13">涉及的名词</h3>
+<ul>
+<li><strong>SUT（System Under Test）</strong>：被测系统，测试动作作用的对象。</li>
+<li><strong>API（Application Programming Interface）</strong>：系统对外提供的调用接口；这里是 HTTP + JSON 接口。</li>
+<li><strong>REST</strong>：一种接口设计风格，用 URL 表示资源，用 HTTP 方法表示动作。我们的接口是 REST 风格，不追求严格 REST。</li>
+<li><strong>Endpoint（端点）</strong>：一个“方法 + URL”，比如 <code>POST /api/tickets</code>。</li>
+<li><strong>HTTP 方法</strong>：<code>GET</code> 查、<code>POST</code> 建、<code>PATCH</code> 改、<code>DELETE</code> 删。</li>
+<li><strong>HTTP 状态码</strong>：<code>200</code> 成功、<code>201</code> 已创建、<code>400</code> 请求错误、<code>404</code> 找不到、<code>422</code> 参数校验失败、<code>500</code> 服务器错误。</li>
+<li><strong>JSON</strong>：一种文本数据格式，如 <code>{"title": "登录失败"}</code>。</li>
+<li><strong>CRUD</strong>：Create/Read/Update/Delete，增删改查；本项目实现了 C/R/U，没做 D。</li>
+<li><strong>ORM</strong>：对象关系映射，用 Python 类操作数据库表，而不是手写 SQL。</li>
+<li><strong>Schema（模式）</strong>：数据的结构和约束；这里用 Pydantic 定义请求/响应格式。</li>
+<li><strong>SQLite</strong>：一个文件型轻量数据库，适合本地演示，不需要单独装数据库服务。</li>
+<li><strong>OpenAPI</strong>：描述 API 的机器可读文档；FastAPI 自动生成 <code>/openapi.json</code> 和 <code>/docs</code> 页面。</li>
+</ul>
+<h3 id="_14">原理</h3>
+<p>一次请求的路径：</p>
+<pre><code>浏览器/测试脚本
+  → HTTP 请求（方法 + URL + Headers + Body）
+  → FastAPI 路由匹配
+  → Pydantic 校验参数
+  → SQLAlchemy 读写 SQLite
+  → 组装 JSON 响应
+  → 返回状态码 + Body
+</code></pre>
+<p><code>/health</code> 为什么先做？因为它是“系统活着”的最小契约：CI、负载均衡、监控都靠它判断服务是否可用。</p>
+<h3 id="_15">效果</h3>
+<p>打开 <code>http://127.0.0.1:8000/docs</code> 能看到可交互的 API 文档；6 个后端测试通过；后续所有测试和页面都围绕这套接口。</p>
+<hr />
+<h2 id="4">4. 第四步：写后端冒烟测试</h2>
+<h3 id="_16">做了什么</h3>
+<p>用 pytest + FastAPI <code>TestClient</code> 写了 6 个用例：健康检查、创建工单、列表、查询、404、参数校验。</p>
+<h3 id="_17">为什么</h3>
+<p>先确认“系统基本能用”，再往上叠接口自动化、UI 和工具。冒烟测试跑得最快，能在几秒内告诉你核心链路有没有断。</p>
+<h3 id="_18">涉及的名词</h3>
+<ul>
+<li><strong>冒烟测试（Smoke Test）</strong>：只测最关键路径，确认系统“没冒烟”。</li>
+<li><strong>单元测试</strong>：测一个函数/模块，依赖尽量隔离。</li>
+<li><strong>集成测试</strong>：测多个组件一起工作，比如 API + 数据库。</li>
+<li><strong>Fixture</strong>：测试前的准备/测试后的清理，pytest 用 <code>@pytest.fixture</code> 复用。</li>
+<li><strong>断言（Assertion）</strong>：把“实际结果”和“预期结果”比较，比如 <code>assert response.status_code == 200</code>。</li>
+<li><strong>测试隔离</strong>：每个测试不依赖别的测试，也不污染共享数据。</li>
+<li><strong>内存数据库</strong>：测试用 <code>sqlite:///:memory:</code>，跑完即销毁，不污染开发库。</li>
+</ul>
+<h3 id="_19">原理</h3>
+<p><strong>Arrange-Act-Assert（准备-执行-断言）</strong>：</p>
+<ol>
+<li>准备数据和客户端；</li>
+<li>调用接口；</li>
+<li>断言状态码和响应内容。</li>
+</ol>
+<p>测试配置通过 <code>conftest.py</code> 把数据库指向内存，保证每次测试从干净状态开始。</p>
+<h3 id="_20">效果</h3>
+<p><code>pytest</code> 一条命令跑完，6 passed。你有了第一层“质量守门员”。</p>
+<hr />
+<h2 id="5">5. 第五步：接口自动化（黑盒测试）</h2>
+<h3 id="_21">做了什么</h3>
+<p>新建 <code>suites/api</code>，用 pytest + requests 写黑盒接口测试，自动拉起/停止 SUT，覆盖：</p>
+<ul>
+<li>健康检查、OpenAPI 契约；</li>
+<li>工单创建、列表、查询、更新；</li>
+<li>异常：404、422、空标题、超长字段、非法优先级、非法状态；</li>
+<li>知识库 mock 接口。</li>
+</ul>
+<p>共 22 个用例。</p>
+<h3 id="_22">为什么</h3>
+<p>接口测试是投入产出比最高的一层：比 UI 快、比单元测试更接近真实业务。企业里大量回归靠接口自动化。</p>
+<h3 id="_23">涉及的名词</h3>
+<ul>
+<li><strong>黑盒测试</strong>：不关心内部实现，只通过接口输入/输出验证行为。</li>
+<li><strong>契约测试</strong>：确认接口的字段、状态码、结构符合约定。</li>
+<li><strong>正向测试</strong>：输入合法，期望成功。</li>
+<li><strong>负向测试</strong>：输入非法，期望被拒绝（4xx）。</li>
+<li><strong>边界值</strong>：长度/范围的两端，比如标题 200 和 201 个字符。</li>
+<li><strong>测试数据</strong>：用例的输入；这里用随机后缀避免多次运行冲突。</li>
+<li><strong>测试隔离</strong>：每个用例独立，顺序不影响结果。</li>
+<li><strong>Session Fixture</strong>：整个测试会话只启动一次 SUT，提高速度。</li>
+<li><strong>Test Runner</strong>：执行测试并汇总结果的工具，这里用 pytest。</li>
+</ul>
+<h3 id="_24">原理</h3>
+<p>接口测试的本质是<strong>对协议的断言</strong>：</p>
+<pre><code>构造请求 → 发送 HTTP → 拿到响应 → 断言 status / headers / body / schema
+</code></pre>
+<p>自动启动 SUT 是为了让测试“一条命令可复现”，不依赖你手动先开服务。</p>
+<h3 id="_25">效果</h3>
+<p>22 个用例约 1.5 秒跑完；正常和异常路径都有覆盖；这部分可以直接写进简历。</p>
+<hr />
+<h2 id="6-vue">6. 第六步：做 Vue 控制台</h2>
+<h3 id="_26">做了什么</h3>
+<p>用 Vue 3 + Vite + Pinia + Vue Router + ECharts 做了 6 个页面：</p>
+<ul>
+<li>仪表盘：统计卡片 + 状态环形图 + 最近工单；</li>
+<li>工单管理：搜索、筛选、新建、改状态/优先级；</li>
+<li>知识库问答：提问、耗时、历史；</li>
+<li>API 工作台：后面模块 03 的复刻；</li>
+<li>项目报告：你现在看的这份内容；</li>
+<li>模块验收：8 个模块的参考项目与状态。</li>
+</ul>
+<h3 id="_27">为什么</h3>
+<ol>
+<li>作品集需要“看得见”的成果；</li>
+<li>测试开发/平台开发岗位需要前端能力；</li>
+<li>你测 UI 之前，得先理解 UI 是怎么被构建出来的。</li>
+</ol>
+<h3 id="_28">涉及的名词</h3>
+<ul>
+<li><strong>SPA（单页应用）</strong>：页面不整页刷新，由前端路由切换视图。</li>
+<li><strong>组件（Component）</strong>：可复用的 UI 单元，如按钮、表格、卡片。</li>
+<li><strong>路由（Router）</strong>：URL 和页面的映射；这里用 hash 路由（<code>#/tickets</code>），静态托管不需要服务端 fallback。</li>
+<li><strong>状态管理（Pinia）</strong>：把工单列表、加载状态等集中管理，多个页面共享。</li>
+<li><strong>Vite</strong>：前端构建工具，开发时热更新，生产时打包。</li>
+<li><strong>构建（Build）</strong>：把 Vue 源码编译成浏览器能直接运行的 HTML/CSS/JS。</li>
+<li><strong>同源（Same-origin）</strong>：协议、域名、端口都相同；同源请求不受 CORS 限制。</li>
+<li><strong>静态托管</strong>：只发 HTML/CSS/JS，不需要应用服务器。</li>
+</ul>
+<h3 id="_29">原理</h3>
+<pre><code>组件渲染 → 读取 Pinia 状态 → 调用 /api → 更新状态 → 重新渲染
+</code></pre>
+<p>生产构建后，FastAPI 把 <code>dist/</code> 挂到 <code>/ui</code>，所以一个服务同时提供 API 和页面，验收只需要一个地址。</p>
+<h3 id="_30">效果</h3>
+<p>本地打开 <code>http://127.0.0.1:8000/ui/</code> 能看到完整控制台，截图已归档。</p>
+<hr />
+<h2 id="7-03-api">7. 第七步：模块 03 复刻——API 工作台</h2>
+<h3 id="_31">做了什么</h3>
+<p>以 Hoppscotch（80,721★，MIT）为参考，复刻了一个 API 工作台：</p>
+<ul>
+<li>请求构建：方法、URL、Headers、Body；</li>
+<li>环境变量：<code>{{baseUrl}}</code> 替换；</li>
+<li>后端代理发送：FastAPI + httpx；</li>
+<li>5 类断言：状态码、最大耗时、文本包含、JSON 路径存在/等于；</li>
+<li>集合保存、加载、删除（localStorage）；</li>
+<li>批量运行与 PASS/FAIL 报告；</li>
+<li>历史记录。</li>
+</ul>
+<h3 id="hoppscotch">为什么选 Hoppscotch</h3>
+<p>它是 API 开发/测试一体化平台里 star 最高的开源项目，核心模型（请求、集合、环境、断言、运行器）和模块 03 完全对口。复刻它的核心闭环，比“自己随便写个请求页面”更有说服力。</p>
+<h3 id="_32">涉及的名词</h3>
+<ul>
+<li><strong>API 客户端</strong>：Postman/Hoppscotch 这类工具，用来发请求、看响应、做断言。</li>
+<li><strong>集合（Collection）</strong>：一组请求的集合，可以批量运行。</li>
+<li><strong>环境变量</strong>：不同环境（本地/测试/生产）用不同的 baseUrl，不在代码里写死。</li>
+<li><strong>CORS</strong>：浏览器的同源策略限制；前端直接请求不同域名的 API 会被拦截。</li>
+<li><strong>反向代理</strong>：由后端代替前端发请求，绕过浏览器 CORS，统一超时和鉴权。</li>
+<li><strong>断言</strong>：对响应做检查，例如“状态码必须是 200”“JSON 的 <code>$.status</code> 必须等于 ok”。</li>
+<li><strong>JSONPath</strong>：从 JSON 里取值的路径表达式，如 <code>$.data[0].id</code>。</li>
+<li><strong>测试运行器（Runner）</strong>：按顺序执行一组请求，汇总每条的结果。</li>
+<li><strong>SSRF</strong>：服务端请求伪造，攻击者诱导服务器访问内网地址；我们的代理只限制协议和云元数据地址，属于本地工具级别，不是完整防护。</li>
+<li><strong>localStorage</strong>：浏览器本地键值存储，关掉浏览器数据还在。</li>
+</ul>
+<h3 id="_33">原理</h3>
+<pre><code>Vue 请求编辑器
+  → POST /api/workbench/send（后端代理）
+  → httpx 发真实请求到目标服务
+  → 后端执行断言
+  → 返回 status / elapsed_ms / failures / body
+  → 前端展示 PASS/FAIL
+</code></pre>
+<p>为什么断言放在后端？因为批量运行时需要统一、可重复的判定逻辑，不能依赖浏览器。</p>
+<h3 id="_34">效果</h3>
+<p>单请求实测 PASS；批量运行 2/2 PASS；新增 5 个工作台契约测试；全量 33 passed。截图和验收说明已归档。</p>
+<hr />
+<h2 id="75-02-pytest">7.5 模块 02 复刻：迷你 pytest</h2>
+<h3 id="_35">做了什么</h3>
+<ul>
+<li>在 <code>libs/minipytest</code> 里自己写了一个 pytest-like 测试执行器；</li>
+<li>支持用例收集、fixture、参数化、marker、断言内省、失败重试、JSON/HTML 报告；</li>
+<li>用真实 pytest 写了 33 个元测试，证明引擎行为正确；</li>
+<li>用迷你 pytest 跑了 20 个验收演示和 9 个故意失败演示；</li>
+<li>生成了一份断网也能打开的 HTML 报告，并挂到 SUT 控制台的 <code>/portfolio</code> 下。</li>
+</ul>
+<h3 id="_36">为什么</h3>
+<p>面试官问“你熟悉 pytest 吗”，如果你只能回答“会写 <code>@pytest.mark.parametrize</code>”，那只是会用工具。能解释“用例怎么被发现、fixture 怎么注入、参数化怎么展开、失败位置怎么定位、报告怎么生成”，才说明你理解测试框架。</p>
+<p>这个模块还有一个实际作用：后续 Web、App、性能、LLM 评测模块都要复用同一套测试基础设施。先把 runner 做出来，后面不用重复造轮子。</p>
+<h3 id="_37">涉及的名词</h3>
+<ul>
+<li><strong>收集（collection）</strong>：框架扫描目录，找出哪些函数是测试用例。</li>
+<li><strong>fixture</strong>：测试前准备数据、测试后清理资源的函数。</li>
+<li><strong>作用域（scope）</strong>：fixture 多久重建一次，function 每条用例、module 每个文件、session 整轮。</li>
+<li><strong>参数化（parametrize）</strong>：一份测试代码，喂多组输入，生成多条用例。</li>
+<li><strong>marker</strong>：给用例打标签，比如 <code>smoke</code>、<code>skip</code>、<code>xfail</code>、<code>retry</code>。</li>
+<li><strong>断言内省</strong>：断言失败时，框架能告诉你期望值、实际值和差异。</li>
+<li><strong>retry</strong>：失败后自动重跑，用来识别不稳定用例（flaky）。</li>
+<li><strong>node ID</strong>：每条用例的唯一名字，例如 <code>test_api.py::test_login[admin]</code>。</li>
+</ul>
+<h3 id="_38">原理</h3>
+<h4 id="1_1">1. 收集</h4>
+<p>框架从你给的路径开始，找 <code>test_*.py</code>。打开文件后：</p>
+<ul>
+<li>模块里名字以 <code>test_</code> 开头的函数，收；</li>
+<li>名字以 <code>Test</code> 开头的类，类里 <code>test_</code> 开头的方法，收；</li>
+<li>其他函数（helper、fixture）不收。</li>
+</ul>
+<p>收集时按源码行号排序，保证执行顺序和文件里写的一致。</p>
+<h4 id="2-fixture">2. fixture</h4>
+<p>测试函数的参数名就是 fixture 名：</p>
+<pre><code class="language-python">@fixture(scope=&quot;session&quot;)
+def api():
+    client = make_client()
+    yield client
+    client.close()
+
+def test_health(api):
+    assert api.get(&quot;/health&quot;).status_code == 200
+</code></pre>
+<p>执行器看到 <code>test_health</code> 需要 <code>api</code>，就去 fixture 表里找 <code>api</code>，调用它。<code>yield</code> 前是准备，<code>yield</code> 后是清理。</p>
+<p>作用域决定复用：</p>
+<ul>
+<li><code>function</code>：每条用例都新建，最干净，也最慢；</li>
+<li><code>module</code>：同一个文件内共用；</li>
+<li><code>session</code>：整轮测试共用，适合启动一次服务。</li>
+</ul>
+<h4 id="3">3. 参数化</h4>
+<pre><code class="language-python">@parametrize(&quot;role&quot;, [&quot;admin&quot;, &quot;viewer&quot;])
+@parametrize(&quot;status&quot;, [&quot;open&quot;, &quot;closed&quot;])
+def test_permission(role, status):
+    ...
+</code></pre>
+<p>收集器把两组值做笛卡尔积，生成 4 条 case：</p>
+<pre><code>test_permission[admin-open]
+test_permission[admin-closed]
+test_permission[viewer-open]
+test_permission[viewer-closed]
+</code></pre>
+<p>每条 case 单独执行、单独记结果。</p>
+<h4 id="4-marker">4. marker</h4>
+<p><code>@mark.skip</code> 直接跳过，不跑 fixture；<code>@mark.xfail</code> 表示“我知道它会失败”，失败记 xfailed，意外通过记 xpassed；<code>@mark.retry(2)</code> 表示最多跑两次。</p>
+<p><code>-m "smoke and not slow"</code> 是一个小型表达式，执行器只跑符合条件的 case。</p>
+<h4 id="5_1">5. 断言内省</h4>
+<p>普通 <code>assert 1 == 2</code> 失败时只告诉你“断言失败”。迷你 pytest 用链式断言：</p>
+<pre><code class="language-python">assert_that({&quot;status&quot;: &quot;closed&quot;}).is_equal_to({&quot;status&quot;: &quot;open&quot;})
+</code></pre>
+<p>失败时输出：</p>
+<pre><code>expected: {'status': 'open'}
+actual:   {'status': 'closed'}
+--- expected
++++ actual
+-{'status': 'open'}
++{'status': 'closed'}
+</code></pre>
+<p>还会定位到测试文件的具体行号，而不是框架内部。</p>
+<h4 id="6">6. 重试</h4>
+<p>执行器记录每次尝试：</p>
+<ul>
+<li>第 1 次失败，记 attempt 1；</li>
+<li>第 2 次通过，最终状态 passed，但标记 retried / flaky。</li>
+</ul>
+<p>这样你不会因为一次网络抖动就误判，也能在报告里看到“这条用例曾经失败过”。</p>
+<h4 id="7">7. 报告</h4>
+<p>JSON 适合机器读，HTML 适合人看。HTML 是单文件，CSS/JS 都内嵌，不依赖 CDN，断网也能打开。报告里有 summary、失败详情、断言 diff、每次 attempt、fixture 耗时。</p>
+<h3 id="_39">效果</h3>
+<ul>
+<li>真实 pytest：66 passed（33 现有 + 33 框架元测试）；</li>
+<li>迷你 pytest：20 cases，17 passed、1 skipped、1 xfailed、1 xpassed，exit 0；</li>
+<li>故意失败演示：9 cases，7 failed、2 errors，exit 1；</li>
+<li>报告：<code>docs/portfolio/module-02-minipytest-report.html</code>；</li>
+<li>控制台入口：<code>/portfolio/module-02-minipytest-report.html</code>。</li>
+</ul>
+<h3 id="_40">关键文件</h3>
+<pre><code>libs/minipytest/collect.py     收集、参数化展开
+libs/minipytest/fixtures.py    fixture 依赖注入
+libs/minipytest/runner.py      执行、重试、退出码
+libs/minipytest/assertions.py  断言与 diff
+libs/minipytest/reporting.py   JSON / HTML
+libs/minipytest/cli.py         命令行入口
+</code></pre>
+<hr />
+<h2 id="76-04-playwright">7.6 模块 04 复刻：迷你 Playwright</h2>
+<h3 id="_41">做了什么</h3>
+<ul>
+<li>在 <code>libs/miniplaywright</code> 里自己写了一个浏览器自动化库；</li>
+<li>用 Chrome DevTools Protocol 驱动本机 Edge/Chrome；</li>
+<li>支持启动、导航、CSS 选择器、点击、填值、自动等待、断言、截图；</li>
+<li>用真实 pytest 写了 6 个元测试；</li>
+<li>用迷你 pytest 跑了 5 个 SUT UI 用例，真实创建了一条工单。</li>
+</ul>
+<h3 id="_42">为什么</h3>
+<p>面试里说“会 Playwright”，如果只会 <code>page.click()</code>，说不出浏览器和测试脚本之间怎么通信，底层还是空的。自己用 CDP 驱动一遍，就能解释“浏览器怎么被控制、元素怎么定位、自动等待在等什么”。</p>
+<h3 id="_43">涉及的名词</h3>
+<ul>
+<li><strong>CDP</strong>：Chrome DevTools Protocol，浏览器暴露的调试协议。</li>
+<li><strong>remote debugging port</strong>：启动浏览器时开的调试端口。</li>
+<li><strong>WebSocket</strong>：CDP 的命令通道，发 JSON，收 JSON。</li>
+<li><strong>选择器</strong>：用 CSS 语法定位页面元素。</li>
+<li><strong>自动等待</strong>：元素没出现就反复查，直到超时。</li>
+<li><strong>headless</strong>：无界面浏览器，适合 CI。</li>
+</ul>
+<h3 id="_44">原理</h3>
+<h4 id="1_2">1. 启动浏览器</h4>
+<p>给 Edge/Chrome 加参数：</p>
+<pre><code>--remote-debugging-port=&lt;端口&gt;
+--remote-allow-origins=*
+--headless=new
+</code></pre>
+<p>浏览器启动后，本地会多一个 HTTP 服务。</p>
+<h4 id="2_1">2. 找到页面</h4>
+<p>请求 <code>GET http://127.0.0.1:&lt;端口&gt;/json/list</code>，返回当前可调试的页面，里面有 <code>webSocketDebuggerUrl</code>。</p>
+<h4 id="3-cdp">3. 连接 CDP</h4>
+<p>用 WebSocket 连上去，发送：</p>
+<pre><code class="language-json">{&quot;id&quot;: 1, &quot;method&quot;: &quot;Page.navigate&quot;, &quot;params&quot;: {&quot;url&quot;: &quot;http://...&quot;}}
+</code></pre>
+<p>浏览器返回：</p>
+<pre><code class="language-json">{&quot;id&quot;: 1, &quot;result&quot;: {&quot;frameId&quot;: &quot;...&quot;}}
+</code></pre>
+<h4 id="4_1">4. 定位和操作</h4>
+<p><code>Runtime.evaluate</code> 可以在页面里执行 JavaScript：</p>
+<pre><code class="language-js">document.querySelector(&quot;#btn&quot;).click()
+</code></pre>
+<p>填值不能只改 <code>value</code>，还要派发 <code>input</code> 和 <code>change</code> 事件，Vue 的 <code>v-model</code> 才会更新。</p>
+<h4 id="5_2">5. 自动等待</h4>
+<p>页面是异步渲染的。<code>expect(locator).to_have_text("工单管理")</code> 会在超时时间内反复查，直到文本出现或超时。这样不会因为页面慢半拍就假失败。</p>
+<h4 id="6_1">6. 截图和报告</h4>
+<p><code>Page.captureScreenshot</code> 返回 base64 PNG，写到文件。测试结果交给迷你 pytest 生成 JSON/HTML 报告。</p>
+<h3 id="_45">效果</h3>
+<ul>
+<li>6 个框架元测试通过；</li>
+<li>5 个 SUT UI 用例通过；</li>
+<li>真实创建工单，截图在 <code>docs/portfolio/screenshots/module-04-tickets.png</code>；</li>
+<li>报告：<code>docs/portfolio/module-04-playwright-report.html</code>。</li>
+</ul>
+<h3 id="_46">关键文件</h3>
+<pre><code>libs/miniplaywright/browser.py    启动浏览器、找 page target
+libs/miniplaywright/cdp.py        CDP WebSocket 客户端
+libs/miniplaywright/page.py       Page / Locator / 截图
+libs/miniplaywright/assertions.py expect 断言
+libs/miniplaywright/demo/         SUT UI 用例
+</code></pre>
+<hr />
+<h2 id="77-05-appium">7.7 模块 05 复刻：迷你 Appium</h2>
+<h3 id="_47">做了什么</h3>
+<ul>
+<li>在 <code>libs/miniappium</code> 里自己写了一个 Android UI 自动化客户端；</li>
+<li>用 ADB + UIAutomator 驱动 Android 模拟器；</li>
+<li>支持设备发现、启动 App、元素定位、点击、滑动、输入、返回、截图；</li>
+<li>用真实 pytest 写了 5 个元测试；</li>
+<li>用迷你 pytest 跑了 3 个 Settings 演示用例。</li>
+</ul>
+<h3 id="_48">为什么</h3>
+<p>面试里说“会 Appium”，如果只会 <code>driver.find_element()</code>，说不出 Appium 底层怎么和手机通信，还是只会用工具。自己用 ADB/UIAutomator 驱动一遍，就能解释“设备怎么连、控件树怎么来、点击坐标怎么算、等待在等什么”。</p>
+<h3 id="_49">涉及的名词</h3>
+<ul>
+<li><strong>ADB</strong>：Android Debug Bridge，电脑和 Android 设备之间的命令通道。</li>
+<li><strong>UIAutomator</strong>：Android 自带的 UI 控件树导出工具。</li>
+<li><strong>resource-id</strong>：控件 ID，最稳的定位方式。</li>
+<li><strong>content-desc</strong>：无障碍描述，图标按钮常用。</li>
+<li><strong>bounds</strong>：控件在屏幕上的坐标范围。</li>
+<li><strong>headless 模拟器</strong>：没有窗口的模拟器，适合自动化。</li>
+</ul>
+<h3 id="_50">原理</h3>
+<h4 id="1_3">1. 连接设备</h4>
+<p><code>adb devices</code> 列出已连接设备。模拟器启动后通常叫 <code>emulator-5554</code>。</p>
+<h4 id="2-app">2. 启动 App</h4>
+<pre><code class="language-bash">adb shell am force-stop com.android.settings
+adb shell am start -a android.settings.SETTINGS
+</code></pre>
+<p>先强制停止，避免 Settings 恢复到上次打开的页面。</p>
+<h4 id="3_1">3. 导出控件树</h4>
+<pre><code class="language-bash">adb shell uiautomator dump /sdcard/window.xml
+adb exec-out cat /sdcard/window.xml
+</code></pre>
+<p>XML 里每个节点有 <code>text</code>、<code>resource-id</code>、<code>content-desc</code>、<code>bounds</code>。</p>
+<h4 id="4_2">4. 定位和点击</h4>
+<p>按 text 或 resource-id 找到节点，取 <code>bounds</code> 中心，<code>adb shell input tap x y</code>。</p>
+<h4 id="5_3">5. 自动等待</h4>
+<p>页面跳转有动画。<code>wait_for(text="Internet")</code> 会反复 dump + 查找，直到出现或超时。</p>
+<h4 id="6_2">6. 截图</h4>
+<p><code>adb exec-out screencap -p</code> 返回 PNG 二进制，写到文件。</p>
+<h3 id="_51">效果</h3>
+<ul>
+<li>5 个框架元测试通过；</li>
+<li>3 个 Settings 演示通过；</li>
+<li>真实打开 Settings、点击 Network &amp; internet、返回首页；</li>
+<li>截图：<code>docs/portfolio/screenshots/module-05-settings.png</code>；</li>
+<li>报告：<code>docs/portfolio/module-05-appium-report.html</code>。</li>
+</ul>
+<h3 id="_52">关键文件</h3>
+<pre><code>libs/miniappium/device.py     ADB、UIAutomator dump、定位、点击、截图
+libs/miniappium/assertions.py expect 断言
+libs/miniappium/demo/         Settings 演示用例
+</code></pre>
+<hr />
+<h2 id="8">8. 第八步：把测试跑成“证据”</h2>
+<h3 id="_53">做了什么</h3>
+<ul>
+<li>用 pytest 跑全量 33 个测试；</li>
+<li>用无头 Chrome 截图验收页面；</li>
+<li>配置 GitHub Actions，每次 push 跑 pytest；</li>
+<li>把截图、报告、验收说明写进仓库。</li>
+</ul>
+<h3 id="_54">为什么</h3>
+<p>简历和面试需要<strong>证据</strong>，不是口头说“我做了”。CI 还能防止你改坏已有功能。</p>
+<h3 id="_55">涉及的名词</h3>
+<ul>
+<li><strong>CI（持续集成）</strong>：每次提交自动构建/跑测试，尽早发现问题。</li>
+<li><strong>GitHub Actions</strong>：GitHub 的 CI 服务；<code>workflow</code> 是配置文件。</li>
+<li><strong>Workflow</strong>：定义“什么时候、在什么环境、跑什么命令”的 YAML。</li>
+<li><strong>无头浏览器（Headless Chrome）</strong>：没有界面的 Chrome，用于自动截图/自动化测试。</li>
+<li><strong>Artifact</strong>：CI 产出的文件，如测试报告、截图。</li>
+<li><strong>回归测试</strong>：改代码后重跑旧测试，确认没把旧功能改坏。</li>
+</ul>
+<h3 id="_56">原理</h3>
+<pre><code>push 代码 → GitHub Actions 启动 Ubuntu → 安装依赖 → 跑 pytest → 记录成功/失败
+</code></pre>
+<h3 id="_57">效果</h3>
+<p>GitHub 上能看到 CI 记录；本地 33 passed；验收截图可追溯。</p>
+<blockquote>
+<p>注意：当前 CI 只跑后端测试，还没有把 <code>suites/api</code> 和前端构建加进去；这是下一步可以补的。</p>
+</blockquote>
+<hr />
+<h2 id="9">9. 第九步：报告与归档</h2>
+<h3 id="_58">做了什么</h3>
+<ul>
+<li>最新报告：<code>docs/index.html</code> 和 Vue <code>/ui/#/report</code>；</li>
+<li>日报：<code>docs/progress/YYYY-MM-DD.md</code>；</li>
+<li>里程碑快照：<code>docs/reports/YYYY-MM-DD-vX.Y.Z/</code>；</li>
+<li>归档索引：<code>docs/reports/index.html</code>；</li>
+<li>归档脚本：<code>scripts/archive_report.py</code>；</li>
+<li>Git tag：<code>v0.2.0</code>、<code>v0.2.0-archive</code>。</li>
+</ul>
+<h3 id="_59">为什么</h3>
+<p>代码每天变，如果报告也每天覆盖，历史就丢了；如果每天生成一个新报告，又会变成噪声。所以：</p>
+<ul>
+<li>日报记录“过程”；</li>
+<li>里程碑快照记录“阶段性成果”；</li>
+<li>根报告永远是最新状态；</li>
+<li>快照不可变，面试时能回看“我当时做到了什么”。</li>
+</ul>
+<h3 id="_60">涉及的名词</h3>
+<ul>
+<li><strong>快照（Snapshot）</strong>：某一时刻的完整副本。</li>
+<li><strong>不可变（Immutable）</strong>：归档后不再修改，保证可信。</li>
+<li><strong>语义化版本（SemVer）</strong>：<code>主.次.补</code>，模块完成升次版本，修复升补丁。</li>
+<li><strong>Git tag</strong>：给某个提交起一个版本名，如 <code>v0.2.0</code>。</li>
+<li><strong>里程碑（Milestone）</strong>：一个阶段目标，如“完成模块 03”。</li>
+<li><strong>Changelog</strong>：变更记录，说明每个版本改了什么。</li>
+</ul>
+<h3 id="_61">原理</h3>
+<p><strong>单一信源 + 自动生成 + 不可变归档</strong>：报告从当前仓库生成快照，脚本复制截图、改写路径、写 <code>metrics.json</code>，再生成索引；历史快照只读。</p>
+<h3 id="_62">效果</h3>
+<p>公网可访问：</p>
+<ul>
+<li>最新报告：https://shenle2019.github.io/ai-qa-lab/</li>
+<li>归档索引：https://shenle2019.github.io/ai-qa-lab/reports/</li>
+<li>v0.2.0 快照：https://shenle2019.github.io/ai-qa-lab/reports/2026-11-02-v0.2.0/</li>
+</ul>
+<hr />
+<h2 id="10">10. 第十步：本地与远端部署</h2>
+<h3 id="_63">做了什么</h3>
+<ul>
+<li>本地：FastAPI 同时提供 <code>/api</code> 和 <code>/ui</code>，一条命令启动；</li>
+<li>容器：写 <code>Dockerfile</code>，Node 构建前端，Python 跑后端；</li>
+<li>Render：<code>render.yaml</code>；</li>
+<li>Hugging Face Spaces：<code>deploy/huggingface/</code>；</li>
+<li>决策：<strong>先本地开发，8 个模块全部完成后再上云</strong>。</li>
+</ul>
+<h3 id="_64">为什么</h3>
+<p>GitHub Pages 只能托管静态文件，不能运行 Python 后端；完整系统需要容器平台。现在上云会打断学习节奏，所以暂缓。</p>
+<h3 id="_65">涉及的名词</h3>
+<ul>
+<li><strong>Docker</strong>：把应用和依赖打包成镜像，保证环境一致。</li>
+<li><strong>镜像（Image）/容器（Container）</strong>：镜像是模板，容器是运行实例。</li>
+<li><strong>端口（Port）</strong>：服务监听的入口，如 8000、7860。</li>
+<li><strong>PaaS</strong>：平台即服务，如 Render、Hugging Face Spaces，帮你托管应用。</li>
+<li><strong>冷启动（Cold Start）</strong>：免费实例休眠后，第一次访问要等它启动。</li>
+<li><strong>临时存储（Ephemeral Storage）</strong>：重启后数据丢失；SQLite 在免费平台就是这个特性。</li>
+</ul>
+<h3 id="_66">原理</h3>
+<pre><code>Docker 构建：Node 构建前端 → 复制 dist → Python 安装依赖 → 启动 uvicorn
+运行：浏览器 → 容器 8000/7860 → FastAPI → SQLite
+</code></pre>
+<h3 id="_67">效果</h3>
+<p>本地完整可用；云部署配置保留，后续直接使用。</p>
+<hr />
+<h2 id="11">11. 术语速查表</h2>
+<table>
+<thead>
+<tr>
+<th>名词</th>
+<th>一句话解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SUT</td>
+<td>被测系统</td>
+</tr>
+<tr>
+<td>API</td>
+<td>系统对外的调用接口</td>
+</tr>
+<tr>
+<td>REST</td>
+<td>用 URL + HTTP 方法表达资源的风格</td>
+</tr>
+<tr>
+<td>Endpoint</td>
+<td>方法 + URL</td>
+</tr>
+<tr>
+<td>状态码</td>
+<td>200 成功、201 创建、400 请求错、404 找不到、422 校验失败、500 服务错</td>
+</tr>
+<tr>
+<td>JSON</td>
+<td>文本数据格式</td>
+</tr>
+<tr>
+<td>CRUD</td>
+<td>增删改查</td>
+</tr>
+<tr>
+<td>ORM</td>
+<td>用对象操作数据库</td>
+</tr>
+<tr>
+<td>Schema</td>
+<td>数据结构与约束</td>
+</tr>
+<tr>
+<td>OpenAPI</td>
+<td>API 的机器可读文档</td>
+</tr>
+<tr>
+<td>冒烟测试</td>
+<td>只测最关键路径</td>
+</tr>
+<tr>
+<td>单元测试</td>
+<td>测单个函数/模块</td>
+</tr>
+<tr>
+<td>集成测试</td>
+<td>测多个组件一起工作</td>
+</tr>
+<tr>
+<td>E2E</td>
+<td>端到端，从用户界面走完整流程</td>
+</tr>
+<tr>
+<td>黑盒测试</td>
+<td>只看输入输出，不看内部实现</td>
+</tr>
+<tr>
+<td>契约测试</td>
+<td>验证接口结构和行为约定</td>
+</tr>
+<tr>
+<td>正向/负向测试</td>
+<td>合法输入期望成功 / 非法输入期望失败</td>
+</tr>
+<tr>
+<td>边界值</td>
+<td>取值范围的两端</td>
+</tr>
+<tr>
+<td>Fixture</td>
+<td>测试准备/清理</td>
+</tr>
+<tr>
+<td>断言</td>
+<td>实际结果 vs 预期结果</td>
+</tr>
+<tr>
+<td>测试隔离</td>
+<td>用例互不影响</td>
+</tr>
+<tr>
+<td>Flaky Test</td>
+<td>时好时坏的测试</td>
+</tr>
+<tr>
+<td>覆盖率</td>
+<td>测试执行到的代码比例</td>
+</tr>
+<tr>
+<td>测试金字塔</td>
+<td>多单元、少接口、更少 E2E</td>
+</tr>
+<tr>
+<td>CI</td>
+<td>每次提交自动跑测试</td>
+</tr>
+<tr>
+<td>CD</td>
+<td>自动交付/部署</td>
+</tr>
+<tr>
+<td>CORS</td>
+<td>浏览器跨域限制</td>
+</tr>
+<tr>
+<td>反向代理</td>
+<td>后端代发请求</td>
+</tr>
+<tr>
+<td>JSONPath</td>
+<td>从 JSON 取值的路径</td>
+</tr>
+<tr>
+<td>SSRF</td>
+<td>服务端请求伪造</td>
+</tr>
+<tr>
+<td>SPA</td>
+<td>单页应用</td>
+</tr>
+<tr>
+<td>组件</td>
+<td>可复用 UI 单元</td>
+</tr>
+<tr>
+<td>路由</td>
+<td>URL 到页面的映射</td>
+</tr>
+<tr>
+<td>状态管理</td>
+<td>集中管理共享数据</td>
+</tr>
+<tr>
+<td>构建</td>
+<td>把源码编译成可部署文件</td>
+</tr>
+<tr>
+<td>同源</td>
+<td>协议/域名/端口一致</td>
+</tr>
+<tr>
+<td>容器</td>
+<td>打包后的运行实例</td>
+</tr>
+<tr>
+<td>PaaS</td>
+<td>托管应用的平台</td>
+</tr>
+<tr>
+<td>冷启动</td>
+<td>休眠后首次访问的等待</td>
+</tr>
+<tr>
+<td>语义化版本</td>
+<td>主.次.补</td>
+</tr>
+<tr>
+<td>快照</td>
+<td>某一刻的完整副本</td>
+</tr>
+<tr>
+<td>RAG</td>
+<td>检索增强生成，先查资料再让模型回答</td>
+</tr>
+<tr>
+<td>LLM 评测</td>
+<td>用数据集和指标评估大模型输出</td>
+</tr>
+<tr>
+<td>虚拟用户（VU）</td>
+<td>压测里的并发用户</td>
+</tr>
+<tr>
+<td>P95/P99</td>
+<td>95%/99% 请求的耗时上限</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="12">12. 简历上怎么写（只写真实做过的）</h2>
+<h3 id="_68">可以写的</h3>
+<ul>
+<li>独立搭建可运行的 AI 工单/知识库 SUT：FastAPI + SQLAlchemy + SQLite，8 个 HTTP 接口（6 个业务 + 2 个工作台），自动生成 OpenAPI 文档。</li>
+<li>设计并实现 66 个真实 pytest 用例：33 个业务/接口契约 + 33 个迷你 pytest 框架元测试，覆盖 404/422/边界/非法枚举。</li>
+<li>clean-room 复刻 pytest 核心：收集、fixture、参数化、marker、断言内省、重试、JSON/HTML 报告；20 个演示用例。</li>
+<li>自研 CDP Web 自动化：启动 Edge/Chrome、选择器、自动等待、断言、截图；6 个元测试 + 5 个 SUT UI 用例。</li>
+<li>自研 ADB/UIAutomator Android 自动化：设备发现、元素定位、点击、等待、截图；5 个元测试 + 3 个 Settings 用例。</li>
+<li>使用 Vue 3 + Vite + Pinia + Router + ECharts 构建 6 页测试控制台，覆盖仪表盘、工单、知识库、API 工作台、报告与模块验收。</li>
+<li>clean-room 复刻 Hoppscotch 核心 API 工作台：请求构建、环境变量、5 类断言、集合保存、批量运行与报告；新增 5 个契约测试。</li>
+<li>建立“日报 + 里程碑快照”的报告归档机制，Git tag 与静态站点可追溯。</li>
+</ul>
+<h3 id="_69">面试可能追问</h3>
+<ol>
+<li>为什么先做接口测试，而不是 UI 自动化？</li>
+<li>接口快、稳定、ROI 高；UI 慢且易碎，适合覆盖关键路径。</li>
+<li>测试数据为什么要随机后缀？</li>
+<li>避免多次运行数据冲突，保证可重复。</li>
+<li>为什么测试用内存数据库？</li>
+<li>隔离、快、不污染开发数据。</li>
+<li>为什么 API 工作台要用后端代理？</li>
+<li>绕过浏览器 CORS，统一超时和断言。</li>
+<li>断言为什么放后端？</li>
+<li>批量运行需要统一、可重复的判定。</li>
+<li>这个项目最大的边界是什么？</li>
+<li>没做登录/RBAC、真实 RAG、Playwright/Appium/性能/LLM 评测；SQLite 只适合演示。</li>
+</ol>
+<h3 id="_70">不要写的</h3>
+<ul>
+<li>不要写“精通 Playwright/Appium/k6/LLM 评测”——这些模块还没做。</li>
+<li>不要写“生产级高可用”——当前是本地演示。</li>
+<li>不要写“从零自研所有工具”——API 工作台是核心闭环复刻，不是完整 Hoppscotch。</li>
+</ul>
+<hr />
+<h2 id="13">13. 下一步怎么学</h2>
+<p>模块 02、04、05 已完成。下一项是<strong>模块 06：性能测试（迷你压测引擎）</strong>。</p>
+<p>先把模块 02 的七个机制过一遍：</p>
+<ol>
+<li><strong>用例收集</strong>：框架怎么找到 <code>test_*.py</code> 里的函数；</li>
+<li><strong>fixture</strong>：怎么准备/清理依赖，怎么按作用域复用；</li>
+<li><strong>参数化</strong>：一组输入怎么生成多条用例；</li>
+<li><strong>marker</strong>：skip / xfail / retry / tag 怎么生效；</li>
+<li><strong>断言内省</strong>：失败时怎么给出 expected / actual / diff；</li>
+<li><strong>失败重试</strong>：怎么记录 attempt，怎么识别 flaky；</li>
+<li><strong>报告</strong>：JSON 和离线 HTML 怎么生成。</li>
+</ol>
+<p>学完这些，你就能解释“为什么 pytest 能成为 Python 测试事实标准”，也能把同样的思路迁移到 Web、App、性能测试。</p>
+<p>每天的节奏固定为：</p>
+<pre><code>读一点 → 写一点 → 跑测试 → 讲清楚 → 归档
+</code></pre>
+<p>每完成一项，必须能回答：<strong>做了什么、为什么、名词、原理、效果</strong>。答不出来，就还没学会。</p>
+<hr />
+<h2 id="14">14. 自测题</h2>
+<ol>
+<li>SUT 是什么？为什么测试前要先有 SUT？</li>
+<li>冒烟测试、接口测试、E2E 的区别是什么？</li>
+<li>为什么测试库要用临时/内存数据库？</li>
+<li>黑盒测试和契约测试分别关注什么？</li>
+<li>422 和 404 分别代表什么？各举一个本项目例子。</li>
+<li>为什么 API 工作台要经过 FastAPI 代理，而不是浏览器直接发？</li>
+<li>JSONPath 断言解决了什么问题？</li>
+<li>为什么要做测试数据隔离？随机后缀有什么用？</li>
+<li>CI 在什么时机跑？它解决了什么问题？</li>
+<li>报告归档为什么要“日报 + 里程碑快照”两层？</li>
+<li>fixture 的 function / module / session 作用域分别什么时候创建、什么时候销毁？</li>
+<li>参数化为什么要先生成 case 再执行？一条 case 的 node ID 由什么组成？</li>
+<li>断言内省和普通 <code>assert</code> 的区别是什么？为什么失败位置要跳过框架自身文件？</li>
+<li>CDP 是什么？测试脚本怎么通过它控制浏览器？</li>
+<li>自动等待解决什么问题？为什么不能页面一打开就断言？</li>
+<li>ADB 和 UIAutomator 分别负责什么？控件树里的 bounds 怎么变成点击坐标？</li>
+<li>为什么移动端自动化要先 <code>force-stop</code> 再启动 App？</li>
+</ol>
+<p>如果这 17 题你能用自己的话答出来，这个项目就可以写进简历并接受面试追问了。</p>
+<hr />
+<h2 id="15-2026-11-03">15. 五个常见问题（2026-11-03）</h2>
+<h3 id="151">15.1 学习页标题为什么改了</h3>
+<p>学习页原来叫 “AI QA Lab”，现在改成 “AI全栈测试开发平台-shenle”。改的是浏览器标签、页面顶部和一级标题，内容不变。控制台侧边栏也同步换成了这个显示名，仓库名 <code>ai-qa-lab</code> 没变。</p>
+<h3 id="152-sut">15.2 SUT 在哪里，我能看见吗</h3>
+<p>SUT 就是被测系统，英文 System Under Test，意思是“被测试的那套系统”。</p>
+<p>代码在两个地方：</p>
+<ul>
+<li><code>apps/sut/backend</code>：FastAPI + SQLAlchemy + SQLite，负责接口和数据；</li>
+<li><code>apps/sut/frontend</code>：Vue 3，负责页面。</li>
+</ul>
+<p>启动后有两个入口：</p>
+<ul>
+<li><code>http://127.0.0.1:8000/ui/</code>：用户界面，能看仪表盘、工单、知识库、API 工作台、报告、模块验收；</li>
+<li><code>http://127.0.0.1:8000/docs</code>：接口文档，能直接点 “Try it out” 发请求。</li>
+</ul>
+<p>现在实际有 8 个 HTTP 接口：</p>
+<ol>
+<li><code>GET /health</code>：健康检查；</li>
+<li><code>GET /api/tickets</code>：工单列表；</li>
+<li><code>POST /api/tickets</code>：创建工单；</li>
+<li><code>GET /api/tickets/{ticket_id}</code>：查单个工单；</li>
+<li><code>PATCH /api/tickets/{ticket_id}</code>：更新工单状态/优先级；</li>
+<li><code>POST /api/kb/query</code>：知识库问答（mock）；</li>
+<li><code>POST /api/workbench/send</code>：API 工作台单请求；</li>
+<li><code>POST /api/workbench/run</code>：API 工作台批量运行。</li>
+</ol>
+<p>之前报告写 7 个，是旧口径，已经更正为 8 个。</p>
+<h3 id="153-03">15.3 模块 03 接口自动化是什么</h3>
+<p>参考 Hoppscotch（80,721 星），它是一个开源的 Postman 类 API 工具，能发请求、管集合、管环境、做断言。</p>
+<p>我们没复制源码，只复刻核心闭环：</p>
+<ul>
+<li>请求构建：方法、URL、Header、Body；</li>
+<li>环境变量：把 <code>{{base_url}}</code> 换成真实地址；</li>
+<li>5 种断言：状态码、最大耗时、响应包含、JSON 路径存在、JSON 路径相等；</li>
+<li>集合保存：把多条请求存起来；</li>
+<li>批量运行：一次跑一组请求；</li>
+<li>报告：看哪条通过、哪条失败。</li>
+</ul>
+<p>入口是 <code>/ui/#/workbench</code>。它解决的是“接口测试不只是发请求”，还要有环境、断言、批量、报告。v0.1 不做 GraphQL、WebSocket、脚本和团队协作。</p>
+<h3 id="154-01">15.4 模块 01 方法论是什么</h3>
+<p>参考 awesome-test-automation（7,208 星），它是一个测试工具清单和地图，不是可运行程序。</p>
+<p>我们用它来确定：</p>
+<ul>
+<li>8 个模块分别考什么；</li>
+<li>每个模块选哪个 GitHub 最高星项目做参考；</li>
+<li>复刻规则：clean-room 重写、完整闭环、验收页、截图、原理说明。</li>
+</ul>
+<p>产物是 <code>docs/requirements/module-matrix.md</code> 和 <code>CLAUDE.md</code> 里的规则。模块 01 排在最后，因为它要把整个项目总结成一张知识地图和选型决策页，不适合一开始就写。</p>
+<h3 id="155-07">15.5 模块 07 测试平台现在有什么</h3>
+<p>参考 MeterSphere（13,600 星），它是一个持续测试平台，管理项目、用例、计划、执行、缺陷、报表。</p>
+<p>现在有 Vue 控制台 + FastAPI 后端，能看仪表盘、工单、知识库、API 工作台、报告、模块验收，所以叫“控制台雏形”。</p>
+<p>还缺：</p>
+<ul>
+<li>测试用例管理；</li>
+<li>测试计划和执行历史；</li>
+<li>缺陷跟踪；</li>
+<li>用户、角色、权限；</li>
+<li>和 CI 的完整集成。</li>
+</ul>
+<p>这些是模块 07 要补的完整闭环，不是现在这一版的交付范围。</p>
+</div>
+</body>
+</html>
