@@ -506,6 +506,98 @@ libs/minipytest/cli.py         命令行入口
 
 ---
 
+## 7.6 模块 04 复刻：迷你 Playwright
+
+### 做了什么
+
+- 在 `libs/miniplaywright` 里自己写了一个浏览器自动化库；
+- 用 Chrome DevTools Protocol 驱动本机 Edge/Chrome；
+- 支持启动、导航、CSS 选择器、点击、填值、自动等待、断言、截图；
+- 用真实 pytest 写了 6 个元测试；
+- 用迷你 pytest 跑了 5 个 SUT UI 用例，真实创建了一条工单。
+
+### 为什么
+
+面试里说“会 Playwright”，如果只会 `page.click()`，说不出浏览器和测试脚本之间怎么通信，底层还是空的。自己用 CDP 驱动一遍，就能解释“浏览器怎么被控制、元素怎么定位、自动等待在等什么”。
+
+### 涉及的名词
+
+- **CDP**：Chrome DevTools Protocol，浏览器暴露的调试协议。
+- **remote debugging port**：启动浏览器时开的调试端口。
+- **WebSocket**：CDP 的命令通道，发 JSON，收 JSON。
+- **选择器**：用 CSS 语法定位页面元素。
+- **自动等待**：元素没出现就反复查，直到超时。
+- **headless**：无界面浏览器，适合 CI。
+
+### 原理
+
+#### 1. 启动浏览器
+
+给 Edge/Chrome 加参数：
+
+```
+--remote-debugging-port=<端口>
+--remote-allow-origins=*
+--headless=new
+```
+
+浏览器启动后，本地会多一个 HTTP 服务。
+
+#### 2. 找到页面
+
+请求 `GET http://127.0.0.1:<端口>/json/list`，返回当前可调试的页面，里面有 `webSocketDebuggerUrl`。
+
+#### 3. 连接 CDP
+
+用 WebSocket 连上去，发送：
+
+```json
+{"id": 1, "method": "Page.navigate", "params": {"url": "http://..."}}
+```
+
+浏览器返回：
+
+```json
+{"id": 1, "result": {"frameId": "..."}}
+```
+
+#### 4. 定位和操作
+
+`Runtime.evaluate` 可以在页面里执行 JavaScript：
+
+```js
+document.querySelector("#btn").click()
+```
+
+填值不能只改 `value`，还要派发 `input` 和 `change` 事件，Vue 的 `v-model` 才会更新。
+
+#### 5. 自动等待
+
+页面是异步渲染的。`expect(locator).to_have_text("工单管理")` 会在超时时间内反复查，直到文本出现或超时。这样不会因为页面慢半拍就假失败。
+
+#### 6. 截图和报告
+
+`Page.captureScreenshot` 返回 base64 PNG，写到文件。测试结果交给迷你 pytest 生成 JSON/HTML 报告。
+
+### 效果
+
+- 6 个框架元测试通过；
+- 5 个 SUT UI 用例通过；
+- 真实创建工单，截图在 `docs/portfolio/screenshots/module-04-tickets.png`；
+- 报告：`docs/portfolio/module-04-playwright-report.html`。
+
+### 关键文件
+
+```
+libs/miniplaywright/browser.py    启动浏览器、找 page target
+libs/miniplaywright/cdp.py        CDP WebSocket 客户端
+libs/miniplaywright/page.py       Page / Locator / 截图
+libs/miniplaywright/assertions.py expect 断言
+libs/miniplaywright/demo/         SUT UI 用例
+```
+
+---
+
 ## 8. 第八步：把测试跑成“证据”
 
 ### 做了什么
@@ -680,6 +772,7 @@ Docker 构建：Node 构建前端 → 复制 dist → Python 安装依赖 → �
 - 独立搭建可运行的 AI 工单/知识库 SUT：FastAPI + SQLAlchemy + SQLite，8 个 HTTP 接口（6 个业务 + 2 个工作台），自动生成 OpenAPI 文档。
 - 设计并实现 66 个真实 pytest 用例：33 个业务/接口契约 + 33 个迷你 pytest 框架元测试，覆盖 404/422/边界/非法枚举。
 - clean-room 复刻 pytest 核心：收集、fixture、参数化、marker、断言内省、重试、JSON/HTML 报告；20 个演示用例。
+- 自研 CDP Web 自动化：启动 Edge/Chrome、选择器、自动等待、断言、截图；6 个元测试 + 5 个 SUT UI 用例。
 - 使用 Vue 3 + Vite + Pinia + Router + ECharts 构建 6 页测试控制台，覆盖仪表盘、工单、知识库、API 工作台、报告与模块验收。
 - clean-room 复刻 Hoppscotch 核心 API 工作台：请求构建、环境变量、5 类断言、集合保存、批量运行与报告；新增 5 个契约测试。
 - 建立“日报 + 里程碑快照”的报告归档机制，Git tag 与静态站点可追溯。
@@ -709,7 +802,7 @@ Docker 构建：Node 构建前端 → 复制 dist → Python 安装依赖 → �
 
 ## 13. 下一步怎么学
 
-模块 02 已完成。下一项是**模块 04：Web 自动化（迷你 Playwright）**。
+模块 02 和模块 04 已完成。下一项是**模块 05：App 自动化（迷你 Appium）**。
 
 先把模块 02 的七个机制过一遍：
 
@@ -748,8 +841,10 @@ Docker 构建：Node 构建前端 → 复制 dist → Python 安装依赖 → �
 11. fixture 的 function / module / session 作用域分别什么时候创建、什么时候销毁？
 12. 参数化为什么要先生成 case 再执行？一条 case 的 node ID 由什么组成？
 13. 断言内省和普通 `assert` 的区别是什么？为什么失败位置要跳过框架自身文件？
+14. CDP 是什么？测试脚本怎么通过它控制浏览器？
+15. 自动等待解决什么问题？为什么不能页面一打开就断言？
 
-如果这 13 题你能用自己的话答出来，这个项目就可以写进简历并接受面试追问了。
+如果这 15 题你能用自己的话答出来，这个项目就可以写进简历并接受面试追问了。
 
 ---
 

@@ -40,13 +40,18 @@ const timeline = [
     title: '模块 02 迷你 pytest',
     detail: '自研收集器、fixture、参数化、marker、断言内省、重试、JSON/HTML 报告；33 个元测试 + 20 个演示用例。',
   },
+  {
+    time: '11-03',
+    title: '模块 04 迷你 Playwright',
+    detail: 'CDP 驱动 Edge、选择器、自动等待、断言、截图；6 个元测试 + 5 个 SUT UI 用例。',
+  },
 ]
 
 const metrics = [
-  { value: '66', label: 'pytest 用例' },
-  { value: '20', label: '迷你演示' },
+  { value: '72', label: 'pytest 用例' },
+  { value: '25', label: '迷你演示' },
   { value: '8', label: '模块选型' },
-  { value: '2', label: '复刻闭环' },
+  { value: '3', label: '复刻闭环' },
 ]
 
 const endpoints = [
@@ -88,7 +93,7 @@ const faqs = [
   <section class="stack">
     <article class="hero card">
       <div>
-        <p class="eyebrow">PROJECT REPORT · 2026-11-02</p>
+        <p class="eyebrow">PROJECT REPORT · 2026-11-03</p>
         <h2>从零搭起一套可运行、可测试、可复刻的 AI 全栈测试工程</h2>
         <p class="muted">
           这份报告回答四个问题：做了什么、原理是什么、步骤是什么、最后成果是什么，以及它能否脱离本地在公网运行。
@@ -114,7 +119,7 @@ const faqs = [
       <div>
         <p class="eyebrow">BEGINNER WALKTHROUGH</p>
         <h2>新手向完整拆解</h2>
-        <p class="muted">每一步做了什么、为什么、涉及哪些测试开发名词、原理是什么、效果是什么；含术语速查、简历写法和 10 道自测题。</p>
+        <p class="muted">每一步做了什么、为什么、涉及哪些测试开发名词、原理是什么、效果是什么；含术语速查、简历写法和 13 道自测题。</p>
       </div>
       <div class="learning-actions">
         <a class="btn" href="/learning/" target="_blank" rel="noreferrer">打开学习手册</a>
@@ -183,7 +188,7 @@ bash scripts/start_sut.sh</pre>
         </div>
         <div>
           <h3>跑测试</h3>
-          <pre class="response-body">./.venv/Scripts/python.exe -m pytest apps/sut/backend suites/api -q</pre>
+          <pre class="response-body">./.venv/Scripts/python.exe -m pytest apps/sut/backend suites/api libs/minipytest/tests libs/miniplaywright/tests -q</pre>
         </div>
         <div>
           <h3>验收页面</h3>
@@ -214,9 +219,10 @@ docker run -p 8000:8000 ai-qa-lab
           <thead><tr><th>产物</th><th>位置</th><th>状态</th></tr></thead>
           <tbody>
             <tr><td>SUT 后端</td><td class="mono">apps/sut/backend</td><td>可运行，8 个接口（6 业务 + 2 工作台）</td></tr>
-            <tr><td>Vue 控制台</td><td class="mono">apps/sut/frontend</td><td>5 个页面，已构建</td></tr>
+            <tr><td>Vue 控制台</td><td class="mono">apps/sut/frontend</td><td>6 个页面，已构建</td></tr>
             <tr><td>接口套件</td><td class="mono">suites/api</td><td>33 tests passing</td></tr>
             <tr><td>API 工作台</td><td class="mono">/ui/#/workbench</td><td>闭环可用</td></tr>
+            <tr><td>迷你 Playwright</td><td class="mono">libs/miniplaywright</td><td>6 元测试 + 5 个 SUT UI 用例</td></tr>
             <tr><td>复刻矩阵</td><td class="mono">docs/requirements/module-matrix.md</td><td>8 模块选型完成</td></tr>
             <tr><td>验收材料</td><td class="mono">docs/portfolio</td><td>报告 + 截图</td></tr>
             <tr><td>CI</td><td class="mono">.github/workflows/ci.yml</td><td>GitHub Actions</td></tr>
@@ -287,7 +293,7 @@ docker run -p 8000:8000 ai-qa-lab
         <li>知识库仍是 mock；模块 08 接入 DeepSeek + 真实检索与评测。</li>
         <li>API 工作台只做 REST，不做 GraphQL/WebSocket/请求链路变量提取。</li>
         <li>SQLite 适合演示，不适合多用户生产；后续可切 PostgreSQL。</li>
-        <li>下一项：模块 04 Web 自动化（迷你 Playwright）。</li>
+        <li>下一项：模块 05 App 自动化（迷你 Appium）。</li>
       </ul>
     </article>
 

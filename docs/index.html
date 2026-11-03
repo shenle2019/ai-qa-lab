@@ -76,10 +76,10 @@
     <p class="lead">这份报告回答：我做了什么、原理是什么、步骤是什么、最终成果是什么，以及它能否脱离本地在公网运行。</p>
     <p style="margin-top:14px"><a class="btn" href="learning/">新手向完整拆解：每一步做什么、为什么、名词、原理、效果 →</a></p>
     <div class="metrics">
-      <div class="metric"><strong>66</strong><span>pytest 用例</span></div>
-      <div class="metric"><strong>20</strong><span>迷你演示</span></div>
+      <div class="metric"><strong>72</strong><span>pytest 用例</span></div>
+      <div class="metric"><strong>25</strong><span>迷你演示</span></div>
       <div class="metric"><strong>6</strong><span>前端页面</span></div>
-      <div class="metric"><strong>2</strong><span>复刻闭环</span></div>
+      <div class="metric"><strong>3</strong><span>复刻闭环</span></div>
     </div>
   </div>
 
@@ -95,6 +95,7 @@
       <li><span class="time">18:20</span><div><strong>SUT 控制台</strong><p>Vue 3 + Vite + Pinia + Router + ECharts，含仪表盘、工单、知识库、API 工作台、项目报告、模块验收。</p></div></li>
       <li><span class="time">18:40</span><div><strong>模块 03 复刻 v0.1</strong><p>以 Hoppscotch（80,721★）为参考，复刻 API 工作台：请求、环境变量、5 类断言、集合、批量运行与报告。</p></div></li>
       <li><span class="time">11-03</span><div><strong>模块 02 复刻 v0.1</strong><p>以 pytest（14,661★）为参考，自研迷你 pytest：收集、fixture、参数化、marker、断言内省、重试、JSON/HTML 报告；33 元测试 + 20 演示。</p></div></li>
+      <li><span class="time">11-03</span><div><strong>模块 04 复刻 v0.1</strong><p>以 Playwright（99,087★）为参考，自研 CDP 浏览器自动化：启动、选择器、自动等待、断言、截图；6 元测试 + 5 个 SUT UI 用例。</p></div></li>
     </ol>
   </section>
 
@@ -155,6 +156,7 @@ docker run -p 8000:8000 ai-qa-lab
         <tr><td>Vue 控制台</td><td><code>apps/sut/frontend</code></td><td>6 个页面，已构建</td></tr>
         <tr><td>接口套件</td><td><code>suites/api</code></td><td>33 tests passing</td></tr>
         <tr><td>迷你 pytest</td><td><code>libs/minipytest</code></td><td>33 元测试 + 20 演示；离线 HTML 报告</td></tr>
+        <tr><td>迷你 Playwright</td><td><code>libs/miniplaywright</code></td><td>6 元测试 + 5 个 SUT UI 用例；截图</td></tr>
         <tr><td>API 工作台</td><td><code>/ui/#/workbench</code></td><td>闭环可用</td></tr>
         <tr><td>复刻矩阵</td><td><code>docs/requirements/module-matrix.md</code></td><td>8 模块选型完成</td></tr>
         <tr><td>验收材料</td><td><code>docs/portfolio</code></td><td>报告 + 截图</td></tr>
@@ -165,6 +167,7 @@ docker run -p 8000:8000 ai-qa-lab
     <div class="shots">
       <figure><img src="portfolio/screenshots/sut-dashboard.png" alt="仪表盘" /><figcaption>仪表盘：工单统计与状态分布</figcaption></figure>
       <figure><img src="portfolio/screenshots/module-02-minipytest.png" alt="迷你 pytest 报告" /><figcaption>模块 02：迷你 pytest 离线报告</figcaption></figure>
+      <figure><img src="portfolio/screenshots/module-04-tickets.png" alt="迷你 Playwright 工单页" /><figcaption>模块 04：CDP 驱动 UI，真实创建工单</figcaption></figure>
       <figure><img src="portfolio/screenshots/module-03-workbench.png" alt="API 工作台" /><figcaption>模块 03：API 工作台闭环</figcaption></figure>
     </div>
   </section>
@@ -217,7 +220,7 @@ docker run -p 8000:8000 ai-qa-lab
       <li>知识库仍是 mock；模块 08 接入 DeepSeek + 真实检索与评测。</li>
       <li>API 工作台只做 REST，不做 GraphQL/WebSocket/请求链路变量提取。</li>
       <li>SQLite 适合演示，不适合多用户生产；后续可切 PostgreSQL。</li>
-      <li>下一项：模块 04 Web 自动化（迷你 Playwright）。</li>
+      <li>下一项：模块 05 App 自动化（迷你 Appium）。</li>
     </ul>
   </section>
 

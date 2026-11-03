@@ -11,7 +11,7 @@ AI-powered full-stack QA portfolio. One runnable system under test (SUT), layere
 | 01 质量工程方法论 | planned |
 | 02 Python 测试开发 | in progress — minipytest v0.1 + 33 meta tests + 20 demo cases |
 | 03 接口自动化 | in progress — API Workbench v0.1 + 33 tests |
-| 04 Web 自动化 | planned |
+| 04 Web 自动化 | in progress — miniplaywright v0.1 + 6 meta tests + 5 SUT UI cases |
 | 05 App 自动化 | planned |
 | 06 性能测试 | planned |
 | 07 测试平台 | in progress — SUT console live at /ui/ |
@@ -23,6 +23,7 @@ AI-powered full-stack QA portfolio. One runnable system under test (SUT), layere
 apps/sut        System under test (FastAPI + Vue3 + SQLite)
 apps/platform   Test platform (FastAPI + Vue3 + Allure)
 libs/minipytest Module 02 clean-room pytest-like runner + demo suites
+libs/miniplaywright Module 04 CDP browser automation + demo suite
 suites/         Layered test suites: api, web, app, perf, agent
 docs/notes      Public notes (single source of truth)
 docs/portfolio  Portfolio site content
@@ -47,8 +48,8 @@ cd ../../..
 # Run SUT (serves API + UI)
 .venv\Scripts\python.exe -m uvicorn app.main:app --app-dir apps/sut/backend --port 8000 --reload
 
-# Tests (66 real pytest cases)
-.venv\Scripts\python.exe -m pytest apps/sut/backend suites/api libs/minipytest/tests -q
+# Tests (72 real pytest cases)
+.venv\Scripts\python.exe -m pytest apps/sut/backend suites/api libs/minipytest/tests libs/miniplaywright/tests -q
 
 # Mini pytest acceptance demo (20 cases, starts a temporary SUT)
 .venv\Scripts\python.exe -m libs.minipytest libs/minipytest/demo/acceptance -v \

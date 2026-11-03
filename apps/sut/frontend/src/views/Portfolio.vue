@@ -36,8 +36,9 @@ const modules = [
     reference: 'microsoft/playwright',
     stars: '99,087',
     href: 'https://github.com/microsoft/playwright',
-    status: 'planned',
-    scope: 'CDP 驱动、自动等待、断言、轨迹与报告',
+    status: 'progress',
+    scope: 'miniplaywright v0.1：CDP 驱动、选择器、自动等待、断言、截图；6 元测试 + 5 个 SUT UI 用例',
+    report: '/portfolio/module-04-playwright-report.html',
   },
   {
     id: '05',

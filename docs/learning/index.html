@@ -56,6 +56,7 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <li><a href="#6-vue">6. 第六步：做 Vue 控制台</a></li>
 <li><a href="#7-03-api">7. 第七步：模块 03 复刻——API 工作台</a></li>
 <li><a href="#75-02-pytest">7.5 模块 02 复刻：迷你 pytest</a></li>
+<li><a href="#76-04-playwright">7.6 模块 04 复刻：迷你 Playwright</a></li>
 <li><a href="#8">8. 第八步：把测试跑成“证据”</a></li>
 <li><a href="#9">9. 第九步：报告与归档</a></li>
 <li><a href="#10">10. 第十步：本地与远端部署</a></li>
@@ -548,17 +549,78 @@ libs/minipytest/reporting.py   JSON / HTML
 libs/minipytest/cli.py         命令行入口
 </code></pre>
 <hr />
-<h2 id="8">8. 第八步：把测试跑成“证据”</h2>
+<h2 id="76-04-playwright">7.6 模块 04 复刻：迷你 Playwright</h2>
 <h3 id="_41">做了什么</h3>
+<ul>
+<li>在 <code>libs/miniplaywright</code> 里自己写了一个浏览器自动化库；</li>
+<li>用 Chrome DevTools Protocol 驱动本机 Edge/Chrome；</li>
+<li>支持启动、导航、CSS 选择器、点击、填值、自动等待、断言、截图；</li>
+<li>用真实 pytest 写了 6 个元测试；</li>
+<li>用迷你 pytest 跑了 5 个 SUT UI 用例，真实创建了一条工单。</li>
+</ul>
+<h3 id="_42">为什么</h3>
+<p>面试里说“会 Playwright”，如果只会 <code>page.click()</code>，说不出浏览器和测试脚本之间怎么通信，底层还是空的。自己用 CDP 驱动一遍，就能解释“浏览器怎么被控制、元素怎么定位、自动等待在等什么”。</p>
+<h3 id="_43">涉及的名词</h3>
+<ul>
+<li><strong>CDP</strong>：Chrome DevTools Protocol，浏览器暴露的调试协议。</li>
+<li><strong>remote debugging port</strong>：启动浏览器时开的调试端口。</li>
+<li><strong>WebSocket</strong>：CDP 的命令通道，发 JSON，收 JSON。</li>
+<li><strong>选择器</strong>：用 CSS 语法定位页面元素。</li>
+<li><strong>自动等待</strong>：元素没出现就反复查，直到超时。</li>
+<li><strong>headless</strong>：无界面浏览器，适合 CI。</li>
+</ul>
+<h3 id="_44">原理</h3>
+<h4 id="1_2">1. 启动浏览器</h4>
+<p>给 Edge/Chrome 加参数：</p>
+<pre><code>--remote-debugging-port=&lt;端口&gt;
+--remote-allow-origins=*
+--headless=new
+</code></pre>
+<p>浏览器启动后，本地会多一个 HTTP 服务。</p>
+<h4 id="2_1">2. 找到页面</h4>
+<p>请求 <code>GET http://127.0.0.1:&lt;端口&gt;/json/list</code>，返回当前可调试的页面，里面有 <code>webSocketDebuggerUrl</code>。</p>
+<h4 id="3-cdp">3. 连接 CDP</h4>
+<p>用 WebSocket 连上去，发送：</p>
+<pre><code class="language-json">{&quot;id&quot;: 1, &quot;method&quot;: &quot;Page.navigate&quot;, &quot;params&quot;: {&quot;url&quot;: &quot;http://...&quot;}}
+</code></pre>
+<p>浏览器返回：</p>
+<pre><code class="language-json">{&quot;id&quot;: 1, &quot;result&quot;: {&quot;frameId&quot;: &quot;...&quot;}}
+</code></pre>
+<h4 id="4_1">4. 定位和操作</h4>
+<p><code>Runtime.evaluate</code> 可以在页面里执行 JavaScript：</p>
+<pre><code class="language-js">document.querySelector(&quot;#btn&quot;).click()
+</code></pre>
+<p>填值不能只改 <code>value</code>，还要派发 <code>input</code> 和 <code>change</code> 事件，Vue 的 <code>v-model</code> 才会更新。</p>
+<h4 id="5_2">5. 自动等待</h4>
+<p>页面是异步渲染的。<code>expect(locator).to_have_text("工单管理")</code> 会在超时时间内反复查，直到文本出现或超时。这样不会因为页面慢半拍就假失败。</p>
+<h4 id="6_1">6. 截图和报告</h4>
+<p><code>Page.captureScreenshot</code> 返回 base64 PNG，写到文件。测试结果交给迷你 pytest 生成 JSON/HTML 报告。</p>
+<h3 id="_45">效果</h3>
+<ul>
+<li>6 个框架元测试通过；</li>
+<li>5 个 SUT UI 用例通过；</li>
+<li>真实创建工单，截图在 <code>docs/portfolio/screenshots/module-04-tickets.png</code>；</li>
+<li>报告：<code>docs/portfolio/module-04-playwright-report.html</code>。</li>
+</ul>
+<h3 id="_46">关键文件</h3>
+<pre><code>libs/miniplaywright/browser.py    启动浏览器、找 page target
+libs/miniplaywright/cdp.py        CDP WebSocket 客户端
+libs/miniplaywright/page.py       Page / Locator / 截图
+libs/miniplaywright/assertions.py expect 断言
+libs/miniplaywright/demo/         SUT UI 用例
+</code></pre>
+<hr />
+<h2 id="8">8. 第八步：把测试跑成“证据”</h2>
+<h3 id="_47">做了什么</h3>
 <ul>
 <li>用 pytest 跑全量 33 个测试；</li>
 <li>用无头 Chrome 截图验收页面；</li>
 <li>配置 GitHub Actions，每次 push 跑 pytest；</li>
 <li>把截图、报告、验收说明写进仓库。</li>
 </ul>
-<h3 id="_42">为什么</h3>
+<h3 id="_48">为什么</h3>
 <p>简历和面试需要<strong>证据</strong>，不是口头说“我做了”。CI 还能防止你改坏已有功能。</p>
-<h3 id="_43">涉及的名词</h3>
+<h3 id="_49">涉及的名词</h3>
 <ul>
 <li><strong>CI（持续集成）</strong>：每次提交自动构建/跑测试，尽早发现问题。</li>
 <li><strong>GitHub Actions</strong>：GitHub 的 CI 服务；<code>workflow</code> 是配置文件。</li>
@@ -567,17 +629,17 @@ libs/minipytest/cli.py         命令行入口
 <li><strong>Artifact</strong>：CI 产出的文件，如测试报告、截图。</li>
 <li><strong>回归测试</strong>：改代码后重跑旧测试，确认没把旧功能改坏。</li>
 </ul>
-<h3 id="_44">原理</h3>
+<h3 id="_50">原理</h3>
 <pre><code>push 代码 → GitHub Actions 启动 Ubuntu → 安装依赖 → 跑 pytest → 记录成功/失败
 </code></pre>
-<h3 id="_45">效果</h3>
+<h3 id="_51">效果</h3>
 <p>GitHub 上能看到 CI 记录；本地 33 passed；验收截图可追溯。</p>
 <blockquote>
 <p>注意：当前 CI 只跑后端测试，还没有把 <code>suites/api</code> 和前端构建加进去；这是下一步可以补的。</p>
 </blockquote>
 <hr />
 <h2 id="9">9. 第九步：报告与归档</h2>
-<h3 id="_46">做了什么</h3>
+<h3 id="_52">做了什么</h3>
 <ul>
 <li>最新报告：<code>docs/index.html</code> 和 Vue <code>/ui/#/report</code>；</li>
 <li>日报：<code>docs/progress/YYYY-MM-DD.md</code>；</li>
@@ -586,7 +648,7 @@ libs/minipytest/cli.py         命令行入口
 <li>归档脚本：<code>scripts/archive_report.py</code>；</li>
 <li>Git tag：<code>v0.2.0</code>、<code>v0.2.0-archive</code>。</li>
 </ul>
-<h3 id="_47">为什么</h3>
+<h3 id="_53">为什么</h3>
 <p>代码每天变，如果报告也每天覆盖，历史就丢了；如果每天生成一个新报告，又会变成噪声。所以：</p>
 <ul>
 <li>日报记录“过程”；</li>
@@ -594,7 +656,7 @@ libs/minipytest/cli.py         命令行入口
 <li>根报告永远是最新状态；</li>
 <li>快照不可变，面试时能回看“我当时做到了什么”。</li>
 </ul>
-<h3 id="_48">涉及的名词</h3>
+<h3 id="_54">涉及的名词</h3>
 <ul>
 <li><strong>快照（Snapshot）</strong>：某一时刻的完整副本。</li>
 <li><strong>不可变（Immutable）</strong>：归档后不再修改，保证可信。</li>
@@ -603,9 +665,9 @@ libs/minipytest/cli.py         命令行入口
 <li><strong>里程碑（Milestone）</strong>：一个阶段目标，如“完成模块 03”。</li>
 <li><strong>Changelog</strong>：变更记录，说明每个版本改了什么。</li>
 </ul>
-<h3 id="_49">原理</h3>
+<h3 id="_55">原理</h3>
 <p><strong>单一信源 + 自动生成 + 不可变归档</strong>：报告从当前仓库生成快照，脚本复制截图、改写路径、写 <code>metrics.json</code>，再生成索引；历史快照只读。</p>
-<h3 id="_50">效果</h3>
+<h3 id="_56">效果</h3>
 <p>公网可访问：</p>
 <ul>
 <li>最新报告：https://shenle2019.github.io/ai-qa-lab/</li>
@@ -614,7 +676,7 @@ libs/minipytest/cli.py         命令行入口
 </ul>
 <hr />
 <h2 id="10">10. 第十步：本地与远端部署</h2>
-<h3 id="_51">做了什么</h3>
+<h3 id="_57">做了什么</h3>
 <ul>
 <li>本地：FastAPI 同时提供 <code>/api</code> 和 <code>/ui</code>，一条命令启动；</li>
 <li>容器：写 <code>Dockerfile</code>，Node 构建前端，Python 跑后端；</li>
@@ -622,9 +684,9 @@ libs/minipytest/cli.py         命令行入口
 <li>Hugging Face Spaces：<code>deploy/huggingface/</code>；</li>
 <li>决策：<strong>先本地开发，8 个模块全部完成后再上云</strong>。</li>
 </ul>
-<h3 id="_52">为什么</h3>
+<h3 id="_58">为什么</h3>
 <p>GitHub Pages 只能托管静态文件，不能运行 Python 后端；完整系统需要容器平台。现在上云会打断学习节奏，所以暂缓。</p>
-<h3 id="_53">涉及的名词</h3>
+<h3 id="_59">涉及的名词</h3>
 <ul>
 <li><strong>Docker</strong>：把应用和依赖打包成镜像，保证环境一致。</li>
 <li><strong>镜像（Image）/容器（Container）</strong>：镜像是模板，容器是运行实例。</li>
@@ -633,11 +695,11 @@ libs/minipytest/cli.py         命令行入口
 <li><strong>冷启动（Cold Start）</strong>：免费实例休眠后，第一次访问要等它启动。</li>
 <li><strong>临时存储（Ephemeral Storage）</strong>：重启后数据丢失；SQLite 在免费平台就是这个特性。</li>
 </ul>
-<h3 id="_54">原理</h3>
+<h3 id="_60">原理</h3>
 <pre><code>Docker 构建：Node 构建前端 → 复制 dist → Python 安装依赖 → 启动 uvicorn
 运行：浏览器 → 容器 8000/7860 → FastAPI → SQLite
 </code></pre>
-<h3 id="_55">效果</h3>
+<h3 id="_61">效果</h3>
 <p>本地完整可用；云部署配置保留，后续直接使用。</p>
 <hr />
 <h2 id="11">11. 术语速查表</h2>
@@ -833,16 +895,17 @@ libs/minipytest/cli.py         命令行入口
 </table>
 <hr />
 <h2 id="12">12. 简历上怎么写（只写真实做过的）</h2>
-<h3 id="_56">可以写的</h3>
+<h3 id="_62">可以写的</h3>
 <ul>
 <li>独立搭建可运行的 AI 工单/知识库 SUT：FastAPI + SQLAlchemy + SQLite，8 个 HTTP 接口（6 个业务 + 2 个工作台），自动生成 OpenAPI 文档。</li>
 <li>设计并实现 66 个真实 pytest 用例：33 个业务/接口契约 + 33 个迷你 pytest 框架元测试，覆盖 404/422/边界/非法枚举。</li>
 <li>clean-room 复刻 pytest 核心：收集、fixture、参数化、marker、断言内省、重试、JSON/HTML 报告；20 个演示用例。</li>
+<li>自研 CDP Web 自动化：启动 Edge/Chrome、选择器、自动等待、断言、截图；6 个元测试 + 5 个 SUT UI 用例。</li>
 <li>使用 Vue 3 + Vite + Pinia + Router + ECharts 构建 6 页测试控制台，覆盖仪表盘、工单、知识库、API 工作台、报告与模块验收。</li>
 <li>clean-room 复刻 Hoppscotch 核心 API 工作台：请求构建、环境变量、5 类断言、集合保存、批量运行与报告；新增 5 个契约测试。</li>
 <li>建立“日报 + 里程碑快照”的报告归档机制，Git tag 与静态站点可追溯。</li>
 </ul>
-<h3 id="_57">面试可能追问</h3>
+<h3 id="_63">面试可能追问</h3>
 <ol>
 <li>为什么先做接口测试，而不是 UI 自动化？</li>
 <li>接口快、稳定、ROI 高；UI 慢且易碎，适合覆盖关键路径。</li>
@@ -857,7 +920,7 @@ libs/minipytest/cli.py         命令行入口
 <li>这个项目最大的边界是什么？</li>
 <li>没做登录/RBAC、真实 RAG、Playwright/Appium/性能/LLM 评测；SQLite 只适合演示。</li>
 </ol>
-<h3 id="_58">不要写的</h3>
+<h3 id="_64">不要写的</h3>
 <ul>
 <li>不要写“精通 Playwright/Appium/k6/LLM 评测”——这些模块还没做。</li>
 <li>不要写“生产级高可用”——当前是本地演示。</li>
@@ -865,7 +928,7 @@ libs/minipytest/cli.py         命令行入口
 </ul>
 <hr />
 <h2 id="13">13. 下一步怎么学</h2>
-<p>模块 02 已完成。下一项是<strong>模块 04：Web 自动化（迷你 Playwright）</strong>。</p>
+<p>模块 02 和模块 04 已完成。下一项是<strong>模块 05：App 自动化（迷你 Appium）</strong>。</p>
 <p>先把模块 02 的七个机制过一遍：</p>
 <ol>
 <li><strong>用例收集</strong>：框架怎么找到 <code>test_*.py</code> 里的函数；</li>
@@ -897,8 +960,10 @@ libs/minipytest/cli.py         命令行入口
 <li>fixture 的 function / module / session 作用域分别什么时候创建、什么时候销毁？</li>
 <li>参数化为什么要先生成 case 再执行？一条 case 的 node ID 由什么组成？</li>
 <li>断言内省和普通 <code>assert</code> 的区别是什么？为什么失败位置要跳过框架自身文件？</li>
+<li>CDP 是什么？测试脚本怎么通过它控制浏览器？</li>
+<li>自动等待解决什么问题？为什么不能页面一打开就断言？</li>
 </ol>
-<p>如果这 13 题你能用自己的话答出来，这个项目就可以写进简历并接受面试追问了。</p>
+<p>如果这 15 题你能用自己的话答出来，这个项目就可以写进简历并接受面试追问了。</p>
 <hr />
 <h2 id="15-2026-11-03">15. 五个常见问题（2026-11-03）</h2>
 <h3 id="151">15.1 学习页标题为什么改了</h3>

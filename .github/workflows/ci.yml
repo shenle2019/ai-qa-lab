@@ -16,6 +16,8 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Run pytest suites
-        run: pytest apps/sut/backend suites/api libs/minipytest/tests -q
+        run: pytest apps/sut/backend suites/api libs/minipytest/tests libs/miniplaywright/tests -q
       - name: Run mini pytest acceptance demo
         run: python -m libs.minipytest libs/minipytest/demo/acceptance
+      - name: Run mini Playwright demo
+        run: python -m libs.minipytest libs/miniplaywright/demo

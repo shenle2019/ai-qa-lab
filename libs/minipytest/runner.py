@@ -22,18 +22,20 @@ FRAMEWORK_DIR = Path(__file__).resolve().parent
 def _find_location(tb: Any, rootdir: Path) -> str:
     if tb is None:
         return ""
-    frames = traceback.extract_tb(tb)
-    for frame in reversed(frames):
+    frames = list(traceback.walk_tb(tb))
+    for frame, lineno in reversed(frames):
+        if frame.f_locals.get("__tracebackhide__"):
+            continue
         try:
-            path = Path(frame.filename).resolve()
+            path = Path(frame.f_code.co_filename).resolve()
             if path == FRAMEWORK_DIR or path.parent == FRAMEWORK_DIR:
                 continue
-            return f"{path.relative_to(rootdir).as_posix()}:{frame.lineno}"
+            return f"{path.relative_to(rootdir).as_posix()}:{lineno}"
         except (ValueError, OSError):
             continue
     if frames:
-        frame = frames[-1]
-        return f"{frame.filename}:{frame.lineno}"
+        frame, lineno = frames[-1]
+        return f"{frame.f_code.co_filename}:{lineno}"
     return ""
 
 
