@@ -78,8 +78,8 @@
     <div class="metrics">
       <div class="metric"><strong>93</strong><span>pytest 用例</span></div>
       <div class="metric"><strong>30</strong><span>迷你演示</span></div>
-      <div class="metric"><strong>7</strong><span>前端页面</span></div>
-      <div class="metric"><strong>7</strong><span>复刻闭环</span></div>
+      <div class="metric"><strong>8</strong><span>前端页面</span></div>
+      <div class="metric"><strong>8</strong><span>复刻闭环</span></div>
     </div>
   </div>
 
@@ -100,6 +100,7 @@
       <li><span class="time">11-03</span><div><strong>模块 06 复刻 v0.1</strong><p>以 k6（32,102★）为参考，自研压测引擎：VU 并发、ramp-up、P95/P99、阈值、离线报告；8239 次请求，1371 RPS，P95 21ms。</p></div></li>
       <li><span class="time">11-03</span><div><strong>模块 07 复刻 v0.1</strong><p>以 MeterSphere（13,600★）为参考，测试平台闭环：项目、用例、计划、执行、缺陷、报表；13 个 API，支持导入迷你 pytest 报告。</p></div></li>
       <li><span class="time">11-03</span><div><strong>模块 08 复刻 v0.1</strong><p>以 DeepEval（19,242★）为参考，自研 LLM 评测：数据集、Mock/DeepSeek 裁判、相关性/忠实度/上下文指标、阈值、对比报告；0.52→0.72。</p></div></li>
+      <li><span class="time">11-03</span><div><strong>模块 01 复刻 v0.1</strong><p>以 awesome-test-automation（7,208★）为参考，方法论页面：8 模块知识图谱、5 层选型决策树、7 步协作流程、10 条检查表。</p></div></li>
     </ol>
   </section>
 
@@ -165,6 +166,7 @@ docker run -p 8000:8000 ai-qa-lab
         <tr><td>迷你压测</td><td><code>libs/miniload</code></td><td>5 元测试；SUT 8239 请求，P95 21ms</td></tr>
         <tr><td>测试平台</td><td><code>/ui/#/platform</code></td><td>项目/用例/计划/执行/缺陷/报表</td></tr>
         <tr><td>LLM 评测</td><td><code>libs/minieval</code></td><td>5 元测试；5 条数据，0.52→0.72</td></tr>
+        <tr><td>方法论</td><td><code>/ui/#/methodology</code></td><td>8 模块图谱 + 5 层选型 + 检查表</td></tr>
         <tr><td>API 工作台</td><td><code>/ui/#/workbench</code></td><td>闭环可用</td></tr>
         <tr><td>复刻矩阵</td><td><code>docs/requirements/module-matrix.md</code></td><td>8 模块选型完成</td></tr>
         <tr><td>验收材料</td><td><code>docs/portfolio</code></td><td>报告 + 截图</td></tr>
@@ -180,6 +182,7 @@ docker run -p 8000:8000 ai-qa-lab
       <figure><img src="portfolio/screenshots/module-06-load-report.png" alt="miniload 报告" /><figcaption>模块 06：8239 请求，P95 21ms</figcaption></figure>
       <figure><img src="portfolio/screenshots/module-07-platform.png" alt="测试平台" /><figcaption>模块 07：项目/用例/计划/执行/缺陷闭环</figcaption></figure>
       <figure><img src="portfolio/screenshots/module-08-llm-report.png" alt="LLM 评测" /><figcaption>模块 08：baseline 0.52 → candidate 0.72</figcaption></figure>
+      <figure><img src="portfolio/screenshots/module-01-methodology.png" alt="方法论" /><figcaption>模块 01：8 模块知识图谱与选型决策</figcaption></figure>
       <figure><img src="portfolio/screenshots/module-03-workbench.png" alt="API 工作台" /><figcaption>模块 03：API 工作台闭环</figcaption></figure>
     </div>
   </section>
@@ -232,7 +235,7 @@ docker run -p 8000:8000 ai-qa-lab
       <li>知识库仍是 mock；模块 08 接入 DeepSeek + 真实检索与评测。</li>
       <li>API 工作台只做 REST，不做 GraphQL/WebSocket/请求链路变量提取。</li>
       <li>SQLite 适合演示，不适合多用户生产；后续可切 PostgreSQL。</li>
-      <li>下一项：模块 01 方法论（知识地图与选型决策页）。</li>
+      <li>下一步：v1.0.0 最终归档与部署。</li>
     </ul>
   </section>
 

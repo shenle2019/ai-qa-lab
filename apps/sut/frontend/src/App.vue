@@ -40,6 +40,7 @@ onMounted(checkHealth)
         <RouterLink to="/workbench" class="nav-item"><span class="nav-icon">⌘</span>API 工作台</RouterLink>
         <RouterLink to="/knowledge" class="nav-item"><span class="nav-icon">✦</span>知识库问答</RouterLink>
         <RouterLink to="/platform" class="nav-item"><span class="nav-icon">▥</span>测试平台</RouterLink>
+        <RouterLink to="/methodology" class="nav-item"><span class="nav-icon">◈</span>方法论</RouterLink>
         <RouterLink to="/report" class="nav-item"><span class="nav-icon">▦</span>项目报告</RouterLink>
         <RouterLink to="/portfolio" class="nav-item"><span class="nav-icon">▣</span>模块验收</RouterLink>
       </nav>

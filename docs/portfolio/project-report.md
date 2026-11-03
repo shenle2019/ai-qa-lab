@@ -21,6 +21,7 @@
 | 11-03 17:06 | 模块 06 复刻 v0.1 | 迷你压测：VU 并发、ramp-up、P95/P99、阈值、离线报告；8239 请求，1371 RPS，P95 21ms |
 | 11-03 17:15 | 模块 07 复刻 v0.1 | 测试平台：项目、用例、计划、执行、缺陷、报表；13 个 API，支持导入迷你 pytest 报告 |
 | 11-03 17:16 | 模块 08 复刻 v0.1 | LLM 评测：数据集、Mock/DeepSeek 裁判、5 项指标、阈值、对比报告；0.52→0.72 |
+| 11-03 17:25 | 模块 01 复刻 v0.1 | 方法论：8 模块知识图谱、5 层选型决策树、7 步协作流程、10 条检查表 |
 
 ## 2. 原理
 
@@ -90,7 +91,7 @@ docker run -p 8000:8000 ai-qa-lab
 - 29 个迷你演示用例：20 个迷你 pytest + 5 个迷你 Playwright + 3 个迷你 Appium + 1 次压测
 - 6 个前端页面，构建成功
 - 8 个模块的 GitHub 最高星项目选型矩阵
-- 7 个可运行的复刻闭环：模块 03 API 工作台、模块 02 迷你 pytest、模块 04 迷你 Playwright、模块 05 迷你 Appium、模块 06 迷你压测、模块 07 测试平台、模块 08 LLM 评测
+- 8 个模块全部完成 v0.1 闭环：方法论、迷你 pytest、API 工作台、迷你 Playwright、迷你 Appium、迷你压测、测试平台、LLM 评测
 - 公开仓库、CI、验收截图、Docker/Render 部署配置
 
 详细验收：
@@ -102,6 +103,7 @@ docker run -p 8000:8000 ai-qa-lab
 - `docs/portfolio/module-06-mini-load.md`
 - `docs/portfolio/module-07-test-platform.md`
 - `docs/portfolio/module-08-llm-eval.md`
+- `docs/portfolio/module-01-methodology.md`
 - `docs/portfolio/module-03-api-workbench.md`
 - `docs/requirements/module-matrix.md`
 
@@ -137,7 +139,7 @@ https://render.com/deploy?repo=https://github.com/shenle2019/ai-qa-lab
 - 知识库仍是 mock，模块 08 接入 DeepSeek + 真实检索与评测。
 - API 工作台只做 REST，不做 GraphQL/WebSocket/请求链路变量提取。
 - SQLite 适合演示，不适合多用户生产；后续切 PostgreSQL。
-- 下一项：模块 01 方法论（知识地图与选型决策页）。
+- 下一步：v1.0.0 最终归档与部署。
 
 ## 7. 五个常见问题（2026-11-03）
 

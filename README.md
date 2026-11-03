@@ -8,14 +8,14 @@ AI-powered full-stack QA portfolio. One runnable system under test (SUT), layere
 
 | Module | Status |
 |---|---|
-| 01 质量工程方法论 | planned |
-| 02 Python 测试开发 | in progress — minipytest v0.1 + 33 meta tests + 20 demo cases |
-| 03 接口自动化 | in progress — API Workbench v0.1 + 33 tests |
-| 04 Web 自动化 | in progress — miniplaywright v0.1 + 6 meta tests + 5 SUT UI cases |
-| 05 App 自动化 | in progress — miniappium v0.1 + 5 meta tests + 3 Settings cases |
-| 06 性能测试 | in progress — miniload v0.1 + 5 meta tests + SUT load run |
-| 07 测试平台 | in progress — platform v0.1 with projects/cases/plans/executions/defects |
-| 08 Agent / LLM 评测 | in progress — minieval v0.1 + 5 meta tests + 5-case dataset |
+| 01 质量工程方法论 | done (v0.1) — methodology page |
+| 02 Python 测试开发 | done (v0.1) — minipytest + 33 meta tests + 20 demo cases |
+| 03 接口自动化 | done (v0.1) — API Workbench + 33 tests |
+| 04 Web 自动化 | done (v0.1) — miniplaywright + 6 meta tests + 5 SUT UI cases |
+| 05 App 自动化 | done (v0.1) — miniappium + 5 meta tests + 3 Settings cases |
+| 06 性能测试 | done (v0.1) — miniload + 5 meta tests + SUT load run |
+| 07 测试平台 | done (v0.1) — projects/cases/plans/executions/defects |
+| 08 Agent / LLM 评测 | done (v0.1) — minieval + 5 meta tests + 5-case dataset |
 
 ## Structure
 
@@ -80,7 +80,7 @@ cd ../../..
 
 ## Deploy
 
-> Status: deployment is deferred until all 8 modules are complete. Local-first for now; Docker / Render / HF configs are kept for later.
+> Status: all 8 modules are complete (v0.1). Local-first; Docker / Render / HF configs are ready for deployment.
 
 Full-stack (FastAPI + Vue) runs in one container:
 
