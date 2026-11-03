@@ -56,8 +56,9 @@ const modules = [
     reference: 'grafana/k6',
     stars: '32,102',
     href: 'https://github.com/grafana/k6',
-    status: 'planned',
-    scope: '场景编排、阈值、P95/P99、实时指标',
+    status: 'progress',
+    scope: 'miniload v0.1：VU 并发、ramp-up、P95/P99、阈值判定、离线报告；5 元测试 + 1 次 SUT 压测',
+    report: '/portfolio/module-06-load-report.html',
   },
   {
     id: '07',

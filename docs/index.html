@@ -76,10 +76,10 @@
     <p class="lead">这份报告回答：我做了什么、原理是什么、步骤是什么、最终成果是什么，以及它能否脱离本地在公网运行。</p>
     <p style="margin-top:14px"><a class="btn" href="learning/">新手向完整拆解：每一步做什么、为什么、名词、原理、效果 →</a></p>
     <div class="metrics">
-      <div class="metric"><strong>77</strong><span>pytest 用例</span></div>
-      <div class="metric"><strong>28</strong><span>迷你演示</span></div>
+      <div class="metric"><strong>82</strong><span>pytest 用例</span></div>
+      <div class="metric"><strong>29</strong><span>迷你演示</span></div>
       <div class="metric"><strong>6</strong><span>前端页面</span></div>
-      <div class="metric"><strong>4</strong><span>复刻闭环</span></div>
+      <div class="metric"><strong>5</strong><span>复刻闭环</span></div>
     </div>
   </div>
 
@@ -97,6 +97,7 @@
       <li><span class="time">11-03</span><div><strong>模块 02 复刻 v0.1</strong><p>以 pytest（14,661★）为参考，自研迷你 pytest：收集、fixture、参数化、marker、断言内省、重试、JSON/HTML 报告；33 元测试 + 20 演示。</p></div></li>
       <li><span class="time">11-03</span><div><strong>模块 04 复刻 v0.1</strong><p>以 Playwright（99,087★）为参考，自研 CDP 浏览器自动化：启动、选择器、自动等待、断言、截图；6 元测试 + 5 个 SUT UI 用例。</p></div></li>
       <li><span class="time">11-03</span><div><strong>模块 05 复刻 v0.1</strong><p>以 Appium（22,174★）为参考，自研 ADB/UIAutomator 客户端：元素定位、点击、等待、截图；5 元测试 + 3 个 Settings 用例。</p></div></li>
+      <li><span class="time">11-03</span><div><strong>模块 06 复刻 v0.1</strong><p>以 k6（32,102★）为参考，自研压测引擎：VU 并发、ramp-up、P95/P99、阈值、离线报告；8239 次请求，1371 RPS，P95 21ms。</p></div></li>
     </ol>
   </section>
 
@@ -159,6 +160,7 @@ docker run -p 8000:8000 ai-qa-lab
         <tr><td>迷你 pytest</td><td><code>libs/minipytest</code></td><td>33 元测试 + 20 演示；离线 HTML 报告</td></tr>
         <tr><td>迷你 Playwright</td><td><code>libs/miniplaywright</code></td><td>6 元测试 + 5 个 SUT UI 用例；截图</td></tr>
         <tr><td>迷你 Appium</td><td><code>libs/miniappium</code></td><td>5 元测试 + 3 个 Settings 用例；截图</td></tr>
+        <tr><td>迷你压测</td><td><code>libs/miniload</code></td><td>5 元测试；SUT 8239 请求，P95 21ms</td></tr>
         <tr><td>API 工作台</td><td><code>/ui/#/workbench</code></td><td>闭环可用</td></tr>
         <tr><td>复刻矩阵</td><td><code>docs/requirements/module-matrix.md</code></td><td>8 模块选型完成</td></tr>
         <tr><td>验收材料</td><td><code>docs/portfolio</code></td><td>报告 + 截图</td></tr>
@@ -171,6 +173,7 @@ docker run -p 8000:8000 ai-qa-lab
       <figure><img src="portfolio/screenshots/module-02-minipytest.png" alt="迷你 pytest 报告" /><figcaption>模块 02：迷你 pytest 离线报告</figcaption></figure>
       <figure><img src="portfolio/screenshots/module-04-tickets.png" alt="迷你 Playwright 工单页" /><figcaption>模块 04：CDP 驱动 UI，真实创建工单</figcaption></figure>
       <figure><img src="portfolio/screenshots/module-05-settings.png" alt="Android Settings" /><figcaption>模块 05：ADB 驱动 Android Settings</figcaption></figure>
+      <figure><img src="portfolio/screenshots/module-06-load-report.png" alt="miniload 报告" /><figcaption>模块 06：8239 请求，P95 21ms</figcaption></figure>
       <figure><img src="portfolio/screenshots/module-03-workbench.png" alt="API 工作台" /><figcaption>模块 03：API 工作台闭环</figcaption></figure>
     </div>
   </section>
@@ -223,7 +226,7 @@ docker run -p 8000:8000 ai-qa-lab
       <li>知识库仍是 mock；模块 08 接入 DeepSeek + 真实检索与评测。</li>
       <li>API 工作台只做 REST，不做 GraphQL/WebSocket/请求链路变量提取。</li>
       <li>SQLite 适合演示，不适合多用户生产；后续可切 PostgreSQL。</li>
-      <li>下一项：模块 06 性能测试（迷你压测引擎）。</li>
+      <li>下一项：模块 07 测试平台（项目/用例/计划/执行/缺陷/报表）。</li>
     </ul>
   </section>
 

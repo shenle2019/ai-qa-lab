@@ -13,7 +13,7 @@ AI-powered full-stack QA portfolio. One runnable system under test (SUT), layere
 | 03 接口自动化 | in progress — API Workbench v0.1 + 33 tests |
 | 04 Web 自动化 | in progress — miniplaywright v0.1 + 6 meta tests + 5 SUT UI cases |
 | 05 App 自动化 | in progress — miniappium v0.1 + 5 meta tests + 3 Settings cases |
-| 06 性能测试 | planned |
+| 06 性能测试 | in progress — miniload v0.1 + 5 meta tests + SUT load run |
 | 07 测试平台 | in progress — SUT console live at /ui/ |
 | 08 Agent / LLM 评测 | planned |
 
@@ -25,6 +25,7 @@ apps/platform   Test platform (FastAPI + Vue3 + Allure)
 libs/minipytest Module 02 clean-room pytest-like runner + demo suites
 libs/miniplaywright Module 04 CDP browser automation + demo suite
 libs/miniappium   Module 05 ADB/UIAutomator Android automation + demo suite
+libs/miniload     Module 06 threaded load engine + HTML report
 suites/         Layered test suites: api, web, app, perf, agent
 docs/notes      Public notes (single source of truth)
 docs/portfolio  Portfolio site content
@@ -49,8 +50,8 @@ cd ../../..
 # Run SUT (serves API + UI)
 .venv\Scripts\python.exe -m uvicorn app.main:app --app-dir apps/sut/backend --port 8000 --reload
 
-# Tests (77 real pytest cases)
-.venv\Scripts\python.exe -m pytest apps/sut/backend suites/api libs/minipytest/tests libs/miniplaywright/tests libs/miniappium/tests -q
+# Tests (82 real pytest cases)
+.venv\Scripts\python.exe -m pytest apps/sut/backend suites/api libs/minipytest/tests libs/miniplaywright/tests libs/miniappium/tests libs/miniload/tests -q
 
 # Mini pytest acceptance demo (20 cases, starts a temporary SUT)
 .venv\Scripts\python.exe -m libs.minipytest libs/minipytest/demo/acceptance -v \
