@@ -60,13 +60,18 @@ const timeline = [
     title: '模块 07 测试平台',
     detail: '项目、用例、计划、执行、缺陷、报表闭环；13 个 API，支持导入迷你 pytest 报告。',
   },
+  {
+    time: '11-03',
+    title: '模块 08 LLM 评测',
+    detail: '数据集、Mock/DeepSeek 裁判、相关性/忠实度/上下文指标、阈值、baseline vs candidate；5 条数据 0.52→0.72。',
+  },
 ]
 
 const metrics = [
-  { value: '88', label: 'pytest 用例' },
-  { value: '29', label: '迷你演示' },
+  { value: '93', label: 'pytest 用例' },
+  { value: '30', label: '迷你演示' },
   { value: '8', label: '模块选型' },
-  { value: '6', label: '复刻闭环' },
+  { value: '7', label: '复刻闭环' },
 ]
 
 const endpoints = [
@@ -241,6 +246,7 @@ docker run -p 8000:8000 ai-qa-lab
             <tr><td>迷你 Appium</td><td class="mono">libs/miniappium</td><td>5 元测试 + 3 个 Settings 用例</td></tr>
             <tr><td>迷你压测</td><td class="mono">libs/miniload</td><td>5 元测试 + 1 次 SUT 压测；P95 21ms</td></tr>
             <tr><td>测试平台</td><td class="mono">/ui/#/platform</td><td>项目/用例/计划/执行/缺陷/报表闭环</td></tr>
+            <tr><td>LLM 评测</td><td class="mono">libs/minieval</td><td>5 元测试 + 5 条数据；0.52→0.72</td></tr>
             <tr><td>复刻矩阵</td><td class="mono">docs/requirements/module-matrix.md</td><td>8 模块选型完成</td></tr>
             <tr><td>验收材料</td><td class="mono">docs/portfolio</td><td>报告 + 截图</td></tr>
             <tr><td>CI</td><td class="mono">.github/workflows/ci.yml</td><td>GitHub Actions</td></tr>
@@ -311,7 +317,7 @@ docker run -p 8000:8000 ai-qa-lab
         <li>知识库仍是 mock；模块 08 接入 DeepSeek + 真实检索与评测。</li>
         <li>API 工作台只做 REST，不做 GraphQL/WebSocket/请求链路变量提取。</li>
         <li>SQLite 适合演示，不适合多用户生产；后续可切 PostgreSQL。</li>
-        <li>下一项：模块 08 LLM 评测（数据集、裁判、指标、报告）。</li>
+        <li>下一项：模块 01 方法论（知识地图与选型决策页）。</li>
       </ul>
     </article>
 

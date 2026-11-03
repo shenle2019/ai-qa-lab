@@ -835,6 +835,76 @@ apps/sut/frontend/src/views/Platform.vue   平台页面
 
 ---
 
+## 7.10 模块 08 复刻：LLM 评测
+
+### 做了什么
+
+- 在 `libs/minieval` 里自己写了一个 LLM 评测引擎；
+- 支持 JSONL 数据集、MockJudge、可选 DeepSeekJudge；
+- 实现 5 项指标：相关性、忠实度、上下文精确率、上下文召回率、正确性；
+- 支持阈值判定和 baseline vs candidate 对比；
+- 生成 JSON 和离线 HTML 报告；
+- 用真实 pytest 写了 5 个元测试；
+- 用 5 条 SUT 问答数据跑出 0.52 → 0.72 的提升。
+
+### 为什么
+
+LLM 输出没有唯一答案。只靠肉眼看“像不像”，无法回归，也无法比较两个版本。评测要回答：切题吗、忠于上下文吗、新版本比旧版本好吗。
+
+### 涉及的名词
+
+- **数据集**：一组问题、回答、参考答案、上下文。
+- **裁判**：给回答打分的模型或规则。
+- **相关性**：回答和问题是否相关。
+- **忠实度**：回答是否忠于上下文。
+- **上下文精确率/召回率**：检索到的上下文是否相关、是否覆盖答案。
+- **阈值**：总分低于多少算失败。
+- **baseline / candidate**：旧版本和新版本。
+
+### 原理
+
+#### 1. 词法指标
+
+没有 embedding 时，用字符和英文单词做近似 token，算集合重叠：
+
+- 相关性 = 问题 token 被回答覆盖的比例；
+- 忠实度 = 回答 token 被上下文覆盖的比例；
+- 正确性 = 参考答案 token 被回答覆盖的比例。
+
+#### 2. MockJudge
+
+不调用模型，直接用上面的词法指标算分。确定、免费、CI 可跑，但不能理解同义表达。
+
+#### 3. DeepSeekJudge
+
+把问题、回答、参考答案、上下文发给 DeepSeek，要求返回 JSON 分数。上下文指标仍由本地算，避免裁判编造。
+
+#### 4. 阈值和对比
+
+- 总分 >= 0.7：整体 PASS；
+- 单条低于 0.7：记入 failures；
+- baseline 和 candidate 各跑一次，输出每个指标的 delta。
+
+### 效果
+
+- 5 个框架元测试通过；
+- 5 条数据：baseline 0.52 → candidate 0.72，delta +0.20；
+- 整体 PASS，2 条单测低于阈值；
+- 报告：`docs/portfolio/module-08-llm-report.html`；
+- 截图：`docs/portfolio/screenshots/module-08-llm-report.png`。
+
+### 关键文件
+
+```
+libs/minieval/dataset.py     EvalCase + JSONL
+libs/minieval/metrics.py     词法指标
+libs/minieval/judges.py      MockJudge / DeepSeekJudge
+libs/minieval/engine.py      评测、阈值、对比
+libs/minieval/reporting.py   JSON + 离线 HTML
+```
+
+---
+
 ## 8. 第八步：把测试跑成“证据”
 
 ### 做了什么
@@ -1013,6 +1083,7 @@ Docker 构建：Node 构建前端 → 复制 dist → Python 安装依赖 → �
 - 自研 ADB/UIAutomator Android 自动化：设备发现、元素定位、点击、等待、截图；5 个元测试 + 3 个 Settings 用例。
 - 自研压测引擎：VU 并发、ramp-up、P95/P99、错误率、阈值判定、离线报告；8239 请求，1371 RPS。
 - 测试平台闭环：项目、用例、计划、执行、结果、缺陷、报表；13 个 API，支持导入迷你 pytest 报告。
+- 自研 LLM 评测：数据集、Mock/DeepSeek 裁判、5 项指标、阈值、baseline/candidate 对比；0.52→0.72。
 - 使用 Vue 3 + Vite + Pinia + Router + ECharts 构建 6 页测试控制台，覆盖仪表盘、工单、知识库、API 工作台、报告与模块验收。
 - clean-room 复刻 Hoppscotch 核心 API 工作台：请求构建、环境变量、5 类断言、集合保存、批量运行与报告；新增 5 个契约测试。
 - 建立“日报 + 里程碑快照”的报告归档机制，Git tag 与静态站点可追溯。
@@ -1042,7 +1113,7 @@ Docker 构建：Node 构建前端 → 复制 dist → Python 安装依赖 → �
 
 ## 13. 下一步怎么学
 
-模块 02、04、05、06、07 已完成。下一项是**模块 08：LLM 评测（数据集、裁判、指标、报告）**。
+模块 02、04、05、06、07、08 已完成。下一项是**模块 01：方法论（知识地图与选型决策页）**。
 
 先把模块 02 的七个机制过一遍：
 
@@ -1089,8 +1160,10 @@ Docker 构建：Node 构建前端 → 复制 dist → Python 安装依赖 → �
 19. 压测阈值应该怎么定？P95 和错误率哪个优先？
 20. 测试平台的六张表怎么关联？通过率为什么不算跳过？
 21. 迷你 pytest 的 JSON 报告怎么导入平台？状态怎么映射？
+22. LLM 评测的相关性、忠实度、上下文指标分别衡量什么？
+23. 为什么整体 PASS 还要看单条失败？MockJudge 的局限是什么？
 
-如果这 21 题你能用自己的话答出来，这个项目就可以写进简历并接受面试追问了。
+如果这 23 题你能用自己的话答出来，这个项目就可以写进简历并接受面试追问了。
 
 ---
 

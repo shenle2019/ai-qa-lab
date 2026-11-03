@@ -60,6 +60,7 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <li><a href="#77-05-appium">7.7 模块 05 复刻：迷你 Appium</a></li>
 <li><a href="#78-06">7.8 模块 06 复刻：迷你压测引擎</a></li>
 <li><a href="#79-07">7.9 模块 07 复刻：测试平台</a></li>
+<li><a href="#710-08-llm">7.10 模块 08 复刻：LLM 评测</a></li>
 <li><a href="#8">8. 第八步：把测试跑成“证据”</a></li>
 <li><a href="#9">9. 第九步：报告与归档</a></li>
 <li><a href="#10">10. 第十步：本地与远端部署</a></li>
@@ -793,17 +794,74 @@ apps/sut/backend/app/platform_api.py       13 个端点 + seed + 导入
 apps/sut/frontend/src/views/Platform.vue   平台页面
 </code></pre>
 <hr />
-<h2 id="8">8. 第八步：把测试跑成“证据”</h2>
+<h2 id="710-08-llm">7.10 模块 08 复刻：LLM 评测</h2>
 <h3 id="_65">做了什么</h3>
+<ul>
+<li>在 <code>libs/minieval</code> 里自己写了一个 LLM 评测引擎；</li>
+<li>支持 JSONL 数据集、MockJudge、可选 DeepSeekJudge；</li>
+<li>实现 5 项指标：相关性、忠实度、上下文精确率、上下文召回率、正确性；</li>
+<li>支持阈值判定和 baseline vs candidate 对比；</li>
+<li>生成 JSON 和离线 HTML 报告；</li>
+<li>用真实 pytest 写了 5 个元测试；</li>
+<li>用 5 条 SUT 问答数据跑出 0.52 → 0.72 的提升。</li>
+</ul>
+<h3 id="_66">为什么</h3>
+<p>LLM 输出没有唯一答案。只靠肉眼看“像不像”，无法回归，也无法比较两个版本。评测要回答：切题吗、忠于上下文吗、新版本比旧版本好吗。</p>
+<h3 id="_67">涉及的名词</h3>
+<ul>
+<li><strong>数据集</strong>：一组问题、回答、参考答案、上下文。</li>
+<li><strong>裁判</strong>：给回答打分的模型或规则。</li>
+<li><strong>相关性</strong>：回答和问题是否相关。</li>
+<li><strong>忠实度</strong>：回答是否忠于上下文。</li>
+<li><strong>上下文精确率/召回率</strong>：检索到的上下文是否相关、是否覆盖答案。</li>
+<li><strong>阈值</strong>：总分低于多少算失败。</li>
+<li><strong>baseline / candidate</strong>：旧版本和新版本。</li>
+</ul>
+<h3 id="_68">原理</h3>
+<h4 id="1_6">1. 词法指标</h4>
+<p>没有 embedding 时，用字符和英文单词做近似 token，算集合重叠：</p>
+<ul>
+<li>相关性 = 问题 token 被回答覆盖的比例；</li>
+<li>忠实度 = 回答 token 被上下文覆盖的比例；</li>
+<li>正确性 = 参考答案 token 被回答覆盖的比例。</li>
+</ul>
+<h4 id="2-mockjudge">2. MockJudge</h4>
+<p>不调用模型，直接用上面的词法指标算分。确定、免费、CI 可跑，但不能理解同义表达。</p>
+<h4 id="3-deepseekjudge">3. DeepSeekJudge</h4>
+<p>把问题、回答、参考答案、上下文发给 DeepSeek，要求返回 JSON 分数。上下文指标仍由本地算，避免裁判编造。</p>
+<h4 id="4_5">4. 阈值和对比</h4>
+<ul>
+<li>总分 &gt;= 0.7：整体 PASS；</li>
+<li>单条低于 0.7：记入 failures；</li>
+<li>baseline 和 candidate 各跑一次，输出每个指标的 delta。</li>
+</ul>
+<h3 id="_69">效果</h3>
+<ul>
+<li>5 个框架元测试通过；</li>
+<li>5 条数据：baseline 0.52 → candidate 0.72，delta +0.20；</li>
+<li>整体 PASS，2 条单测低于阈值；</li>
+<li>报告：<code>docs/portfolio/module-08-llm-report.html</code>；</li>
+<li>截图：<code>docs/portfolio/screenshots/module-08-llm-report.png</code>。</li>
+</ul>
+<h3 id="_70">关键文件</h3>
+<pre><code>libs/minieval/dataset.py     EvalCase + JSONL
+libs/minieval/metrics.py     词法指标
+libs/minieval/judges.py      MockJudge / DeepSeekJudge
+libs/minieval/engine.py      评测、阈值、对比
+libs/minieval/reporting.py   JSON + 离线 HTML
+</code></pre>
+<hr />
+<h2 id="8">8. 第八步：把测试跑成“证据”</h2>
+<h3 id="_71">做了什么</h3>
 <ul>
 <li>用 pytest 跑全量 33 个测试；</li>
 <li>用无头 Chrome 截图验收页面；</li>
 <li>配置 GitHub Actions，每次 push 跑 pytest；</li>
 <li>把截图、报告、验收说明写进仓库。</li>
 </ul>
-<h3 id="_66">为什么</h3>
+<h3 id="_72">为什么</h3>
 <p>简历和面试需要<strong>证据</strong>，不是口头说“我做了”。CI 还能防止你改坏已有功能。</p>
-<h3 id="_67">涉及的名词</h3>
+<h3 id="_73">涉及的名词</h3>
 <ul>
 <li><strong>CI（持续集成）</strong>：每次提交自动构建/跑测试，尽早发现问题。</li>
 <li><strong>GitHub Actions</strong>：GitHub 的 CI 服务；<code>workflow</code> 是配置文件。</li>
@@ -812,17 +870,17 @@ apps/sut/frontend/src/views/Platform.vue   平台页面
 <li><strong>Artifact</strong>：CI 产出的文件，如测试报告、截图。</li>
 <li><strong>回归测试</strong>：改代码后重跑旧测试，确认没把旧功能改坏。</li>
 </ul>
-<h3 id="_68">原理</h3>
+<h3 id="_74">原理</h3>
 <pre><code>push 代码 → GitHub Actions 启动 Ubuntu → 安装依赖 → 跑 pytest → 记录成功/失败
 </code></pre>
-<h3 id="_69">效果</h3>
+<h3 id="_75">效果</h3>
 <p>GitHub 上能看到 CI 记录；本地 33 passed；验收截图可追溯。</p>
 <blockquote>
 <p>注意：当前 CI 只跑后端测试，还没有把 <code>suites/api</code> 和前端构建加进去；这是下一步可以补的。</p>
 </blockquote>
 <hr />
 <h2 id="9">9. 第九步：报告与归档</h2>
-<h3 id="_70">做了什么</h3>
+<h3 id="_76">做了什么</h3>
 <ul>
 <li>最新报告：<code>docs/index.html</code> 和 Vue <code>/ui/#/report</code>；</li>
 <li>日报：<code>docs/progress/YYYY-MM-DD.md</code>；</li>
@@ -831,7 +889,7 @@ apps/sut/frontend/src/views/Platform.vue   平台页面
 <li>归档脚本：<code>scripts/archive_report.py</code>；</li>
 <li>Git tag：<code>v0.2.0</code>、<code>v0.2.0-archive</code>。</li>
 </ul>
-<h3 id="_71">为什么</h3>
+<h3 id="_77">为什么</h3>
 <p>代码每天变，如果报告也每天覆盖，历史就丢了；如果每天生成一个新报告，又会变成噪声。所以：</p>
 <ul>
 <li>日报记录“过程”；</li>
@@ -839,7 +897,7 @@ apps/sut/frontend/src/views/Platform.vue   平台页面
 <li>根报告永远是最新状态；</li>
 <li>快照不可变，面试时能回看“我当时做到了什么”。</li>
 </ul>
-<h3 id="_72">涉及的名词</h3>
+<h3 id="_78">涉及的名词</h3>
 <ul>
 <li><strong>快照（Snapshot）</strong>：某一时刻的完整副本。</li>
 <li><strong>不可变（Immutable）</strong>：归档后不再修改，保证可信。</li>
@@ -848,9 +906,9 @@ apps/sut/frontend/src/views/Platform.vue   平台页面
 <li><strong>里程碑（Milestone）</strong>：一个阶段目标，如“完成模块 03”。</li>
 <li><strong>Changelog</strong>：变更记录，说明每个版本改了什么。</li>
 </ul>
-<h3 id="_73">原理</h3>
+<h3 id="_79">原理</h3>
 <p><strong>单一信源 + 自动生成 + 不可变归档</strong>：报告从当前仓库生成快照，脚本复制截图、改写路径、写 <code>metrics.json</code>，再生成索引；历史快照只读。</p>
-<h3 id="_74">效果</h3>
+<h3 id="_80">效果</h3>
 <p>公网可访问：</p>
 <ul>
 <li>最新报告：https://shenle2019.github.io/ai-qa-lab/</li>
@@ -859,7 +917,7 @@ apps/sut/frontend/src/views/Platform.vue   平台页面
 </ul>
 <hr />
 <h2 id="10">10. 第十步：本地与远端部署</h2>
-<h3 id="_75">做了什么</h3>
+<h3 id="_81">做了什么</h3>
 <ul>
 <li>本地：FastAPI 同时提供 <code>/api</code> 和 <code>/ui</code>，一条命令启动；</li>
 <li>容器：写 <code>Dockerfile</code>，Node 构建前端，Python 跑后端；</li>
@@ -867,9 +925,9 @@ apps/sut/frontend/src/views/Platform.vue   平台页面
 <li>Hugging Face Spaces：<code>deploy/huggingface/</code>；</li>
 <li>决策：<strong>先本地开发，8 个模块全部完成后再上云</strong>。</li>
 </ul>
-<h3 id="_76">为什么</h3>
+<h3 id="_82">为什么</h3>
 <p>GitHub Pages 只能托管静态文件，不能运行 Python 后端；完整系统需要容器平台。现在上云会打断学习节奏，所以暂缓。</p>
-<h3 id="_77">涉及的名词</h3>
+<h3 id="_83">涉及的名词</h3>
 <ul>
 <li><strong>Docker</strong>：把应用和依赖打包成镜像，保证环境一致。</li>
 <li><strong>镜像（Image）/容器（Container）</strong>：镜像是模板，容器是运行实例。</li>
@@ -878,11 +936,11 @@ apps/sut/frontend/src/views/Platform.vue   平台页面
 <li><strong>冷启动（Cold Start）</strong>：免费实例休眠后，第一次访问要等它启动。</li>
 <li><strong>临时存储（Ephemeral Storage）</strong>：重启后数据丢失；SQLite 在免费平台就是这个特性。</li>
 </ul>
-<h3 id="_78">原理</h3>
+<h3 id="_84">原理</h3>
 <pre><code>Docker 构建：Node 构建前端 → 复制 dist → Python 安装依赖 → 启动 uvicorn
 运行：浏览器 → 容器 8000/7860 → FastAPI → SQLite
 </code></pre>
-<h3 id="_79">效果</h3>
+<h3 id="_85">效果</h3>
 <p>本地完整可用；云部署配置保留，后续直接使用。</p>
 <hr />
 <h2 id="11">11. 术语速查表</h2>
@@ -1078,7 +1136,7 @@ apps/sut/frontend/src/views/Platform.vue   平台页面
 </table>
 <hr />
 <h2 id="12">12. 简历上怎么写（只写真实做过的）</h2>
-<h3 id="_80">可以写的</h3>
+<h3 id="_86">可以写的</h3>
 <ul>
 <li>独立搭建可运行的 AI 工单/知识库 SUT：FastAPI + SQLAlchemy + SQLite，8 个 HTTP 接口（6 个业务 + 2 个工作台），自动生成 OpenAPI 文档。</li>
 <li>设计并实现 66 个真实 pytest 用例：33 个业务/接口契约 + 33 个迷你 pytest 框架元测试，覆盖 404/422/边界/非法枚举。</li>
@@ -1087,11 +1145,12 @@ apps/sut/frontend/src/views/Platform.vue   平台页面
 <li>自研 ADB/UIAutomator Android 自动化：设备发现、元素定位、点击、等待、截图；5 个元测试 + 3 个 Settings 用例。</li>
 <li>自研压测引擎：VU 并发、ramp-up、P95/P99、错误率、阈值判定、离线报告；8239 请求，1371 RPS。</li>
 <li>测试平台闭环：项目、用例、计划、执行、结果、缺陷、报表；13 个 API，支持导入迷你 pytest 报告。</li>
+<li>自研 LLM 评测：数据集、Mock/DeepSeek 裁判、5 项指标、阈值、baseline/candidate 对比；0.52→0.72。</li>
 <li>使用 Vue 3 + Vite + Pinia + Router + ECharts 构建 6 页测试控制台，覆盖仪表盘、工单、知识库、API 工作台、报告与模块验收。</li>
 <li>clean-room 复刻 Hoppscotch 核心 API 工作台：请求构建、环境变量、5 类断言、集合保存、批量运行与报告；新增 5 个契约测试。</li>
 <li>建立“日报 + 里程碑快照”的报告归档机制，Git tag 与静态站点可追溯。</li>
 </ul>
-<h3 id="_81">面试可能追问</h3>
+<h3 id="_87">面试可能追问</h3>
 <ol>
 <li>为什么先做接口测试，而不是 UI 自动化？</li>
 <li>接口快、稳定、ROI 高；UI 慢且易碎，适合覆盖关键路径。</li>
@@ -1106,7 +1165,7 @@ apps/sut/frontend/src/views/Platform.vue   平台页面
 <li>这个项目最大的边界是什么？</li>
 <li>没做登录/RBAC、真实 RAG、Playwright/Appium/性能/LLM 评测；SQLite 只适合演示。</li>
 </ol>
-<h3 id="_82">不要写的</h3>
+<h3 id="_88">不要写的</h3>
 <ul>
 <li>不要写“精通 Playwright/Appium/k6/LLM 评测”——这些模块还没做。</li>
 <li>不要写“生产级高可用”——当前是本地演示。</li>
@@ -1114,7 +1173,7 @@ apps/sut/frontend/src/views/Platform.vue   平台页面
 </ul>
 <hr />
 <h2 id="13">13. 下一步怎么学</h2>
-<p>模块 02、04、05、06、07 已完成。下一项是<strong>模块 08：LLM 评测（数据集、裁判、指标、报告）</strong>。</p>
+<p>模块 02、04、05、06、07、08 已完成。下一项是<strong>模块 01：方法论（知识地图与选型决策页）</strong>。</p>
 <p>先把模块 02 的七个机制过一遍：</p>
 <ol>
 <li><strong>用例收集</strong>：框架怎么找到 <code>test_*.py</code> 里的函数；</li>
@@ -1154,8 +1213,10 @@ apps/sut/frontend/src/views/Platform.vue   平台页面
 <li>压测阈值应该怎么定？P95 和错误率哪个优先？</li>
 <li>测试平台的六张表怎么关联？通过率为什么不算跳过？</li>
 <li>迷你 pytest 的 JSON 报告怎么导入平台？状态怎么映射？</li>
+<li>LLM 评测的相关性、忠实度、上下文指标分别衡量什么？</li>
+<li>为什么整体 PASS 还要看单条失败？MockJudge 的局限是什么？</li>
 </ol>
-<p>如果这 21 题你能用自己的话答出来，这个项目就可以写进简历并接受面试追问了。</p>
+<p>如果这 23 题你能用自己的话答出来，这个项目就可以写进简历并接受面试追问了。</p>
 <hr />
 <h2 id="15-2026-11-03">15. 五个常见问题（2026-11-03）</h2>
 <h3 id="151">15.1 学习页标题为什么改了</h3>

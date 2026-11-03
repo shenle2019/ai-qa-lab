@@ -76,8 +76,9 @@ const modules = [
     reference: 'confident-ai/deepeval',
     stars: '19,242',
     href: 'https://github.com/confident-ai/deepeval',
-    status: 'planned',
-    scope: '数据集、指标、裁判模型、阈值与对比报告',
+    status: 'progress',
+    scope: 'minieval v0.1：数据集、Mock/DeepSeek 裁判、相关性/忠实度/上下文指标、阈值、对比报告；5 元测试 + 5 条数据',
+    report: '/portfolio/module-08-llm-report.html',
   },
 ]
 

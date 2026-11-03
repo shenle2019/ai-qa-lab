@@ -20,6 +20,7 @@
 | 11-03 16:48 | 模块 05 复刻 v0.1 | 迷你 Appium：ADB/UIAutomator、元素定位、点击、等待、截图；5 元测试 + 3 个 Settings 用例 |
 | 11-03 17:06 | 模块 06 复刻 v0.1 | 迷你压测：VU 并发、ramp-up、P95/P99、阈值、离线报告；8239 请求，1371 RPS，P95 21ms |
 | 11-03 17:15 | 模块 07 复刻 v0.1 | 测试平台：项目、用例、计划、执行、缺陷、报表；13 个 API，支持导入迷你 pytest 报告 |
+| 11-03 17:16 | 模块 08 复刻 v0.1 | LLM 评测：数据集、Mock/DeepSeek 裁判、5 项指标、阈值、对比报告；0.52→0.72 |
 
 ## 2. 原理
 
@@ -47,6 +48,7 @@ SQLAlchemy → SQLite
 - **App 自动化**：miniappium 通过 ADB + UIAutomator 驱动 Android 模拟器，不依赖 Appium Server。
 - **性能测试**：miniload 用线程 VU + requests 采集 P95/P99 和错误率，按阈值判定是否通过。
 - **测试平台**：项目/用例/计划/执行/缺陷/报表六张表，支持把迷你 pytest JSON 报告导入成一次执行。
+- **LLM 评测**：JSONL 数据集 + Mock/DeepSeek 裁判 + 5 项指标 + 阈值 + baseline/candidate 对比。
 
 ## 3. 步骤
 
@@ -84,11 +86,11 @@ docker run -p 8000:8000 ai-qa-lab
 
 ## 4. 最后成果
 
-- 88 个真实 pytest 用例全部通过（33 现有 + 33 迷你 pytest + 6 迷你 Playwright + 5 迷你 Appium + 5 迷你压测 + 6 平台）
+- 93 个真实 pytest 用例全部通过（33 现有 + 33 迷你 pytest + 6 迷你 Playwright + 5 迷你 Appium + 5 迷你压测 + 6 平台 + 5 LLM 评测）
 - 29 个迷你演示用例：20 个迷你 pytest + 5 个迷你 Playwright + 3 个迷你 Appium + 1 次压测
 - 6 个前端页面，构建成功
 - 8 个模块的 GitHub 最高星项目选型矩阵
-- 6 个可运行的复刻闭环：模块 03 API 工作台、模块 02 迷你 pytest、模块 04 迷你 Playwright、模块 05 迷你 Appium、模块 06 迷你压测、模块 07 测试平台
+- 7 个可运行的复刻闭环：模块 03 API 工作台、模块 02 迷你 pytest、模块 04 迷你 Playwright、模块 05 迷你 Appium、模块 06 迷你压测、模块 07 测试平台、模块 08 LLM 评测
 - 公开仓库、CI、验收截图、Docker/Render 部署配置
 
 详细验收：
@@ -99,6 +101,7 @@ docker run -p 8000:8000 ai-qa-lab
 - `docs/portfolio/module-05-mini-appium.md`
 - `docs/portfolio/module-06-mini-load.md`
 - `docs/portfolio/module-07-test-platform.md`
+- `docs/portfolio/module-08-llm-eval.md`
 - `docs/portfolio/module-03-api-workbench.md`
 - `docs/requirements/module-matrix.md`
 
@@ -134,7 +137,7 @@ https://render.com/deploy?repo=https://github.com/shenle2019/ai-qa-lab
 - 知识库仍是 mock，模块 08 接入 DeepSeek + 真实检索与评测。
 - API 工作台只做 REST，不做 GraphQL/WebSocket/请求链路变量提取。
 - SQLite 适合演示，不适合多用户生产；后续切 PostgreSQL。
-- 下一项：模块 08 LLM 评测（数据集、裁判、指标、报告）。
+- 下一项：模块 01 方法论（知识地图与选型决策页）。
 
 ## 7. 五个常见问题（2026-11-03）
 
