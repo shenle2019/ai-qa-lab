@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>2026-11-04 测试用例扩充与执行报告 · AI全栈测试开发平台-shenle</title>
+<style>
+  :root { --bg:#070b14; --line:rgba(148,163,184,.16); --text:#e6edf7; --muted:#9fb0c9; --accent:#38bdf8; }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:36px 20px 70px; color:var(--text); background:radial-gradient(900px 600px at 15% -10%, rgba(56,189,248,.16), transparent 60%), var(--bg); font-family:"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif; }
+  .wrap { max-width:1000px; margin:0 auto; }
+  h1 { font-size:28px; margin:0 0 8px; }
+  h2 { font-size:19px; margin:28px 0 10px; }
+  h3 { font-size:15px; margin:20px 0 8px; color:#bae6fd; }
+  p, li { color:#c9d6e8; font-size:13.5px; line-height:1.8; }
+  table { width:100%; border-collapse:collapse; margin:14px 0; font-size:12.5px; }
+  th, td { padding:9px 10px; border-bottom:1px solid rgba(148,163,184,.12); text-align:left; }
+  th { color:var(--muted); font-size:11px; letter-spacing:.05em; text-transform:uppercase; }
+  code { padding:2px 6px; border-radius:6px; color:#bae6fd; background:rgba(56,189,248,.1); font-family:Consolas,monospace; font-size:12px; }
+  blockquote { margin:12px 0; padding:10px 14px; border-left:3px solid var(--accent); color:var(--muted); background:rgba(56,189,248,.06); }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>2026-11-04 测试用例扩充与执行报告</h1>
+<blockquote>
+<p>生成时间：2026-11-04T16:13:38
+执行方式：按类别分别运行 pytest，结果来自 JUnit XML。</p>
+</blockquote>
+<h2>结论</h2>
+<p>六类场景共设计并收集 <strong>194</strong> 条用例：通过 181，失败 0，跳过 13。跳过项全部是 Android 真机/模拟器用例，当前环境没有可用设备，未伪造通过。</p>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>执行结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>接口测试</td>
+<td><code>51 passed in 1.82s</code></td>
+</tr>
+<tr>
+<td>兼容性</td>
+<td><code>35 passed in 1.85s</code></td>
+</tr>
+<tr>
+<td>可靠性</td>
+<td><code>26 passed in 3.56s</code></td>
+</tr>
+<tr>
+<td>Web 测试</td>
+<td><code>28 passed in 6.45s</code></td>
+</tr>
+<tr>
+<td>性能测试</td>
+<td><code>29 passed in 36.56s</code></td>
+</tr>
+<tr>
+<td>App 测试</td>
+<td><code>12 passed, 13 skipped in 0.07s</code></td>
+</tr>
+</tbody>
+</table>
+<h2>分类汇总</h2>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th style="text-align: right;">用例数</th>
+<th style="text-align: right;">通过</th>
+<th style="text-align: right;">跳过</th>
+<th style="text-align: right;">失败</th>
+<th>设计方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>接口测试</td>
+<td style="text-align: right;">51</td>
+<td style="text-align: right;">51</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td>等价类 / 边界值 / 错误推测 / 场景法</td>
+</tr>
+<tr>
+<td>兼容性</td>
+<td style="text-align: right;">35</td>
+<td style="text-align: right;">35</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td>协议 / 编码 / 格式 / 架构兼容</td>
+</tr>
+<tr>
+<td>可靠性</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td>重复性 / 并发 / 恢复 / 隔离</td>
+</tr>
+<tr>
+<td>Web 测试</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td>UI 等价类 / 边界 / 错误推测 / 场景</td>
+</tr>
+<tr>
+<td>性能测试</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td>并发 / 持续负载 / 爬坡 / 阈值</td>
+</tr>
+<tr>
+<td>App 测试</td>
+<td style="text-align: right;">25</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">0</td>
+<td>元素解析 + 真机场景</td>
+</tr>
+</tbody>
+</table>
+<h2>本次发现并修复</h2>
+<ul>
+<li>超大路径 ID（如 24 位整数）会触发 SQLite 溢出并返回 500，已改为参数越界直接返回 404。</li>
+<li>执行器先开写事务再回调自身接口，会导致 <code>database is locked</code>；已在部署阶段修复为先执行后落库，并启用 WAL 与 30 秒 busy timeout。</li>
+<li>测试基础设施：多个 <code>tests</code> 目录没有包标记，pytest 混合收集时 <code>page</code>/<code>sut</code> fixture 会串到其他目录；已补 <code>__init__.py</code> 并把冲突 fixture 改为唯一名称。</li>
+</ul>
+<h2>分类明细</h2>
+<h3>接口测试（51 条）</h3>
+<ul>
+<li>[x] <code>test_title_valid_equivalence_and_boundary[1]</code></li>
+<li>[x] <code>test_title_valid_equivalence_and_boundary[2]</code></li>
+<li>[x] <code>test_title_valid_equivalence_and_boundary[10]</code></li>
+<li>[x] <code>test_title_valid_equivalence_and_boundary[50]</code></li>
+<li>[x] <code>test_title_valid_equivalence_and_boundary[100]</code></li>
+<li>[x] <code>test_title_valid_equivalence_and_boundary[199]</code></li>
+<li>[x] <code>test_title_valid_equivalence_and_boundary[200]</code></li>
+<li>[x] <code>test_title_invalid_equivalence_and_boundary[0]</code></li>
+<li>[x] <code>test_title_invalid_equivalence_and_boundary[201]</code></li>
+<li>[x] <code>test_title_invalid_equivalence_and_boundary[1000]</code></li>
+<li>[x] <code>test_priority_valid_equivalence[low]</code></li>
+<li>[x] <code>test_priority_valid_equivalence[medium]</code></li>
+<li>[x] <code>test_priority_valid_equivalence[high]</code></li>
+<li>[x] <code>test_priority_invalid_equivalence[urgent]</code></li>
+<li>[x] <code>test_priority_invalid_equivalence[]</code></li>
+<li>[x] <code>test_priority_invalid_equivalence[HIGH]</code></li>
+<li>[x] <code>test_priority_invalid_equivalence[0]</code></li>
+<li>[x] <code>test_description_valid_boundary[0]</code></li>
+<li>[x] <code>test_description_valid_boundary[1]</code></li>
+<li>[x] <code>test_description_valid_boundary[4999]</code></li>
+<li>[x] <code>test_description_valid_boundary[5000]</code></li>
+<li>[x] <code>test_description_over_limit</code></li>
+<li>[x] <code>test_ticket_lifecycle_scenario</code></li>
+<li>[x] <code>test_status_update_equivalence[open]</code></li>
+<li>[x] <code>test_status_update_equivalence[in_progress]</code></li>
+<li>[x] <code>test_status_update_equivalence[closed]</code></li>
+<li>[x] <code>test_status_update_invalid[done]</code></li>
+<li>[x] <code>test_status_update_invalid[]</code></li>
+<li>[x] <code>test_status_update_invalid[OPEN]</code></li>
+<li>[x] <code>test_status_update_invalid[closed ]</code></li>
+<li>[x] <code>test_partial_update_keeps_other_fields</code></li>
+<li>[x] <code>test_update_missing_ticket</code></li>
+<li>[x] <code>test_get_missing_ticket</code></li>
+<li>[x] <code>test_delete_missing_ticket</code></li>
+<li>[x] <code>test_duplicate_titles_are_allowed</code></li>
+<li>[x] <code>test_unicode_title</code></li>
+<li>[x] <code>test_emoji_title</code></li>
+<li>[x] <code>test_special_characters_are_preserved[quotes ' "</code>]`</li>
+<li>[x] <code>test_special_characters_are_preserved[line1\nline2\tend]</code></li>
+<li>[x] <code>test_special_characters_are_preserved[%%%___---]</code></li>
+<li>[x] <code>test_special_characters_are_preserved[a  b]</code></li>
+<li>[x] <code>test_sql_injection_is_stored_literally</code></li>
+<li>[x] <code>test_xss_payload_is_returned_as_data</code></li>
+<li>[x] <code>test_invalid_title_payloads[payload0]</code></li>
+<li>[x] <code>test_invalid_title_payloads[payload1]</code></li>
+<li>[x] <code>test_invalid_title_payloads[payload2]</code></li>
+<li>[x] <code>test_invalid_title_payloads[payload3]</code></li>
+<li>[x] <code>test_invalid_title_payloads[payload4]</code></li>
+<li>[x] <code>test_unknown_fields_are_ignored</code></li>
+<li>[x] <code>test_created_ticket_appears_in_list</code></li>
+<li>[x] <code>test_bulk_create_scenario</code></li>
+</ul>
+<h3>兼容性（35 条）</h3>
+<ul>
+<li>[x] <code>test_json_with_utf8_charset</code></li>
+<li>[x] <code>test_text_plain_json_body_is_rejected</code></li>
+<li>[x] <code>test_missing_content_type_still_parses_json</code></li>
+<li>[x] <code>test_utf8_bom_json_is_accepted</code></li>
+<li>[x] <code>test_accept_header_does_not_break_json[application/json]</code></li>
+<li>[x] <code>test_accept_header_does_not_break_json[text/html]</code></li>
+<li>[x] <code>test_accept_header_does_not_break_json[application/xml]</code></li>
+<li>[x] <code>test_accept_header_does_not_break_json[*/*]</code></li>
+<li>[x] <code>test_unsupported_methods[OPTIONS]</code></li>
+<li>[x] <code>test_unsupported_methods[HEAD]</code></li>
+<li>[x] <code>test_unsupported_methods[PUT]</code></li>
+<li>[x] <code>test_unknown_query_parameters_are_ignored</code></li>
+<li>[x] <code>test_trailing_slash_redirects</code></li>
+<li>[x] <code>test_path_is_case_sensitive</code></li>
+<li>[x] <code>test_ticket_response_schema_is_stable</code></li>
+<li>[x] <code>test_created_at_is_iso_datetime</code></li>
+<li>[x] <code>test_health_schema_is_stable</code></li>
+<li>[x] <code>test_openapi_lists_ticket_endpoints</code></li>
+<li>[x] <code>test_response_is_utf8_decodable</code></li>
+<li>[x] <code>test_max_description_round_trip</code></li>
+<li>[x] <code>test_unknown_field_is_ignored</code></li>
+<li>[x] <code>test_duplicate_json_keys_last_one_wins</code></li>
+<li>[x] <code>test_non_object_bodies_are_rejected[body0]</code></li>
+<li>[x] <code>test_non_object_bodies_are_rejected[body1]</code></li>
+<li>[x] <code>test_non_object_bodies_are_rejected[string-body]</code></li>
+<li>[x] <code>test_non_object_bodies_are_rejected[123]</code></li>
+<li>[x] <code>test_null_and_wrong_typed_optionals_are_rejected[payload0]</code></li>
+<li>[x] <code>test_null_and_wrong_typed_optionals_are_rejected[payload1]</code></li>
+<li>[x] <code>test_null_and_wrong_typed_optionals_are_rejected[payload2]</code></li>
+<li>[x] <code>test_defaults_when_optional_fields_missing</code></li>
+<li>[x] <code>test_oversized_id_is_rejected</code></li>
+<li>[x] <code>test_negative_id_is_not_found</code></li>
+<li>[x] <code>test_delete_returns_empty_204</code></li>
+<li>[x] <code>test_error_body_has_detail</code></li>
+<li>[x] <code>test_no_cors_headers_by_default</code></li>
+</ul>
+<h3>可靠性（26 条）</h3>
+<ul>
+<li>[x] <code>test_repeated_reads_are_consistent</code></li>
+<li>[x] <code>test_concurrent_reads_succeed</code></li>
+<li>[x] <code>test_concurrent_writes_succeed</code></li>
+<li>[x] <code>test_create_delete_recreate</code></li>
+<li>[x] <code>test_malformed_json_then_valid_request</code></li>
+<li>[x] <code>test_validation_error_then_valid_request</code></li>
+<li>[x] <code>test_delete_is_not_idempotent</code></li>
+<li>[x] <code>test_status_round_trip</code></li>
+<li>[x] <code>test_repeated_create_delete_cycles</code></li>
+<li>[x] <code>test_health_survives_burst</code></li>
+<li>[x] <code>test_error_detail_is_stable</code></li>
+<li>[x] <code>test_list_is_sorted_by_id_desc</code></li>
+<li>[x] <code>test_ids_increase_monotonically</code></li>
+<li>[x] <code>test_workbench_can_call_health</code></li>
+<li>[x] <code>test_workbench_reports_unreachable_target</code></li>
+<li>[x] <code>test_workbench_rejects_invalid_url</code></li>
+<li>[x] <code>test_workbench_blocks_metadata_address</code></li>
+<li>[x] <code>test_workbench_batch_limit</code></li>
+<li>[x] <code>test_workbench_batch_ok</code></li>
+<li>[x] <code>test_execute_without_cases_is_rejected</code></li>
+<li>[x] <code>test_executor_rejects_absolute_target</code></li>
+<li>[x] <code>test_missing_execution_report</code></li>
+<li>[x] <code>test_duplicate_model_name_is_rejected</code></li>
+<li>[x] <code>test_model_key_is_masked</code></li>
+<li>[x] <code>test_seed_is_idempotent</code></li>
+<li>[x] <code>test_server_survives_bad_body_and_stays_healthy</code></li>
+</ul>
+<h3>Web 测试（28 条）</h3>
+<ul>
+<li>[x] <code>test_tickets_page_loads</code></li>
+<li>[x] <code>test_sidebar_has_nine_entries</code></li>
+<li>[x] <code>test_dashboard_has_four_stat_cards</code></li>
+<li>[x] <code>test_dashboard_shows_total_label</code></li>
+<li>[x] <code>test_create_ticket_by_priority[low]</code></li>
+<li>[x] <code>test_create_ticket_by_priority[medium]</code></li>
+<li>[x] <code>test_create_ticket_by_priority[high]</code></li>
+<li>[x] <code>test_create_with_description</code></li>
+<li>[x] <code>test_create_title_variants[\u4e2d\u6587\u6807\u9898-\u6253\u5370\u673a\u65e0\u6cd5\u8fde\u63a5]</code></li>
+<li>[x] <code>test_create_title_variants[\u652f\u4ed8\u5931\u8d25 \U0001f525\U0001f9fe]</code></li>
+<li>[x] <code>test_create_title_variants[\u7279\u6b8a\u5b57\u7b26 &lt;&gt;&amp;"']</code></li>
+<li>[x] <code>test_title_input_declares_200_limit</code></li>
+<li>[x] <code>test_empty_title_shows_error</code></li>
+<li>[x] <code>test_whitespace_title_shows_error</code></li>
+<li>[x] <code>test_cancel_modal</code></li>
+<li>[x] <code>test_search_filters_rows</code></li>
+<li>[x] <code>test_status_filter</code></li>
+<li>[x] <code>test_priority_filter</code></li>
+<li>[x] <code>test_update_status_inline</code></li>
+<li>[x] <code>test_update_priority_inline</code></li>
+<li>[x] <code>test_delete_ticket</code></li>
+<li>[x] <code>test_data_persists_after_reload</code></li>
+<li>[x] <code>test_navigation_pages[/ui/#/platform-\u6d4b\u8bd5\u5e73\u53f0]</code></li>
+<li>[x] <code>test_navigation_pages[/ui/#/models-\u6a21\u578b\u4e2d\u5fc3]</code></li>
+<li>[x] <code>test_navigation_pages[/ui/#/report-\u9879\u76ee\u62a5\u544a]</code></li>
+<li>[x] <code>test_navigation_pages[/ui/#/portfolio-\u6a21\u5757\u9a8c\u6536]</code></li>
+<li>[x] <code>test_navigation_pages[/ui/#/methodology-\u65b9\u6cd5\u8bba]</code></li>
+<li>[x] <code>test_navigation_pages[/ui/#/knowledge-\u77e5\u8bc6\u5e93\u95ee\u7b54]</code></li>
+</ul>
+<h3>性能测试（29 条）</h3>
+<ul>
+<li>[x] <code>test_health_under_concurrency[1]</code></li>
+<li>[x] <code>test_health_under_concurrency[2]</code></li>
+<li>[x] <code>test_health_under_concurrency[3]</code></li>
+<li>[x] <code>test_health_under_concurrency[5]</code></li>
+<li>[x] <code>test_health_under_concurrency[8]</code></li>
+<li>[x] <code>test_ticket_list_under_concurrency[1]</code></li>
+<li>[x] <code>test_ticket_list_under_concurrency[2]</code></li>
+<li>[x] <code>test_ticket_list_under_concurrency[3]</code></li>
+<li>[x] <code>test_ticket_list_under_concurrency[5]</code></li>
+<li>[x] <code>test_sustained_load[2]</code></li>
+<li>[x] <code>test_sustained_load[3]</code></li>
+<li>[x] <code>test_ramp_up_keeps_success[0.2]</code></li>
+<li>[x] <code>test_ramp_up_keeps_success[0.5]</code></li>
+<li>[x] <code>test_p95_thresholds_pass[200]</code></li>
+<li>[x] <code>test_p95_thresholds_pass[500]</code></li>
+<li>[x] <code>test_p95_thresholds_pass[2000]</code></li>
+<li>[x] <code>test_p95_threshold_can_fail</code></li>
+<li>[x] <code>test_404_is_counted_as_error</code></li>
+<li>[x] <code>test_error_rate_threshold</code></li>
+<li>[x] <code>test_percentiles_are_ordered</code></li>
+<li>[x] <code>test_rps_is_positive</code></li>
+<li>[x] <code>test_total_exceeds_vus</code></li>
+<li>[x] <code>test_min_rps_threshold</code></li>
+<li>[x] <code>test_min_rps_can_fail</code></li>
+<li>[x] <code>test_mixed_endpoint_sequence</code></li>
+<li>[x] <code>test_high_concurrency_health</code></li>
+<li>[x] <code>test_status_counts_present</code></li>
+<li>[x] <code>test_average_latency_is_positive</code></li>
+<li>[x] <code>test_thresholds_are_recorded</code></li>
+</ul>
+<h3>App 测试（25 条）</h3>
+<ul>
+<li>[x] <code>test_element_text</code></li>
+<li>[x] <code>test_element_resource_id</code></li>
+<li>[x] <code>test_element_content_desc</code></li>
+<li>[x] <code>test_element_class_name</code></li>
+<li>[x] <code>test_element_bounds_parse</code></li>
+<li>[x] <code>test_element_center</code></li>
+<li>[x] <code>test_element_visible_with_area</code></li>
+<li>[x] <code>test_element_invisible_zero_width</code></li>
+<li>[x] <code>test_element_invisible_without_bounds</code></li>
+<li>[x] <code>test_element_tap_uses_center</code></li>
+<li>[x] <code>test_element_tap_without_bounds_raises</code></li>
+<li>[x] <code>test_element_repr_contains_text</code></li>
+<li>[-] <code>test_device_model</code>（跳过：无 Android 设备）</li>
+<li>[-] <code>test_device_serial</code>（跳过：无 Android 设备）</li>
+<li>[-] <code>test_settings_home_visible</code>（跳过：无 Android 设备）</li>
+<li>[-] <code>test_settings_entries_visible[Network &amp; internet]</code>（跳过：无 Android 设备）</li>
+<li>[-] <code>test_settings_entries_visible[Connected devices]</code>（跳过：无 Android 设备）</li>
+<li>[-] <code>test_settings_entries_visible[Apps]</code>（跳过：无 Android 设备）</li>
+<li>[-] <code>test_settings_entries_visible[Notifications]</code>（跳过：无 Android 设备）</li>
+<li>[-] <code>test_settings_entries_visible[Display &amp; touch]</code>（跳过：无 Android 设备）</li>
+<li>[-] <code>test_open_network</code>（跳过：无 Android 设备）</li>
+<li>[-] <code>test_open_apps_and_back</code>（跳过：无 Android 设备）</li>
+<li>[-] <code>test_press_home_stays_in_launcher</code>（跳过：无 Android 设备）</li>
+<li>[-] <code>test_screenshot_saved</code>（跳过：无 Android 设备）</li>
+<li>[-] <code>test_current_activity_is_settings</code>（跳过：无 Android 设备）</li>
+</ul>
+</div>
+</body>
+</html>

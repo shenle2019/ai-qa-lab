@@ -6,7 +6,7 @@ from libs.miniplaywright import launch
 
 
 @pytest.fixture(scope="session")
-def browser():
+def mp_browser():
     try:
         instance = launch()
     except Exception as exc:
@@ -16,8 +16,8 @@ def browser():
 
 
 @pytest.fixture
-def page(browser):
-    return browser.page
+def mp_page(mp_browser):
+    return mp_browser.page
 
 
 @pytest.fixture

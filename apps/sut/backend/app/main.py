@@ -63,8 +63,17 @@ def create_ticket(payload: schemas.TicketCreate, db: Session = Depends(get_db)):
     return ticket
 
 
+SQLITE_MAX_INT = 2**63 - 1
+
+
+def _ensure_sqlite_int(value: int) -> None:
+    if value > SQLITE_MAX_INT or value < -SQLITE_MAX_INT - 1:
+        raise HTTPException(status_code=404, detail="ticket not found")
+
+
 @app.get("/api/tickets/{ticket_id}", response_model=schemas.TicketOut)
 def get_ticket(ticket_id: int, db: Session = Depends(get_db)):
+    _ensure_sqlite_int(ticket_id)
     ticket = db.get(models.Ticket, ticket_id)
     if ticket is None:
         raise HTTPException(status_code=404, detail="ticket not found")
@@ -77,6 +86,7 @@ def update_ticket(
     payload: schemas.TicketUpdate,
     db: Session = Depends(get_db),
 ):
+    _ensure_sqlite_int(ticket_id)
     ticket = db.get(models.Ticket, ticket_id)
     if ticket is None:
         raise HTTPException(status_code=404, detail="ticket not found")
@@ -89,6 +99,7 @@ def update_ticket(
 
 @app.delete("/api/tickets/{ticket_id}", status_code=204)
 def delete_ticket(ticket_id: int, db: Session = Depends(get_db)):
+    _ensure_sqlite_int(ticket_id)
     ticket = db.get(models.Ticket, ticket_id)
     if ticket is None:
         raise HTTPException(status_code=404, detail="ticket not found")

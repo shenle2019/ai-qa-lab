@@ -59,8 +59,8 @@ cd ../../..
 # Run SUT (serves API + UI)
 .venv\Scripts\python.exe -m uvicorn app.main:app --app-dir apps/sut/backend --port 8000 --reload
 
-# Tests (187 real pytest cases, 29 device tests skipped without an Android device)
-.venv\Scripts\python.exe -m pytest apps/sut/backend suites/api libs/minipytest/tests libs/miniplaywright/tests libs/miniappium/tests libs/miniload/tests libs/minieval/tests -q
+# Tests (382 real pytest cases, Android device tests skip automatically)
+.venv\Scripts\python.exe -m pytest apps/sut/backend suites/api suites/web suites/app suites/perf libs/minipytest/tests libs/miniplaywright/tests libs/miniappium/tests libs/miniload/tests libs/minieval/tests -q
 
 # Mini pytest acceptance demo (20 cases, starts a temporary SUT)
 .venv\Scripts\python.exe -m libs.minipytest libs/minipytest/demo/acceptance -v \
