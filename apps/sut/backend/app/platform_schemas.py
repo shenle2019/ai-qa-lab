@@ -24,6 +24,7 @@ class CaseCreate(BaseModel):
     priority: Literal["low", "medium", "high"] = "medium"
     steps: str = ""
     expected: str = ""
+    steps_json: str = "[]"
 
 
 class CaseOut(BaseModel):
@@ -105,6 +106,11 @@ class ResultOut(BaseModel):
 
 class ExecutionCreate(BaseModel):
     results: list[ResultIn]
+
+
+class ExecutePlanRequest(BaseModel):
+    case_ids: list[int] | None = None
+    base_url: str | None = None
 
 
 class ExecutionOut(BaseModel):

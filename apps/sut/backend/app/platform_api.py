@@ -3,9 +3,10 @@ from __future__ import annotations
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 
-from . import case_generator, llm_client, llm_models
+from . import case_executor, case_generator, llm_client, llm_models, report_generator
 from . import platform_models as models
 from . import platform_schemas as schemas
 from .db import SessionLocal
@@ -281,6 +282,34 @@ def run_plan(plan_id: int, payload: schemas.ExecutionCreate, db: Session = Depen
     return _create_execution(db, plan, payload.results)
 
 
+@router.post("/plans/{plan_id}/execute", response_model=schemas.ExecutionOut, status_code=201)
+def execute_plan(
+    plan_id: int,
+    payload: schemas.ExecutePlanRequest | None = None,
+    db: Session = Depends(get_db),
+):
+    plan = db.get(models.TestPlan, plan_id)
+    if plan is None:
+        raise HTTPException(status_code=404, detail="plan not found")
+
+    query = db.query(models.TestCase).filter(
+        models.TestCase.project_id == plan.project_id,
+        models.TestCase.status == "approved",
+    )
+    if payload and payload.case_ids:
+        query = query.filter(models.TestCase.id.in_(payload.case_ids))
+    cases = query.order_by(models.TestCase.id).all()
+    if not cases:
+        raise HTTPException(status_code=400, detail="没有已审核通过的用例可执行")
+
+    base_url = payload.base_url if payload else None
+    if base_url and not base_url.startswith(("http://", "https://")):
+        raise HTTPException(status_code=400, detail="base_url 必须以 http:// 或 https:// 开头")
+
+    execution = case_executor.execute_plan(db, plan, cases, base_url)
+    return _execution_out(db, execution)
+
+
 @router.get("/executions", response_model=list[schemas.ExecutionOut])
 def list_executions(plan_id: int | None = Query(default=None), db: Session = Depends(get_db)):
     query = db.query(models.TestExecution)
@@ -296,6 +325,20 @@ def get_execution(execution_id: int, db: Session = Depends(get_db)):
     if execution is None:
         raise HTTPException(status_code=404, detail="execution not found")
     return _execution_out(db, execution)
+
+
+@router.get("/executions/{execution_id}/report", response_class=HTMLResponse)
+def execution_report(execution_id: int, db: Session = Depends(get_db)):
+    execution = db.get(models.TestExecution, execution_id)
+    if execution is None:
+        raise HTTPException(status_code=404, detail="execution not found")
+    results = (
+        db.query(models.TestResult)
+        .filter(models.TestResult.execution_id == execution.id)
+        .order_by(models.TestResult.id)
+        .all()
+    )
+    return HTMLResponse(report_generator.render(execution, results))
 
 
 @router.get("/defects", response_model=list[schemas.DefectOut])
@@ -380,20 +423,33 @@ def seed_demo(db: Session = Depends(get_db)):
         db.flush()
 
         cases = [
-            ("工单列表返回 200", "api", "high"),
-            ("创建工单并回查", "api", "high"),
-            ("Web 工单页可打开", "web", "medium"),
-            ("Android Settings 可启动", "app", "medium"),
+            (
+                "工单列表返回 200",
+                "api",
+                "high",
+                '[{"action":"GET","target":"/api/tickets","data":"","assert":"status=200"}]',
+                "GET /api/tickets 返回 200",
+            ),
+            (
+                "创建工单并回查",
+                "api",
+                "high",
+                '[{"action":"POST","target":"/api/tickets","data":"{\\"title\\":\\"seed case\\",\\"priority\\":\\"medium\\"}","assert":"status=201"}]',
+                "POST /api/tickets 返回 201",
+            ),
+            ("Web 工单页可打开", "web", "medium", "[]", "Web 自动化暂未接入平台执行"),
+            ("Android Settings 可启动", "app", "medium", "[]", "App 自动化暂未接入平台执行"),
         ]
-        for title, module, priority in cases:
+        for title, module, priority, steps_json, steps in cases:
             db.add(
                 models.TestCase(
                     project_id=project.id,
                     title=title,
                     module=module,
                     priority=priority,
-                    steps="执行对应自动化用例",
+                    steps=steps,
                     expected="状态符合预期",
+                    steps_json=steps_json,
                 )
             )
         db.flush()

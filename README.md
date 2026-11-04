@@ -14,8 +14,16 @@ AI-powered full-stack QA test platform. One runnable system under test (SUT), la
 | 04 Web 自动化 | done (v0.1) — miniplaywright + 6 meta tests + 5 SUT UI cases |
 | 05 App 自动化 | done (v0.1) — miniappium + 5 meta tests + 3 Settings cases |
 | 06 性能测试 | done (v0.1) — miniload + 5 meta tests + SUT load run |
-| 07 测试平台 | done (v0.1) — projects/cases/plans/executions/defects |
+| 07 测试平台 | done (v0.1) — projects/cases/plans/executions/defects; AI generation + review gate + real execution |
 | 08 Agent / LLM 评测 | done (v0.1) — minieval + 5 meta tests + 5-case dataset |
+
+## Platform capabilities
+
+- Model center: register OpenAI-compatible models, mask API keys, test connectivity, and record every call with latency and token usage.
+- AI case generation: turn a requirement into structured draft cases, including executable step JSON.
+- Review gate: draft → pending review → approved or rejected; only approved cases can be executed.
+- Real execution: the server runs approved API cases step by step against a configurable base URL and stores per-case results.
+- Execution report: every run has a standalone HTML report with pass rate and failure reasons.
 
 ## Structure
 

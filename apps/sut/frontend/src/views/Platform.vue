@@ -132,6 +132,18 @@ async function reviewCase(item, decision) {
   }
 }
 
+async function executePlan(item) {
+  notice.value = `正在执行：${item.name}…`
+  error.value = ''
+  try {
+    const execution = await api.executePlatformPlan(item.id)
+    notice.value = `执行完成：${execution.passed}/${execution.total} 通过，${execution.duration_ms} ms`
+    await refresh()
+  } catch (err) {
+    error.value = err.message
+  }
+}
+
 async function createPlan() {
   if (!planForm.project_id || !planForm.name.trim()) return
   try {
@@ -280,7 +292,7 @@ onMounted(refresh)
 
       <article class="card">
         <div class="card-head">
-          <div><h2>计划</h2><p>计划把用例组织成一次执行</p></div>
+          <div><h2>计划</h2><p>执行本项目已审核通过的用例</p></div>
         </div>
         <form class="platform-form" @submit.prevent="createPlan">
           <select v-model.number="planForm.project_id">
@@ -291,15 +303,16 @@ onMounted(refresh)
         </form>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>ID</th><th>计划</th><th>状态</th><th>创建时间</th></tr></thead>
+            <thead><tr><th>ID</th><th>计划</th><th>状态</th><th>创建时间</th><th>操作</th></tr></thead>
             <tbody>
               <tr v-for="item in plans" :key="item.id">
                 <td class="mono">#{{ item.id }}</td>
                 <td>{{ item.name }}</td>
                 <td><span class="badge" :class="item.status === 'failed' ? 'module-planned' : 'module-done'">{{ item.status }}</span></td>
                 <td class="muted">{{ formatTime(item.created_at) }}</td>
+                <td><button class="btn ghost" @click="executePlan(item)">执行</button></td>
               </tr>
-              <tr v-if="!plans.length"><td colspan="4" class="empty">还没有计划。</td></tr>
+              <tr v-if="!plans.length"><td colspan="5" class="empty">还没有计划。</td></tr>
             </tbody>
           </table>
         </div>
@@ -308,6 +321,7 @@ onMounted(refresh)
       <article class="card">
         <div class="card-head">
           <div><h2>最近执行</h2><p>通过/失败/跳过与耗时</p></div>
+          <a v-if="latestExecution" class="btn ghost" :href="`/api/platform/executions/${latestExecution.id}/report`" target="_blank" rel="noreferrer">查看报告</a>
         </div>
         <div v-if="latestExecution" class="execution-summary">
           <div><span>状态</span><strong>{{ latestExecution.status }}</strong></div>

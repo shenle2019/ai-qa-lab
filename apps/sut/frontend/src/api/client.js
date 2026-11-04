@@ -45,6 +45,8 @@ export const api = {
   platformPlans: () => request('/api/platform/plans'),
   createPlatformPlan: (payload) =>
     request('/api/platform/plans', { method: 'POST', body: JSON.stringify(payload) }),
+  executePlatformPlan: (id, payload = {}) =>
+    request(`/api/platform/plans/${id}/execute`, { method: 'POST', body: JSON.stringify(payload) }),
   platformExecutions: () => request('/api/platform/executions'),
   platformDefects: () => request('/api/platform/defects'),
   createPlatformDefect: (payload) =>
