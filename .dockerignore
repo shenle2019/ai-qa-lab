@@ -5,7 +5,7 @@
 node_modules
 apps/sut/frontend/node_modules
 apps/sut/frontend/dist
-docs
+docs/reports
 suites/**/.tmp
 **/__pycache__
 **/.pytest_cache

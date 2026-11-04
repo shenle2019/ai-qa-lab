@@ -9,3 +9,5 @@ services:
     envVars:
       - key: SEED_DEMO
         value: "1"
+      - key: DEEPSEEK_API_KEY
+        sync: false

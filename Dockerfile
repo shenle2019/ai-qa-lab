@@ -17,6 +17,8 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY apps/sut/backend ./apps/sut/backend
+COPY docs/learning ./docs/learning
+COPY docs/portfolio ./docs/portfolio
 COPY --from=frontend /app/apps/sut/frontend/dist ./apps/sut/frontend/dist
 
 EXPOSE 8000
