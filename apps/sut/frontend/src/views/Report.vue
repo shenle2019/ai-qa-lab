@@ -78,12 +78,12 @@ const timeline = [
   {
     time: '11-04',
     title: '平台闭环',
-    detail: '模型中心、AI 生成用例、审核门禁、服务端真实执行、HTML 报告；158 个 pytest 用例通过。',
+    detail: '模型中心、AI 生成用例、审核门禁、服务端真实执行、HTML 报告；340 个 pytest 用例通过。',
   },
 ]
 
 const metrics = [
-  { value: '187', label: 'pytest 用例' },
+  { value: '382', label: 'pytest 用例' },
   { value: '58', label: '迷你演示' },
   { value: '8', label: '模块选型' },
   { value: '8', label: '复刻闭环' },
