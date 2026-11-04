@@ -114,11 +114,10 @@ def execute_plan(
     base_url: str | None = None,
 ) -> models.TestExecution:
     target = (base_url or default_base_url()).rstrip("/")
-    execution = models.TestExecution(plan_id=plan.id, status="running", started_at=datetime.utcnow())
-    db.add(execution)
-    db.flush()
 
-    passed = failed = skipped = total_ms = 0
+    # Run the requests before opening a write transaction. Some cases call back
+    # into this same service, and SQLite would otherwise lock itself.
+    outcomes: list[tuple[models.TestCase, dict]] = []
     started = time.perf_counter()
     for case in cases[:MAX_CASES]:
         if case.module != "api":
@@ -129,13 +128,25 @@ def execute_plan(
             }
         else:
             result = execute_case(case, target)
-        if result["status"] == "passed":
-            passed += 1
-        elif result["status"] == "failed":
-            failed += 1
-        else:
-            skipped += 1
-        total_ms += result["duration_ms"]
+        outcomes.append((case, result))
+
+    passed = sum(1 for _, item in outcomes if item["status"] == "passed")
+    failed = sum(1 for _, item in outcomes if item["status"] == "failed")
+    skipped = sum(1 for _, item in outcomes if item["status"] == "skipped")
+
+    execution = models.TestExecution(
+        plan_id=plan.id,
+        status="failed" if failed else ("skipped" if skipped and not passed else "passed"),
+        total=len(outcomes),
+        passed=passed,
+        failed=failed,
+        skipped=skipped,
+        duration_ms=int((time.perf_counter() - started) * 1000),
+        started_at=datetime.utcnow(),
+    )
+    db.add(execution)
+    db.flush()
+    for case, result in outcomes:
         db.add(
             models.TestResult(
                 execution_id=execution.id,
@@ -146,13 +157,6 @@ def execute_plan(
                 message=result["message"],
             )
         )
-
-    execution.total = passed + failed + skipped
-    execution.passed = passed
-    execution.failed = failed
-    execution.skipped = skipped
-    execution.duration_ms = int((time.perf_counter() - started) * 1000)
-    execution.status = "failed" if failed else ("skipped" if skipped and not passed else "passed")
     plan.status = execution.status
     db.commit()
     db.refresh(execution)
