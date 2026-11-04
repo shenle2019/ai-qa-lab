@@ -63,7 +63,7 @@ def main() -> None:
 <body>
 <div class="wrap">
   <div class="top">
-    <span>AI全栈测试开发平台-shenle · 项目学习手册 · v1.0.1</span>
+    <span>AI全栈测试开发平台-shenle · 项目学习手册 · v1.1.0</span>
     <span>
       <a href="../">最新报告</a> ·
       <a href="../reports/">归档索引</a> ·

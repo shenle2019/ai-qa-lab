@@ -62,7 +62,7 @@ onUnmounted(() => {
           {{ checking ? '检测中' : online ? 'SUT 在线' : 'SUT 离线' }}
         </div>
         <RouterLink to="/login" class="nav-item"><span class="nav-icon">⚿</span>访问密钥</RouterLink>
-        <p>v1.0.1 · FastAPI + Vue 3</p>
+        <p>v1.1.0 · FastAPI + Vue 3</p>
       </div>
     </aside>
 

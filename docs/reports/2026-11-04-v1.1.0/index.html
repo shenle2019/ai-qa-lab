@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>v1.1.0 · 安全加固报告 · AI全栈测试开发平台-shenle</title>
+<style>
+:root { --bg:#070b14; --line:rgba(148,163,184,.16); --text:#e6edf7; --muted:#9fb0c9; --accent:#38bdf8; }
+* { box-sizing:border-box; }
+body { margin:0; padding:36px 20px 70px; color:var(--text); background:radial-gradient(900px 600px at 15% -10%, rgba(56,189,248,.16), transparent 60%), var(--bg); font-family:"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif; }
+.wrap { max-width:1000px; margin:0 auto; }
+h1 { font-size:28px; } h2 { font-size:19px; margin-top:28px; } h3 { font-size:15px; color:#bae6fd; }
+p, li { color:#c9d6e8; font-size:13.5px; line-height:1.8; }
+table { width:100%; border-collapse:collapse; margin:14px 0; font-size:12.5px; }
+th, td { padding:9px 10px; border-bottom:1px solid rgba(148,163,184,.12); text-align:left; }
+th { color:var(--muted); font-size:11px; letter-spacing:.05em; text-transform:uppercase; }
+code { padding:2px 6px; border-radius:6px; color:#bae6fd; background:rgba(56,189,248,.1); font-family:Consolas,monospace; font-size:12px; }
+a { color:var(--accent); }
+blockquote { margin:12px 0; padding:10px 14px; border-left:3px solid var(--accent); color:var(--muted); background:rgba(56,189,248,.06); }
+</style></head><body><div class="wrap"><h1>v1.1.0 安全加固报告</h1>
+<blockquote>
+<p>日期：2026-11-04
+基线：v1.0.0
+审计来源：全栈审计报告（38 项）
+处理结果：31 项已处理（含 4 项部分处理），7 项延后</p>
+</blockquote>
+<h2>一、P0 安全</h2>
+<table>
+<thead>
+<tr>
+<th>审计项</th>
+<th>处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>全站零认证</td>
+<td>生产环境下所有 <code>/api/*</code> 非 GET 请求必须带 <code>Authorization: Bearer</code> 或 <code>X-API-Key</code>；缺失或错误返回 401。前端新增访问密钥页，401 自动跳转。</td>
+</tr>
+<tr>
+<td>DeepSeek Key 可被白嫖</td>
+<td>Key 只从环境变量读取，数据库不存明文；LLM 端点按 IP 限流；Railway 已删除 DeepSeek 变量。</td>
+</tr>
+<tr>
+<td>Workbench SSRF</td>
+<td>URL 解析后做 DNS 解析，拒绝私网、回环、link-local、保留段、组播与 metadata 地址；不跟随重定向；批量子请求上限 10，超时上限 10 秒。</td>
+</tr>
+<tr>
+<td>SQLite + 临时盘</td>
+<td>已使用 Railway 持久卷 <code>/app/data</code>，<code>DATABASE_URL=sqlite:////app/data/sut.db</code>；镜像不再硬编码 <code>SEED_DEMO</code>。PostgreSQL 迁移延后。</td>
+</tr>
+<tr>
+<td>docs/openapi 暴露</td>
+<td>生产环境关闭 <code>/docs</code>、<code>/redoc</code>、<code>/openapi.json</code>。</td>
+</tr>
+</tbody>
+</table>
+<h2>二、P1 架构</h2>
+<ul>
+<li><code>get_db</code> 收敛到 <code>deps.py</code>，消除三处重复。</li>
+<li>全局异常兜底、request-id、JSON 日志、CORS、安全响应头、<code>/ready</code>、限流。</li>
+<li>执行改为 202 + BackgroundTasks + 前端轮询，避免单个 HTTP 请求挂 12 分钟。</li>
+<li>生产禁用客户端上报结果的 <code>/run</code>；导入仍保留但需要认证。</li>
+<li>列表分页；executions 列表一次预取 results，消除 N+1。</li>
+<li>Model Key 不再入库，展示口径统一为 <code>env:DEEPSEEK_API_KEY</code>。</li>
+</ul>
+<h2>三、P2 代码</h2>
+<ul>
+<li>LLM 调用记账使用独立 Session，不再穿插业务事务。</li>
+<li>超大 ID 返回 422；重名项目返回 200；时间统一走 <code>utcnow()</code> helper。</li>
+<li>汇总通过率改为最近 10 次执行聚合。</li>
+<li>知识库改为工单 + 内置知识的词法检索，返回真实来源。</li>
+<li>工单 PATCH 支持标题、描述；前端增加编辑弹窗。</li>
+<li>导入计划名加随机后缀；长消息截断加省略号。</li>
+<li>前端：路由懒加载、echarts 动态导入、fetch 超时/GET 重试/401、错误中文映射、30 秒健康轮询、<code>VITE_API_BASE</code>。</li>
+</ul>
+<h2>四、P3 工程</h2>
+<ul>
+<li>删除 <code>_tmp_window*.xml</code>；旧报表脚本与 Render/HF 配置归档到 <code>docs/archive/</code>。</li>
+<li><code>requirements.txt</code> 只保留运行时依赖，新增 <code>requirements-dev.txt</code>。</li>
+<li>Docker 增加 <code>HEALTHCHECK</code>；CI 增加前端构建与镜像构建。</li>
+<li>新增 CSP、X-Frame-Options、nosniff、Referrer-Policy、HSTS。</li>
+<li>测试新增安全用例：生产 401、缺服务端 Key 失败关闭、SSRF 私网拦截、安全头、<code>/ready</code>。</li>
+</ul>
+<h2>五、未完成与原因</h2>
+<table>
+<thead>
+<tr>
+<th>项</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PostgreSQL</td>
+<td>需要 Railway 数据库实例，涉及费用与数据迁移</td>
+</tr>
+<tr>
+<td>Alembic</td>
+<td>需要基线迁移与现有库 stamp，属于下一阶段</td>
+</tr>
+<tr>
+<td>完整 routers/services/repositories</td>
+<td>大重构，当前只收敛了依赖</td>
+</tr>
+<tr>
+<td>JWT + User + RBAC</td>
+<td>当前是服务级 Key，用户体系需要独立设计</td>
+</tr>
+<tr>
+<td>全量 Pinia</td>
+<td>涉及 10+ 视图状态改造</td>
+</tr>
+<tr>
+<td>ESLint/Prettier</td>
+<td>工具链引入与存量格式修正</td>
+</tr>
+<tr>
+<td>镜像非 root / 文档移出镜像</td>
+<td>与持久卷权限、静态页访问耦合，需单独验证</td>
+</tr>
+</tbody>
+</table>
+<h2>六、验证记录</h2>
+<ul>
+<li>全量 pytest：351 passed，42 skipped。</li>
+<li>线上匿名写：401；带 Key 写：201；删除：204。</li>
+<li><code>/docs</code>、<code>/openapi.json</code>：404。</li>
+<li><code>http://127.0.0.1:8000/health</code> 经 Workbench：400。</li>
+<li>安全头：<code>X-Request-ID</code>、<code>X-Frame-Options: DENY</code>、CSP 均存在。</li>
+<li>用例目录：196 条，183 通过，13 跳过。</li>
+</ul><p><a href="../">← 返回归档索引</a></p></div></body></html>
