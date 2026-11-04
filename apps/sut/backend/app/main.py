@@ -6,8 +6,9 @@ from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
-from . import models, platform_models, schemas
+from . import llm_models, models, platform_models, schemas
 from .db import Base, SessionLocal, engine
+from .model_api import router as model_router
 from .platform_api import router as platform_router
 from .workbench import router as workbench_router
 
@@ -21,6 +22,7 @@ if os.getenv("SEED_DEMO") == "1":
 app = FastAPI(title="AI Knowledge Ops SUT", version="0.1.0")
 app.include_router(workbench_router)
 app.include_router(platform_router)
+app.include_router(model_router)
 
 FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
 LEARNING_DIR = Path(__file__).resolve().parents[4] / "docs" / "learning"

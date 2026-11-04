@@ -6,6 +6,7 @@ import Workbench from './views/Workbench.vue'
 import Report from './views/Report.vue'
 import Portfolio from './views/Portfolio.vue'
 import Platform from './views/Platform.vue'
+import Models from './views/Models.vue'
 import Methodology from './views/Methodology.vue'
 
 export default createRouter({
@@ -18,6 +19,7 @@ export default createRouter({
     { path: '/report', component: Report, meta: { title: '项目报告' } },
     { path: '/portfolio', component: Portfolio, meta: { title: '模块验收' } },
     { path: '/platform', component: Platform, meta: { title: '测试平台' } },
+    { path: '/models', component: Models, meta: { title: '模型中心' } },
     { path: '/methodology', component: Methodology, meta: { title: '方法论' } },
   ],
 })

@@ -46,4 +46,13 @@ export const api = {
   updatePlatformDefect: (id, payload) =>
     request(`/api/platform/defects/${id}`, { method: 'PATCH', body: JSON.stringify(payload) }),
   seedPlatform: () => request('/api/platform/seed', { method: 'POST' }),
+
+  platformModels: () => request('/api/platform/models'),
+  createPlatformModel: (payload) =>
+    request('/api/platform/models', { method: 'POST', body: JSON.stringify(payload) }),
+  updatePlatformModel: (id, payload) =>
+    request(`/api/platform/models/${id}`, { method: 'PATCH', body: JSON.stringify(payload) }),
+  testPlatformModel: (id) =>
+    request(`/api/platform/models/${id}/test`, { method: 'POST' }),
+  platformModelCalls: (limit = 20) => request(`/api/platform/model-calls?limit=${limit}`),
 }
