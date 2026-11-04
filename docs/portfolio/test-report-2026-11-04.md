@@ -1,20 +1,20 @@
 # 2026-11-04 测试用例扩充与执行报告
 
-> 生成时间：2026-11-04T16:13:38
+> 生成时间：2026-11-04T16:44:35
 > 执行方式：按类别分别运行 pytest，结果来自 JUnit XML。
 
 ## 结论
 
-六类场景共设计并收集 **194** 条用例：通过 181，失败 0，跳过 13。跳过项全部是 Android 真机/模拟器用例，当前环境没有可用设备，未伪造通过。
+六类场景共设计并收集 **195** 条用例：通过 182，失败 0，跳过 13。跳过项全部是 Android 真机/模拟器用例，当前环境没有可用设备，未伪造通过。
 
 | 类别 | 执行结果 |
 |---|---|
-| 接口测试 | `51 passed in 1.82s` |
-| 兼容性 | `35 passed in 1.85s` |
-| 可靠性 | `26 passed in 3.56s` |
-| Web 测试 | `28 passed in 6.45s` |
-| 性能测试 | `29 passed in 36.56s` |
-| App 测试 | `12 passed, 13 skipped in 0.07s` |
+| 接口测试 | `51 passed, 0 skipped` |
+| 兼容性 | `35 passed, 0 skipped` |
+| 可靠性 | `26 passed, 0 skipped` |
+| Web 测试 | `29 passed, 0 skipped` |
+| 性能测试 | `29 passed, 0 skipped` |
+| App 测试 | `12 passed, 13 skipped` |
 
 ## 分类汇总
 
@@ -23,7 +23,7 @@
 | 接口测试 | 51 | 51 | 0 | 0 | 等价类 / 边界值 / 错误推测 / 场景法 |
 | 兼容性 | 35 | 35 | 0 | 0 | 协议 / 编码 / 格式 / 架构兼容 |
 | 可靠性 | 26 | 26 | 0 | 0 | 重复性 / 并发 / 恢复 / 隔离 |
-| Web 测试 | 28 | 28 | 0 | 0 | UI 等价类 / 边界 / 错误推测 / 场景 |
+| Web 测试 | 29 | 29 | 0 | 0 | UI 等价类 / 边界 / 错误推测 / 场景 |
 | 性能测试 | 29 | 29 | 0 | 0 | 并发 / 持续负载 / 爬坡 / 阈值 |
 | App 测试 | 25 | 12 | 13 | 0 | 元素解析 + 真机场景 |
 
@@ -156,10 +156,10 @@
 - [x] `test_seed_is_idempotent`
 - [x] `test_server_survives_bad_body_and_stays_healthy`
 
-### Web 测试（28 条）
+### Web 测试（29 条）
 
 - [x] `test_tickets_page_loads`
-- [x] `test_sidebar_has_nine_entries`
+- [x] `test_sidebar_has_ten_entries`
 - [x] `test_dashboard_has_four_stat_cards`
 - [x] `test_dashboard_shows_total_label`
 - [x] `test_create_ticket_by_priority[low]`
@@ -182,6 +182,7 @@
 - [x] `test_data_persists_after_reload`
 - [x] `test_navigation_pages[/ui/#/platform-\u6d4b\u8bd5\u5e73\u53f0]`
 - [x] `test_navigation_pages[/ui/#/models-\u6a21\u578b\u4e2d\u5fc3]`
+- [x] `test_navigation_pages[/ui/#/testcases-\u6d4b\u8bd5\u7528\u4f8b]`
 - [x] `test_navigation_pages[/ui/#/report-\u9879\u76ee\u62a5\u544a]`
 - [x] `test_navigation_pages[/ui/#/portfolio-\u6a21\u5757\u9a8c\u6536]`
 - [x] `test_navigation_pages[/ui/#/methodology-\u65b9\u6cd5\u8bba]`

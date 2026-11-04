@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import subprocess
 import sys
 import xml.etree.ElementTree as ET
@@ -14,6 +15,7 @@ import markdown
 ROOT = Path(__file__).resolve().parents[1]
 OUT_MD = ROOT / "docs" / "portfolio" / "test-report-2026-11-04.md"
 OUT_HTML = ROOT / "docs" / "portfolio" / "test-report-2026-11-04.html"
+OUT_JSON = ROOT / "docs" / "portfolio" / "test-cases.json"
 
 CATEGORIES = OrderedDict(
     [
@@ -32,7 +34,7 @@ def run_suite(path: str, slug: str) -> tuple[dict[str, list[dict]], str]:
     command = [sys.executable, "-m", "pytest", path, "-q", f"--junitxml={xml}"]
     result = subprocess.run(command, cwd=ROOT, text=True, capture_output=True, encoding="utf-8")
     if not xml.exists():
-        print(result.stdout, result.stderr)
+        print(result.stdout or "", result.stderr or "")
         raise SystemExit(f"pytest did not produce junit xml for {path}")
     tree = ET.parse(xml)
     cases = []
@@ -45,7 +47,12 @@ def run_suite(path: str, slug: str) -> tuple[dict[str, list[dict]], str]:
                 "failed": case.find("failure") is not None or case.find("error") is not None,
             }
         )
-    summary = result.stdout.strip().splitlines()[-1] if result.stdout.strip() else "unknown"
+    passed = sum(1 for item in cases if not item["skipped"] and not item["failed"])
+    skipped = sum(1 for item in cases if item["skipped"])
+    failed = sum(1 for item in cases if item["failed"])
+    summary = f"{passed} passed, {skipped} skipped"
+    if failed:
+        summary += f", {failed} failed"
     return {"cases": cases}, summary
 
 
@@ -139,6 +146,41 @@ HTML_TEMPLATE = """<!doctype html>
 """
 
 
+def build_catalog(grouped: dict[str, list[dict]]) -> dict:
+    categories = []
+    for label, items in grouped.items():
+        passed = sum(1 for item in items if not item["skipped"] and not item["failed"])
+        skipped = sum(1 for item in items if item["skipped"])
+        failed = sum(1 for item in items if item["failed"])
+        categories.append(
+            {
+                "name": label,
+                "method": CATEGORIES[label][2],
+                "total": len(items),
+                "passed": passed,
+                "skipped": skipped,
+                "failed": failed,
+                "cases": [
+                    {
+                        "name": item["name"],
+                        "status": "skipped" if item["skipped"] else ("failed" if item["failed"] else "passed"),
+                        "duration_ms": round(item["time"] * 1000, 2),
+                    }
+                    for item in items
+                ],
+            }
+        )
+    return {
+        "generated_at": datetime.now().isoformat(timespec="seconds"),
+        "total": sum(item["total"] for item in categories),
+        "passed": sum(item["passed"] for item in categories),
+        "skipped": sum(item["skipped"] for item in categories),
+        "failed": sum(item["failed"] for item in categories),
+        "report_url": "/portfolio/test-report-2026-11-04.html",
+        "categories": categories,
+    }
+
+
 def main() -> None:
     grouped: dict[str, list[dict]] = OrderedDict()
     summaries: dict[str, str] = {}
@@ -152,8 +194,11 @@ def main() -> None:
     OUT_MD.write_text(md, encoding="utf-8")
     body = markdown.Markdown(extensions=["tables"]).convert(md)
     OUT_HTML.write_text(HTML_TEMPLATE.format(body=body), encoding="utf-8")
+    catalog = build_catalog(grouped)
+    OUT_JSON.write_text(json.dumps(catalog, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"built: {OUT_MD}")
     print(f"built: {OUT_HTML}")
+    print(f"built: {OUT_JSON}")
 
 
 if __name__ == "__main__":

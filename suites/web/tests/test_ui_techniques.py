@@ -96,9 +96,9 @@ def test_tickets_page_loads(page, sut):
     _go_tickets(page, sut)
 
 
-def test_sidebar_has_nine_entries(page, sut):
+def test_sidebar_has_ten_entries(page, sut):
     _go_tickets(page, sut)
-    assert page.evaluate("document.querySelectorAll('.nav-item').length") == 9
+    assert page.evaluate("document.querySelectorAll('.nav-item').length") == 10
 
 
 def test_dashboard_has_four_stat_cards(page, sut):
@@ -239,6 +239,7 @@ def test_data_persists_after_reload(page, sut):
     [
         ("/ui/#/platform", "测试平台"),
         ("/ui/#/models", "模型中心"),
+        ("/ui/#/testcases", "测试用例"),
         ("/ui/#/report", "项目报告"),
         ("/ui/#/portfolio", "模块验收"),
         ("/ui/#/methodology", "方法论"),

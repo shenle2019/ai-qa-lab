@@ -41,6 +41,7 @@ onMounted(checkHealth)
         <RouterLink to="/knowledge" class="nav-item"><span class="nav-icon">✦</span>知识库问答</RouterLink>
         <RouterLink to="/platform" class="nav-item"><span class="nav-icon">▥</span>测试平台</RouterLink>
         <RouterLink to="/models" class="nav-item"><span class="nav-icon">◎</span>模型中心</RouterLink>
+        <RouterLink to="/testcases" class="nav-item"><span class="nav-icon">☑</span>测试用例</RouterLink>
         <RouterLink to="/methodology" class="nav-item"><span class="nav-icon">◈</span>方法论</RouterLink>
         <RouterLink to="/report" class="nav-item"><span class="nav-icon">▦</span>项目报告</RouterLink>
         <RouterLink to="/portfolio" class="nav-item"><span class="nav-icon">▣</span>模块验收</RouterLink>

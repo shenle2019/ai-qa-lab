@@ -25,6 +25,25 @@ AI-powered full-stack QA test platform. One runnable system under test (SUT), la
 - Real execution: the server runs approved API cases step by step against a configurable base URL and stores per-case results.
 - Execution report: every run has a standalone HTML report with pass rate and failure reasons.
 
+
+## Test catalog
+
+Every suite is browsable in the running app at `/ui/#/testcases`.
+
+| Category | Cases |
+|---|---:|
+| API techniques | 51 |
+| Compatibility | 35 |
+| Reliability | 26 |
+| Web UI | 29 |
+| Performance | 29 |
+| App | 25 |
+
+- 195 cases total: 182 passed, 13 skipped because no Android device is attached.
+- Filter by category, status, or name; the page reads `/portfolio/test-cases.json`, generated from the same JUnit run as the report.
+- Regenerate with `.venv/Scripts/python.exe scripts/build_test_report_2026_11_04.py`.
+- Full report: `/portfolio/test-report-2026-11-04.html`.
+
 ## Structure
 
 ```
@@ -59,7 +78,7 @@ cd ../../..
 # Run SUT (serves API + UI)
 .venv\Scripts\python.exe -m uvicorn app.main:app --app-dir apps/sut/backend --port 8000 --reload
 
-# Tests (382 real pytest cases, Android device tests skip automatically)
+# Tests (383 real pytest cases, Android device tests skip automatically)
 .venv\Scripts\python.exe -m pytest apps/sut/backend suites/api suites/web suites/app suites/perf libs/minipytest/tests libs/miniplaywright/tests libs/miniappium/tests libs/miniload/tests libs/minieval/tests -q
 
 # Mini pytest acceptance demo (20 cases, starts a temporary SUT)
