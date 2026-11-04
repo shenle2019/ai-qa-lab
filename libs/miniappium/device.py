@@ -214,11 +214,24 @@ class Device:
         return self
 
     def start_settings(self) -> "Device":
-        try:
-            self.shell("am", "force-stop", "com.android.settings")
-        except MiniAppiumError:
-            pass
-        return self.start_activity("android.settings.SETTINGS")
+        self.press_home()
+        time.sleep(0.8)
+        for package in ("com.android.settings", "com.google.android.settings.intelligence"):
+            try:
+                self.shell("am", "force-stop", package)
+            except MiniAppiumError:
+                pass
+        self.start_activity("android.settings.SETTINGS")
+        time.sleep(1.5)
+        for _ in range(5):
+            try:
+                if self.find(text="Search Settings"):
+                    return self
+            except Exception:
+                pass
+            self.press_back()
+            time.sleep(0.5)
+        return self
 
     def current_activity(self) -> str:
         output = self.shell("dumpsys", "window")

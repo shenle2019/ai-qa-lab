@@ -1,8 +1,8 @@
 # ai-qa-lab
 
-AI-powered full-stack QA portfolio. One runnable system under test (SUT), layered test suites, and a test platform — built module by module.
+AI-powered full-stack QA test platform. One runnable system under test (SUT), layered test suites, and a test platform — built module by module.
 
-面向 AI 时代的全栈测试开发作品集：一套可运行的被测系统、分层测试套件与测试平台，覆盖接口、Web、App、性能与 Agent/大模型评测。
+面向 AI 时代的全栈测试开发项目：一套可运行的被测系统、分层测试套件与测试平台，覆盖接口、Web、App、性能与 Agent/大模型评测。
 
 ## Status
 
@@ -10,7 +10,7 @@ AI-powered full-stack QA portfolio. One runnable system under test (SUT), layere
 |---|---|
 | 01 质量工程方法论 | done (v0.1) — methodology page |
 | 02 Python 测试开发 | done (v0.1) — minipytest + 33 meta tests + 20 demo cases |
-| 03 接口自动化 | done (v0.1) — API Workbench + 33 tests |
+| 03 接口自动化 | done (v0.1) — API Workbench + 56 tests |
 | 04 Web 自动化 | done (v0.1) — miniplaywright + 6 meta tests + 5 SUT UI cases |
 | 05 App 自动化 | done (v0.1) — miniappium + 5 meta tests + 3 Settings cases |
 | 06 性能测试 | done (v0.1) — miniload + 5 meta tests + SUT load run |
@@ -29,7 +29,7 @@ libs/miniload     Module 06 threaded load engine + HTML report
 libs/minieval     Module 08 LLM evaluation engine + dataset + report
 suites/         Layered test suites: api, web, app, perf, agent
 docs/notes      Public notes (single source of truth)
-docs/portfolio  Portfolio site content
+docs/portfolio  Project showcase content
 docs/progress   Daily progress log
 ```
 
@@ -51,7 +51,7 @@ cd ../../..
 # Run SUT (serves API + UI)
 .venv\Scripts\python.exe -m uvicorn app.main:app --app-dir apps/sut/backend --port 8000 --reload
 
-# Tests (93 real pytest cases)
+# Tests (172 real pytest cases)
 .venv\Scripts\python.exe -m pytest apps/sut/backend suites/api libs/minipytest/tests libs/miniplaywright/tests libs/miniappium/tests libs/miniload/tests libs/minieval/tests -q
 
 # Mini pytest acceptance demo (20 cases, starts a temporary SUT)

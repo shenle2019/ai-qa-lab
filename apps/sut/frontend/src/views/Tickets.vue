@@ -79,6 +79,15 @@ async function changePriority(ticket, event) {
     alert(error.message)
   }
 }
+
+async function removeTicket(ticket) {
+  if (!window.confirm(`删除工单 #${ticket.id}？`)) return
+  try {
+    await store.remove(ticket.id)
+  } catch (error) {
+    alert(error.message)
+  }
+}
 </script>
 
 <template>
@@ -136,7 +145,7 @@ async function changePriority(ticket, event) {
                 </select>
               </td>
               <td class="muted">{{ new Date(ticket.created_at).toLocaleString('zh-CN', { hour12: false }) }}</td>
-              <td><StatusBadge :status="ticket.status" /></td>
+              <td><StatusBadge :status="ticket.status" /> <button class="btn ghost delete-ticket" @click="removeTicket(ticket)">删除</button></td>
             </tr>
           </tbody>
         </table>

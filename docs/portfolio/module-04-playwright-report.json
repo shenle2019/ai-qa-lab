@@ -4,8 +4,8 @@
     "name": "minipytest",
     "version": "0.1.0"
   },
-  "started_at": "2026-11-03T16:42:26",
-  "duration_ms": 3068.137,
+  "started_at": "2026-11-03T18:58:01",
+  "duration_ms": 11314.108,
   "rootdir": "E:/ailearning/ai-qa-lab",
   "command": [
     "minipytest",
@@ -20,8 +20,8 @@
     "platform": "win32"
   },
   "summary": {
-    "total": 5,
-    "passed": 5,
+    "total": 33,
+    "passed": 33,
     "failed": 0,
     "error": 0,
     "skipped": 0,
@@ -35,23 +35,21 @@
   },
   "tests": [
     {
-      "id": "libs/miniplaywright/demo/test_sut_ui.py::test_dashboard_loads",
-      "module": "test_sut_ui.py",
-      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_ui.py",
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_tickets_page_loads",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
       "class": null,
-      "name": "test_dashboard_loads",
+      "name": "test_tickets_page_loads",
       "params": {},
-      "markers": [
-        "smoke"
-      ],
+      "markers": [],
       "status": "passed",
       "phase": "call",
-      "duration_ms": 2226.904,
+      "duration_ms": 3544.313,
       "attempts": [
         {
           "number": 1,
           "status": "passed",
-          "duration_ms": 2226.897,
+          "duration_ms": 3544.304,
           "failure": null
         }
       ],
@@ -63,21 +61,947 @@
           "name": "sut",
           "scope": "session",
           "phase": "setup",
-          "duration_ms": 1252.146,
+          "duration_ms": 1764.076,
           "status": "ok"
         },
         {
           "name": "browser",
           "scope": "session",
           "phase": "setup",
-          "duration_ms": 517.711,
+          "duration_ms": 1318.724,
           "status": "ok"
         },
         {
           "name": "page",
           "scope": "function",
           "phase": "setup",
-          "duration_ms": 1945.38,
+          "duration_ms": 3361.432,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_create_minimal_ticket",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_create_minimal_ticket",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 199.861,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 199.854,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 32.442,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_create_ticket_with_description",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_create_ticket_with_description",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 186.504,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 186.497,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 40.53,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_create_high_priority_ticket",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_create_high_priority_ticket",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 158.794,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 158.786,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 30.524,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_create_low_priority_ticket",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_create_low_priority_ticket",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 162.82,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 162.812,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 26.647,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_create_second_ticket",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_create_second_ticket",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 400.196,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 400.189,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 141.399,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_cancel_modal",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_cancel_modal",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 69.295,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 69.288,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 28.859,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_empty_title_shows_error",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_empty_title_shows_error",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 89.806,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 89.797,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 49.956,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_long_title_200",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_long_title_200",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 236.673,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 236.667,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 52.326,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_created_ticket_visible",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_created_ticket_visible",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 273.182,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 273.175,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 52.496,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_update_status_in_progress",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_update_status_in_progress",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 231.342,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 231.337,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 55.023,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_update_status_closed",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_update_status_closed",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 206.477,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 206.468,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 48.604,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_update_priority_high",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_update_priority_high",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 384.393,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 384.386,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 61.177,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_update_priority_low",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_update_priority_low",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 232.774,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 232.769,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 55.508,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_update_status_and_priority",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_update_status_and_priority",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 175.0,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 174.996,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 34.494,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_delete_ticket",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_delete_ticket",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 280.281,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 280.276,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 36.692,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_delete_second_ticket",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_delete_second_ticket",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 397.523,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 397.515,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 33.669,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_deleted_ticket_not_in_search",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_deleted_ticket_not_in_search",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 307.237,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 307.231,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 45.384,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_search_filters_title",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_search_filters_title",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 343.634,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 343.629,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 43.228,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_status_filter_closed",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_status_filter_closed",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 304.443,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 304.439,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 35.018,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_priority_filter_high",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_priority_filter_high",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 388.921,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 388.908,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 38.371,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_navigate_workbench",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_navigate_workbench",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 123.03,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 123.017,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 56.318,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_navigate_knowledge",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_navigate_knowledge",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 106.201,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 106.187,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 63.871,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_navigate_report",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_navigate_report",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 258.953,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 258.938,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 77.339,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_navigate_portfolio",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_navigate_portfolio",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 96.648,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 96.636,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 63.913,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_navigate_platform",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_navigate_platform",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 115.196,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 115.191,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 58.46,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_navigate_methodology",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_navigate_methodology",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 96.176,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 96.168,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 52.696,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_crud.py::test_dashboard_loads_after_create",
+      "module": "test_sut_crud.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_crud.py",
+      "class": null,
+      "name": "test_dashboard_loads_after_create",
+      "params": {},
+      "markers": [],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 255.322,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 255.316,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 45.303,
+          "status": "ok"
+        }
+      ],
+      "teardown_errors": []
+    },
+    {
+      "id": "libs/miniplaywright/demo/test_sut_ui.py::test_dashboard_loads",
+      "module": "test_sut_ui.py",
+      "path": "E:/ailearning/ai-qa-lab/libs/miniplaywright/demo/test_sut_ui.py",
+      "class": null,
+      "name": "test_dashboard_loads",
+      "params": {},
+      "markers": [
+        "smoke"
+      ],
+      "status": "passed",
+      "phase": "call",
+      "duration_ms": 206.613,
+      "attempts": [
+        {
+          "number": 1,
+          "status": "passed",
+          "duration_ms": 206.606,
+          "failure": null
+        }
+      ],
+      "failure": null,
+      "skip_reason": null,
+      "xfail_reason": null,
+      "fixtures": [
+        {
+          "name": "page",
+          "scope": "function",
+          "phase": "setup",
+          "duration_ms": 41.536,
           "status": "ok"
         }
       ],
@@ -93,12 +1017,12 @@
       "markers": [],
       "status": "passed",
       "phase": "call",
-      "duration_ms": 47.383,
+      "duration_ms": 67.357,
       "attempts": [
         {
           "number": 1,
           "status": "passed",
-          "duration_ms": 47.376,
+          "duration_ms": 67.351,
           "failure": null
         }
       ],
@@ -110,7 +1034,7 @@
           "name": "page",
           "scope": "function",
           "phase": "setup",
-          "duration_ms": 28.409,
+          "duration_ms": 39.271,
           "status": "ok"
         }
       ],
@@ -126,12 +1050,12 @@
       "markers": [],
       "status": "passed",
       "phase": "call",
-      "duration_ms": 246.903,
+      "duration_ms": 323.038,
       "attempts": [
         {
           "number": 1,
           "status": "passed",
-          "duration_ms": 246.896,
+          "duration_ms": 323.031,
           "failure": null
         }
       ],
@@ -143,7 +1067,7 @@
           "name": "page",
           "scope": "function",
           "phase": "setup",
-          "duration_ms": 26.282,
+          "duration_ms": 40.05,
           "status": "ok"
         }
       ],
@@ -159,12 +1083,12 @@
       "markers": [],
       "status": "passed",
       "phase": "call",
-      "duration_ms": 63.382,
+      "duration_ms": 93.924,
       "attempts": [
         {
           "number": 1,
           "status": "passed",
-          "duration_ms": 63.374,
+          "duration_ms": 93.917,
           "failure": null
         }
       ],
@@ -176,7 +1100,7 @@
           "name": "page",
           "scope": "function",
           "phase": "setup",
-          "duration_ms": 27.821,
+          "duration_ms": 52.347,
           "status": "ok"
         }
       ],
@@ -192,12 +1116,12 @@
       "markers": [],
       "status": "passed",
       "phase": "call",
-      "duration_ms": 69.145,
+      "duration_ms": 109.788,
       "attempts": [
         {
           "number": 1,
           "status": "passed",
-          "duration_ms": 69.138,
+          "duration_ms": 109.78,
           "failure": null
         }
       ],
@@ -209,7 +1133,7 @@
           "name": "page",
           "scope": "function",
           "phase": "setup",
-          "duration_ms": 30.15,
+          "duration_ms": 59.348,
           "status": "ok"
         }
       ],

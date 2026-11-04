@@ -20,7 +20,7 @@
 ## 归档目录
 
 ```
-docs/reports/2026-11-02-v0.2.0/
+docs/reports/2026-11-03-v1.0.0/
   index.html      静态报告快照（截图路径已改写为本地）
   report.md       Markdown 版报告
   screenshots/    快照自带截图
@@ -30,7 +30,7 @@ docs/reports/2026-11-02-v0.2.0/
 
 ## 规则
 
-1. 旧快照不可修改；需要更正时新增 `corrections.md`。
+1. 旧快照原则上不修改；措辞或安全类更正可直接修订，并在快照内新增 `corrections.md` 记录。
 2. 根 `docs/index.html` 永远是最新报告；归档索引在 `docs/reports/index.html`。
 3. 每次归档同时打 Git tag（与版本同名），标签即代码归档点。
 4. `.gitignore` 只忽略根目录 `/reports/`，不要忽略 `docs/reports/`；否则快照不会进 Git，Pages 会 404。
@@ -52,4 +52,4 @@ git push ssh-origin v0.2.0
 
 - 最新报告：https://shenle2019.github.io/ai-qa-lab/
 - 归档索引：https://shenle2019.github.io/ai-qa-lab/reports/
-- 快照示例：https://shenle2019.github.io/ai-qa-lab/reports/2026-11-02-v0.2.0/
+- 快照示例：https://shenle2019.github.io/ai-qa-lab/reports/2026-11-03-v1.0.0/

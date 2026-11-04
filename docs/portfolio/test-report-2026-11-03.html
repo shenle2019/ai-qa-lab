@@ -1,0 +1,669 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>测试报告 2026-11-03</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1120;--panel:#111a2e;--line:#26344d;--text:#e5edf8;--muted:#8fa3bf;--accent:#38bdf8}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.7 "Segoe UI","Microsoft YaHei",sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:32px 24px 64px}
+h1{font-size:28px}h2{margin-top:32px;font-size:20px;border-top:1px solid var(--line);padding-top:16px}
+table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:12.5px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--muted)}tr:last-child td{border-bottom:0}
+code{background:rgba(56,189,248,.1);color:#bae6fd;padding:1px 5px;border-radius:5px;font-family:Consolas,monospace}
+pre{background:#0a0f1c;border:1px solid var(--line);border-radius:10px;padding:12px;overflow:auto}
+blockquote{color:var(--muted);border-left:3px solid var(--accent);margin:12px 0;padding-left:12px}
+a{color:var(--accent)}footer{margin-top:36px;color:var(--muted);font-size:12px}
+</style></head><body><div class="wrap"><h1 id="2026-11-03-crud">2026-11-03 测试报告：CRUD 与分层用例扩充</h1>
+<blockquote>
+<p>目标：每个子项新增 20+ 用例，覆盖创建、读取、更新、删除和关键交互。
+所有用例均本地真实运行，不使用 mock 数据替代被测系统。</p>
+</blockquote>
+<h2 id="1">1. 汇总</h2>
+<table>
+<thead>
+<tr>
+<th>子项</th>
+<th style="text-align: right;">新增</th>
+<th style="text-align: right;">套件总数</th>
+<th>命令</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>接口 CRUD</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: right;">—</td>
+<td><code>pytest suites/api -q</code></td>
+<td>56 passed</td>
+</tr>
+<tr>
+<td>Web UI CRUD</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">—</td>
+<td><code>python -m libs.minipytest libs/miniplaywright/demo</code></td>
+<td>33 passed</td>
+</tr>
+<tr>
+<td>App UI</td>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">—</td>
+<td><code>pytest libs/miniappium/tests -q</code></td>
+<td>29 passed</td>
+</tr>
+<tr>
+<td>测试平台 CRUD</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">—</td>
+<td><code>pytest apps/sut/backend -q</code></td>
+<td>38 passed</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>本轮新增：<strong>107</strong> 个用例。</li>
+<li>真实 pytest：172 个（接口 56 + 后端/平台 38 + 迷你 pytest 33 + 迷你 Playwright 6 + 迷你 Appium 29 + 迷你压测 5 + LLM 评测 5）。</li>
+<li>迷你演示：58 个（迷你 pytest 20 + Web 33 + App 3 + 压测 1 + 评测 1）。</li>
+</ul>
+<h2 id="2-crud29">2. 接口 CRUD（29 个新增）</h2>
+<p>覆盖：创建默认值、优先级、空描述、200/201 字标题、422 拒绝、读取/404、列表倒序、状态/优先级更新、非法枚举、空更新、删除/404/重复删除。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">#</th>
+<th>用例</th>
+<th>覆盖点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td><code>test_create_minimal_returns_201</code></td>
+<td>创建</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td><code>test_create_defaults</code></td>
+<td>创建</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td><code>test_create_high_priority</code></td>
+<td>创建</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td><code>test_create_low_priority</code></td>
+<td>创建</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td><code>test_create_with_description</code></td>
+<td>创建</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td><code>test_create_empty_description</code></td>
+<td>创建</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td><code>test_create_title_200_chars</code></td>
+<td>创建</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td><code>test_create_title_201_chars_rejected</code></td>
+<td>创建</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td><code>test_create_blank_title_rejected</code></td>
+<td>创建</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td><code>test_create_missing_title_rejected</code></td>
+<td>创建</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td><code>test_create_single_char_title</code></td>
+<td>创建</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td><code>test_get_created_ticket</code></td>
+<td>查询单条</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td><code>test_get_missing_ticket_returns_404</code></td>
+<td>查询单条</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td><code>test_list_contains_created_ticket</code></td>
+<td>列表</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td><code>test_list_is_newest_first</code></td>
+<td>列表</td>
+</tr>
+<tr>
+<td style="text-align: right;">16</td>
+<td><code>test_update_status_in_progress</code></td>
+<td>更新</td>
+</tr>
+<tr>
+<td style="text-align: right;">17</td>
+<td><code>test_update_status_closed</code></td>
+<td>更新</td>
+</tr>
+<tr>
+<td style="text-align: right;">18</td>
+<td><code>test_update_priority_high</code></td>
+<td>更新</td>
+</tr>
+<tr>
+<td style="text-align: right;">19</td>
+<td><code>test_update_priority_low</code></td>
+<td>更新</td>
+</tr>
+<tr>
+<td style="text-align: right;">20</td>
+<td><code>test_update_status_and_priority</code></td>
+<td>更新</td>
+</tr>
+<tr>
+<td style="text-align: right;">21</td>
+<td><code>test_update_invalid_status_rejected</code></td>
+<td>更新</td>
+</tr>
+<tr>
+<td style="text-align: right;">22</td>
+<td><code>test_update_invalid_priority_rejected</code></td>
+<td>更新</td>
+</tr>
+<tr>
+<td style="text-align: right;">23</td>
+<td><code>test_update_missing_ticket_returns_404</code></td>
+<td>更新</td>
+</tr>
+<tr>
+<td style="text-align: right;">24</td>
+<td><code>test_empty_update_keeps_values</code></td>
+<td>更新</td>
+</tr>
+<tr>
+<td style="text-align: right;">25</td>
+<td><code>test_delete_ticket_returns_204</code></td>
+<td>删除</td>
+</tr>
+<tr>
+<td style="text-align: right;">26</td>
+<td><code>test_delete_missing_ticket_returns_404</code></td>
+<td>删除</td>
+</tr>
+<tr>
+<td style="text-align: right;">27</td>
+<td><code>test_deleted_ticket_is_gone</code></td>
+<td>删除</td>
+</tr>
+<tr>
+<td style="text-align: right;">28</td>
+<td><code>test_deleted_ticket_not_in_list</code></td>
+<td>删除</td>
+</tr>
+<tr>
+<td style="text-align: right;">29</td>
+<td><code>test_delete_twice_returns_404</code></td>
+<td>删除</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-web-ui-crud28">3. Web UI CRUD（28 个新增）</h2>
+<p>覆盖：页面加载、创建（最小/描述/高/低优先级）、取消、空标题校验、200 字标题、列表可见、状态/优先级更新、删除、搜索、状态/优先级筛选、7 个页面导航。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">#</th>
+<th>用例</th>
+<th>覆盖点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td><code>test_tickets_page_loads</code></td>
+<td>其他</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td><code>test_create_minimal_ticket</code></td>
+<td>创建</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td><code>test_create_ticket_with_description</code></td>
+<td>创建</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td><code>test_create_high_priority_ticket</code></td>
+<td>创建</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td><code>test_create_low_priority_ticket</code></td>
+<td>创建</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td><code>test_create_second_ticket</code></td>
+<td>创建</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td><code>test_cancel_modal</code></td>
+<td>其他</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td><code>test_empty_title_shows_error</code></td>
+<td>空值/空更新</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td><code>test_long_title_200</code></td>
+<td>边界长度</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td><code>test_created_ticket_visible</code></td>
+<td>创建</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td><code>test_update_status_in_progress</code></td>
+<td>更新</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td><code>test_update_status_closed</code></td>
+<td>更新</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td><code>test_update_priority_high</code></td>
+<td>更新</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td><code>test_update_priority_low</code></td>
+<td>更新</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td><code>test_update_status_and_priority</code></td>
+<td>更新</td>
+</tr>
+<tr>
+<td style="text-align: right;">16</td>
+<td><code>test_delete_ticket</code></td>
+<td>删除</td>
+</tr>
+<tr>
+<td style="text-align: right;">17</td>
+<td><code>test_delete_second_ticket</code></td>
+<td>删除</td>
+</tr>
+<tr>
+<td style="text-align: right;">18</td>
+<td><code>test_deleted_ticket_not_in_search</code></td>
+<td>删除</td>
+</tr>
+<tr>
+<td style="text-align: right;">19</td>
+<td><code>test_search_filters_title</code></td>
+<td>搜索</td>
+</tr>
+<tr>
+<td style="text-align: right;">20</td>
+<td><code>test_status_filter_closed</code></td>
+<td>筛选</td>
+</tr>
+<tr>
+<td style="text-align: right;">21</td>
+<td><code>test_priority_filter_high</code></td>
+<td>筛选</td>
+</tr>
+<tr>
+<td style="text-align: right;">22</td>
+<td><code>test_navigate_workbench</code></td>
+<td>页面导航</td>
+</tr>
+<tr>
+<td style="text-align: right;">23</td>
+<td><code>test_navigate_knowledge</code></td>
+<td>页面导航</td>
+</tr>
+<tr>
+<td style="text-align: right;">24</td>
+<td><code>test_navigate_report</code></td>
+<td>页面导航</td>
+</tr>
+<tr>
+<td style="text-align: right;">25</td>
+<td><code>test_navigate_portfolio</code></td>
+<td>页面导航</td>
+</tr>
+<tr>
+<td style="text-align: right;">26</td>
+<td><code>test_navigate_platform</code></td>
+<td>页面导航</td>
+</tr>
+<tr>
+<td style="text-align: right;">27</td>
+<td><code>test_navigate_methodology</code></td>
+<td>页面导航</td>
+</tr>
+<tr>
+<td style="text-align: right;">28</td>
+<td><code>test_dashboard_loads_after_create</code></td>
+<td>其他</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-app-ui24">4. App UI（24 个新增）</h2>
+<p>覆盖：Settings 首页 9 个元素、7 个页面打开/返回、返回首页、搜索 Wi-Fi、滑动、截图、当前 Activity、Home 后重启。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">#</th>
+<th>用例</th>
+<th>覆盖点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td><code>test_model</code></td>
+<td>设备信息</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td><code>test_serial</code></td>
+<td>设备序列号</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td><code>test_home_search_visible</code></td>
+<td>搜索</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td><code>test_home_network_visible</code></td>
+<td>首页元素</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td><code>test_home_connected_devices_visible</code></td>
+<td>首页元素</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td><code>test_home_apps_visible</code></td>
+<td>首页元素</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td><code>test_home_notifications_visible</code></td>
+<td>首页元素</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td><code>test_home_sound_visible</code></td>
+<td>首页元素</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td><code>test_home_modes_visible</code></td>
+<td>首页元素</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td><code>test_home_display_visible</code></td>
+<td>首页元素</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td><code>test_home_google_visible</code></td>
+<td>首页元素</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td><code>test_open_network</code></td>
+<td>打开页面</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td><code>test_open_apps</code></td>
+<td>打开页面</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td><code>test_open_notifications</code></td>
+<td>打开页面</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td><code>test_open_sound</code></td>
+<td>打开页面</td>
+</tr>
+<tr>
+<td style="text-align: right;">16</td>
+<td><code>test_open_display</code></td>
+<td>打开页面</td>
+</tr>
+<tr>
+<td style="text-align: right;">17</td>
+<td><code>test_open_connected_devices</code></td>
+<td>打开页面</td>
+</tr>
+<tr>
+<td style="text-align: right;">18</td>
+<td><code>test_home_search_bar_visible</code></td>
+<td>搜索</td>
+</tr>
+<tr>
+<td style="text-align: right;">19</td>
+<td><code>test_back_from_network</code></td>
+<td>返回</td>
+</tr>
+<tr>
+<td style="text-align: right;">20</td>
+<td><code>test_search_wifi</code></td>
+<td>搜索</td>
+</tr>
+<tr>
+<td style="text-align: right;">21</td>
+<td><code>test_swipe_home</code></td>
+<td>滑动</td>
+</tr>
+<tr>
+<td style="text-align: right;">22</td>
+<td><code>test_screenshot</code></td>
+<td>截图</td>
+</tr>
+<tr>
+<td style="text-align: right;">23</td>
+<td><code>test_current_activity</code></td>
+<td>当前页面</td>
+</tr>
+<tr>
+<td style="text-align: right;">24</td>
+<td><code>test_home_key_and_restart</code></td>
+<td>首页元素</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-crud26">5. 测试平台 CRUD（26 个新增）</h2>
+<p>覆盖：项目创建/重复/列表/404、用例创建/筛选/非法项目、计划创建/筛选/404、执行通过/失败/404、结果查询、缺陷创建/更新/筛选/非法状态、报告导入、汇总字段。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">#</th>
+<th>用例</th>
+<th>覆盖点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td><code>test_create_project_and_get</code></td>
+<td>创建</td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td><code>test_duplicate_project_name_returns_same_id</code></td>
+<td>重复数据</td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td><code>test_list_projects_contains_project</code></td>
+<td>列表</td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td><code>test_missing_project_returns_404</code></td>
+<td>不存在</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td><code>test_create_case_and_list</code></td>
+<td>创建</td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td><code>test_filter_cases_by_project</code></td>
+<td>筛选</td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td><code>test_case_invalid_project_404</code></td>
+<td>非法输入</td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td><code>test_case_high_priority</code></td>
+<td>其他</td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td><code>test_case_low_priority</code></td>
+<td>其他</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td><code>test_case_web_module</code></td>
+<td>其他</td>
+</tr>
+<tr>
+<td style="text-align: right;">11</td>
+<td><code>test_create_plan_and_get</code></td>
+<td>创建</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td><code>test_filter_plans_by_project</code></td>
+<td>筛选</td>
+</tr>
+<tr>
+<td style="text-align: right;">13</td>
+<td><code>test_plan_invalid_project_404</code></td>
+<td>非法输入</td>
+</tr>
+<tr>
+<td style="text-align: right;">14</td>
+<td><code>test_missing_plan_returns_404</code></td>
+<td>不存在</td>
+</tr>
+<tr>
+<td style="text-align: right;">15</td>
+<td><code>test_run_plan_passed</code></td>
+<td>执行</td>
+</tr>
+<tr>
+<td style="text-align: right;">16</td>
+<td><code>test_run_plan_failed</code></td>
+<td>执行</td>
+</tr>
+<tr>
+<td style="text-align: right;">17</td>
+<td><code>test_run_missing_plan_404</code></td>
+<td>执行</td>
+</tr>
+<tr>
+<td style="text-align: right;">18</td>
+<td><code>test_list_executions_contains_run</code></td>
+<td>列表</td>
+</tr>
+<tr>
+<td style="text-align: right;">19</td>
+<td><code>test_get_execution_results</code></td>
+<td>查询单条</td>
+</tr>
+<tr>
+<td style="text-align: right;">20</td>
+<td><code>test_missing_execution_404</code></td>
+<td>不存在</td>
+</tr>
+<tr>
+<td style="text-align: right;">21</td>
+<td><code>test_create_defect_and_patch</code></td>
+<td>创建</td>
+</tr>
+<tr>
+<td style="text-align: right;">22</td>
+<td><code>test_filter_defects_by_project</code></td>
+<td>筛选</td>
+</tr>
+<tr>
+<td style="text-align: right;">23</td>
+<td><code>test_invalid_defect_status_422</code></td>
+<td>非法输入</td>
+</tr>
+<tr>
+<td style="text-align: right;">24</td>
+<td><code>test_patch_missing_defect_404</code></td>
+<td>更新</td>
+</tr>
+<tr>
+<td style="text-align: right;">25</td>
+<td><code>test_import_minipytest_report</code></td>
+<td>导入</td>
+</tr>
+<tr>
+<td style="text-align: right;">26</td>
+<td><code>test_summary_shape</code></td>
+<td>其他</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6">6. 复现命令</h2>
+<pre><code class="language-bash">cd /e/ailearning/ai-qa-lab
+./.venv/Scripts/python.exe -m pytest suites/api -q
+./.venv/Scripts/python.exe -m pytest apps/sut/backend -q
+./.venv/Scripts/python.exe -m pytest libs/miniappium/tests -q
+./.venv/Scripts/python.exe -m libs.minipytest libs/miniplaywright/demo
+</code></pre>
+<h2 id="7">7. 边界</h2>
+<ul>
+<li>App 用例跑在本机 Android 模拟器；CI 无设备时自动 skip。</li>
+<li>Web 用例跑在本机 Edge headless；CI 无 Chromium 时自动 skip。</li>
+<li>接口和平台用例使用临时/内存 SQLite，不污染开发数据。</li>
+<li>本轮新增以 CRUD 和关键交互为主，不代表生产级覆盖率。</li>
+</ul>
+<footer>AI全栈测试开发平台-shenle · 2026-11-03 · 离线报告</footer></div></body></html>

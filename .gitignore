@@ -37,3 +37,9 @@ suites/api/.tmp/
 Thumbs.db
 .vscode/
 .idea/
+
+# Local private notes (not published)
+notes/private/
+
+# Internal planning notes (not published)
+参考站对标与改进清单.md

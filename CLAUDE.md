@@ -1,7 +1,7 @@
 # ai-qa-lab 项目约定
 
 ## 项目目标
-面向杭州 30K+ 测试开发（AI 质量方向）岗位的公开作品集。用一套可运行的被测系统（SUT）+ 分层测试套件 + 测试平台，覆盖 8 个模块：质量工程方法论、Python 测试开发、接口自动化、Web 自动化、App 自动化、性能测试、测试平台、Agent/大模型评测。
+面向 AI 质量方向的全栈测试开发项目。用一套可运行的被测系统（SUT）+ 分层测试套件 + 测试平台，覆盖 8 个模块：质量工程方法论、Python 测试开发、接口自动化、Web 自动化、App 自动化、性能测试、测试平台、Agent/大模型评测。
 
 ## 目录约定
 - `apps/sut`：被测系统（FastAPI + Vue3 + SQLite），后端在 `apps/sut/backend`
@@ -10,7 +10,7 @@
   - `libs/minipytest`：模块 02 的自研测试框架；包名不得为 `pytest`，不得覆盖真实 pytest
 - `suites/api|web|app|perf|agent`：各层测试套件，按模块归档
 - `docs/notes`：对外笔记，仓库是唯一信源
-- `docs/portfolio`：作品集站点内容
+- `docs/portfolio`：项目展示站点内容
 - `docs/progress`：每日进度归档，文件名 `YYYY-MM-DD.md`
 - `scripts`：本地脚本（启动、数据准备、报告汇总）
 - `.github/workflows`：CI

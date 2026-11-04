@@ -50,7 +50,7 @@ onMounted(checkHealth)
           <span class="dot" :class="online ? 'ok' : 'bad'"></span>
           {{ checking ? '检测中' : online ? 'SUT 在线' : 'SUT 离线' }}
         </div>
-        <p>v0.2.0 · FastAPI + Vue 3</p>
+        <p>v1.0.1 · FastAPI + Vue 3</p>
       </div>
     </aside>
 

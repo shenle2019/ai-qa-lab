@@ -29,7 +29,7 @@ const modules = [
     stars: '80,721',
     href: 'https://github.com/hoppscotch/hoppscotch',
     status: 'done',
-    scope: '基础接口套件 22 tests 通过；Hoppscotch 风格 API 工作台 v0.1 已上线',
+    scope: '基础接口套件 56 tests 通过；Hoppscotch 风格 API 工作台 v0.1 已上线',
   },
   {
     id: '04',
@@ -38,7 +38,7 @@ const modules = [
     stars: '99,087',
     href: 'https://github.com/microsoft/playwright',
     status: 'done',
-    scope: 'miniplaywright v0.1：CDP 驱动、选择器、自动等待、断言、截图；6 元测试 + 5 个 SUT UI 用例',
+    scope: 'miniplaywright v0.1：CDP 驱动、选择器、自动等待、断言、截图；6 元测试 + 33 个 SUT UI 用例',
     report: '/portfolio/module-04-playwright-report.html',
   },
   {
@@ -48,7 +48,7 @@ const modules = [
     stars: '22,174',
     href: 'https://github.com/appium/appium',
     status: 'done',
-    scope: 'miniappium v0.1：ADB/UIAutomator、元素定位、点击、等待、截图；5 元测试 + 3 个 Settings 用例',
+    scope: 'miniappium v0.1：ADB/UIAutomator、元素定位、点击、等待、截图；29 元测试 + 3 个 Settings 用例',
     report: '/portfolio/module-05-appium-report.html',
   },
   {

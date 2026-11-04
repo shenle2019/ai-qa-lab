@@ -25,6 +25,7 @@ export const api = {
     request('/api/tickets', { method: 'POST', body: JSON.stringify(payload) }),
   updateTicket: (id, payload) =>
     request(`/api/tickets/${id}`, { method: 'PATCH', body: JSON.stringify(payload) }),
+  deleteTicket: (id) => request(`/api/tickets/${id}`, { method: 'DELETE' }),
   queryKnowledge: (payload) =>
     request('/api/kb/query', { method: 'POST', body: JSON.stringify(payload) }),
 

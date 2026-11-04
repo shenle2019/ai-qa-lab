@@ -76,8 +76,8 @@
     <p class="lead">这份报告回答：我做了什么、原理是什么、步骤是什么、最终成果是什么，以及它能否脱离本地在公网运行。</p>
     <p style="margin-top:14px"><a class="btn" href="learning/">新手向完整拆解：每一步做什么、为什么、名词、原理、效果 →</a></p>
     <div class="metrics">
-      <div class="metric"><strong>93</strong><span>pytest 用例</span></div>
-      <div class="metric"><strong>30</strong><span>迷你演示</span></div>
+      <div class="metric"><strong>172</strong><span>pytest 用例</span></div>
+      <div class="metric"><strong>58</strong><span>迷你演示</span></div>
       <div class="metric"><strong>8</strong><span>前端页面</span></div>
       <div class="metric"><strong>8</strong><span>复刻闭环</span></div>
     </div>
@@ -98,7 +98,7 @@
       <li><span class="time">11-03</span><div><strong>模块 04 复刻 v0.1</strong><p>以 Playwright（99,087★）为参考，自研 CDP 浏览器自动化：启动、选择器、自动等待、断言、截图；6 元测试 + 5 个 SUT UI 用例。</p></div></li>
       <li><span class="time">11-03</span><div><strong>模块 05 复刻 v0.1</strong><p>以 Appium（22,174★）为参考，自研 ADB/UIAutomator 客户端：元素定位、点击、等待、截图；5 元测试 + 3 个 Settings 用例。</p></div></li>
       <li><span class="time">11-03</span><div><strong>模块 06 复刻 v0.1</strong><p>以 k6（32,102★）为参考，自研压测引擎：VU 并发、ramp-up、P95/P99、阈值、离线报告；8239 次请求，1371 RPS，P95 21ms。</p></div></li>
-      <li><span class="time">11-03</span><div><strong>模块 07 复刻 v0.1</strong><p>以 MeterSphere（13,600★）为参考，测试平台闭环：项目、用例、计划、执行、缺陷、报表；13 个 API，支持导入迷你 pytest 报告。</p></div></li>
+      <li><span class="time">11-03</span><div><strong>模块 07 复刻 v0.1</strong><p>以 MeterSphere（13,600★）为参考，测试平台闭环：项目、用例、计划、执行、缺陷、报表；17 个平台 API，支持导入迷你 pytest 报告。</p></div></li>
       <li><span class="time">11-03</span><div><strong>模块 08 复刻 v0.1</strong><p>以 DeepEval（19,242★）为参考，自研 LLM 评测：数据集、Mock/DeepSeek 裁判、相关性/忠实度/上下文指标、阈值、对比报告；0.52→0.72。</p></div></li>
       <li><span class="time">11-03</span><div><strong>模块 01 复刻 v0.1</strong><p>以 awesome-test-automation（7,208★）为参考，方法论页面：8 模块知识图谱、5 层选型决策树、7 步协作流程、10 条检查表。</p></div></li>
     </ol>
@@ -157,14 +157,15 @@ docker run -p 8000:8000 ai-qa-lab
     <table>
       <thead><tr><th>产物</th><th>位置</th><th>状态</th></tr></thead>
       <tbody>
-        <tr><td>SUT 后端</td><td><code>apps/sut/backend</code></td><td>可运行，8 个接口（6 业务 + 2 工作台）</td></tr>
+        <tr><td>SUT 后端</td><td><code>apps/sut/backend</code></td><td>可运行，9 个接口（7 业务 + 2 工作台）</td></tr>
         <tr><td>Vue 控制台</td><td><code>apps/sut/frontend</code></td><td>6 个页面，已构建</td></tr>
-        <tr><td>接口套件</td><td><code>suites/api</code></td><td>33 tests passing</td></tr>
+        <tr><td>接口套件</td><td><code>suites/api</code></td><td>56 tests passing（含 29 个 CRUD）</td></tr>
         <tr><td>迷你 pytest</td><td><code>libs/minipytest</code></td><td>33 元测试 + 20 演示；离线 HTML 报告</td></tr>
-        <tr><td>迷你 Playwright</td><td><code>libs/miniplaywright</code></td><td>6 元测试 + 5 个 SUT UI 用例；截图</td></tr>
-        <tr><td>迷你 Appium</td><td><code>libs/miniappium</code></td><td>5 元测试 + 3 个 Settings 用例；截图</td></tr>
+        <tr><td>迷你 Playwright</td><td><code>libs/miniplaywright</code></td><td>6 元测试 + 33 个 SUT UI 用例</td></tr>
+        <tr><td>迷你 Appium</td><td><code>libs/miniappium</code></td><td>29 元测试 + 3 个 Settings 用例</td></tr>
         <tr><td>迷你压测</td><td><code>libs/miniload</code></td><td>5 元测试；SUT 8239 请求，P95 21ms</td></tr>
-        <tr><td>测试平台</td><td><code>/ui/#/platform</code></td><td>项目/用例/计划/执行/缺陷/报表</td></tr>
+        <tr><td>测试平台</td><td><code>/ui/#/platform</code></td><td>项目/用例/计划/执行/缺陷/报表；38 backend tests</td></tr>
+        <tr><td>CRUD 测试报告</td><td><a href="portfolio/test-report-2026-11-03.html">test-report-2026-11-03.html</a></td><td>107 个新增用例</td></tr>
         <tr><td>LLM 评测</td><td><code>libs/minieval</code></td><td>5 元测试；5 条数据，0.52→0.72</td></tr>
         <tr><td>方法论</td><td><code>/ui/#/methodology</code></td><td>8 模块图谱 + 5 层选型 + 检查表</td></tr>
         <tr><td>API 工作台</td><td><code>/ui/#/workbench</code></td><td>闭环可用</td></tr>
@@ -219,7 +220,7 @@ docker run -p 8000:8000 ai-qa-lab
     <p>学习页原来叫 “AI QA Lab”，现在改成 “AI全栈测试开发平台-shenle”。改的是浏览器标签、页面顶部和一级标题，内容不变。控制台侧边栏也同步换成了这个显示名，仓库名 <code>ai-qa-lab</code> 没变。</p>
     <h3>2. SUT 在哪里，我能看见吗</h3>
     <p>SUT 就是被测系统（System Under Test）。代码在 <code>apps/sut/backend</code>（FastAPI + SQLite）和 <code>apps/sut/frontend</code>（Vue3）。启动后看两个地方：<code>/ui/</code> 是用户界面，<code>/docs</code> 是接口文档，能直接点 “Try it out” 发请求。</p>
-    <p>现在实际有 8 个 HTTP 接口：健康检查、工单列表、创建工单、查单个工单、更新工单、知识库问答，加 2 个工作台接口。之前报告写 7 个，是旧口径，已更正。</p>
+    <p>现在实际有 9 个 HTTP 接口：健康检查、工单列表、创建工单、查单个工单、更新工单、删除工单、知识库问答，加 2 个工作台接口。之前报告写 7 个，是旧口径，已更正。</p>
     <h3>3. 模块 03 接口自动化是什么</h3>
     <p>参考 Hoppscotch（80,721 星），一个开源的 Postman 类 API 工具。我们没复制源码，只复刻核心闭环：发请求、环境变量、5 种断言、集合保存、批量运行、报告。入口是 <code>/ui/#/workbench</code>。v0.1 不做 GraphQL、WebSocket、脚本和团队协作。</p>
     <h3>4. 模块 01 方法论是什么</h3>
@@ -235,7 +236,7 @@ docker run -p 8000:8000 ai-qa-lab
       <li>知识库仍是 mock；模块 08 接入 DeepSeek + 真实检索与评测。</li>
       <li>API 工作台只做 REST，不做 GraphQL/WebSocket/请求链路变量提取。</li>
       <li>SQLite 适合演示，不适合多用户生产；后续可切 PostgreSQL。</li>
-      <li>已完成 v1.0.0 归档与推送；完整应用部署待 Render/HF 账号授权。</li>
+      <li>已完成 v1.0.0 归档与推送；CRUD 扩充 107 个新用例；完整应用部署待 Render/HF 账号授权。</li>
     </ul>
   </section>
 

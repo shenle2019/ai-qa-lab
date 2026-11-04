@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Response
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
@@ -81,6 +81,16 @@ def update_ticket(
     db.commit()
     db.refresh(ticket)
     return ticket
+
+
+@app.delete("/api/tickets/{ticket_id}", status_code=204)
+def delete_ticket(ticket_id: int, db: Session = Depends(get_db)):
+    ticket = db.get(models.Ticket, ticket_id)
+    if ticket is None:
+        raise HTTPException(status_code=404, detail="ticket not found")
+    db.delete(ticket)
+    db.commit()
+    return Response(status_code=204)
 
 
 @app.post("/api/kb/query")

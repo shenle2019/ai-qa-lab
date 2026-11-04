@@ -19,9 +19,10 @@
 | 11-03 16:42 | 模块 04 复刻 v0.1 | 迷你 Playwright：CDP 驱动、选择器、自动等待、断言、截图；6 元测试 + 5 个 SUT UI 用例 |
 | 11-03 16:48 | 模块 05 复刻 v0.1 | 迷你 Appium：ADB/UIAutomator、元素定位、点击、等待、截图；5 元测试 + 3 个 Settings 用例 |
 | 11-03 17:06 | 模块 06 复刻 v0.1 | 迷你压测：VU 并发、ramp-up、P95/P99、阈值、离线报告；8239 请求，1371 RPS，P95 21ms |
-| 11-03 17:15 | 模块 07 复刻 v0.1 | 测试平台：项目、用例、计划、执行、缺陷、报表；13 个 API，支持导入迷你 pytest 报告 |
+| 11-03 17:15 | 模块 07 复刻 v0.1 | 测试平台：项目、用例、计划、执行、缺陷、报表；17 个平台 API，支持导入迷你 pytest 报告 |
 | 11-03 17:16 | 模块 08 复刻 v0.1 | LLM 评测：数据集、Mock/DeepSeek 裁判、5 项指标、阈值、对比报告；0.52→0.72 |
 | 11-03 17:25 | 模块 01 复刻 v0.1 | 方法论：8 模块知识图谱、5 层选型决策树、7 步协作流程、10 条检查表 |
+| 11-03 18:00 | CRUD 用例扩充 | 接口 29 + Web 28 + App 24 + 平台 26，共 107 个新增用例；全部记录到测试报告 |
 
 ## 2. 原理
 
@@ -87,7 +88,7 @@ docker run -p 8000:8000 ai-qa-lab
 
 ## 4. 最后成果
 
-- 93 个真实 pytest 用例全部通过（33 现有 + 33 迷你 pytest + 6 迷你 Playwright + 5 迷你 Appium + 5 迷你压测 + 6 平台 + 5 LLM 评测）
+- 172 个真实 pytest 用例全部通过；58 个迷你演示/压测/评测用例。
 - 29 个迷你演示用例：20 个迷你 pytest + 5 个迷你 Playwright + 3 个迷你 Appium + 1 次压测
 - 6 个前端页面，构建成功
 - 8 个模块的 GitHub 最高星项目选型矩阵
@@ -104,6 +105,7 @@ docker run -p 8000:8000 ai-qa-lab
 - `docs/portfolio/module-07-test-platform.md`
 - `docs/portfolio/module-08-llm-eval.md`
 - `docs/portfolio/module-01-methodology.md`
+- `docs/portfolio/test-report-2026-11-03.md`
 - `docs/portfolio/module-03-api-workbench.md`
 - `docs/requirements/module-matrix.md`
 
@@ -139,7 +141,7 @@ https://render.com/deploy?repo=https://github.com/shenle2019/ai-qa-lab
 - 知识库仍是 mock，模块 08 接入 DeepSeek + 真实检索与评测。
 - API 工作台只做 REST，不做 GraphQL/WebSocket/请求链路变量提取。
 - SQLite 适合演示，不适合多用户生产；后续切 PostgreSQL。
-- 已完成 v1.0.0 归档与推送；完整应用部署待 Render/HF 账号授权。
+- 已完成 v1.0.0 归档与推送；CRUD 扩充 107 个新用例，报告见 `docs/portfolio/test-report-2026-11-03.html`；完整应用部署待 Render/HF 账号授权。
 
 ## 7. 五个常见问题（2026-11-03）
 
@@ -154,7 +156,7 @@ SUT 就是被测系统（System Under Test）。代码在 `apps/sut/backend`（F
 - `http://127.0.0.1:8000/ui/`：用户界面，能看仪表盘、工单、知识库、API 工作台、报告、模块验收。
 - `http://127.0.0.1:8000/docs`：接口文档，能直接点 “Try it out” 发请求。
 
-现在实际有 8 个 HTTP 接口：健康检查、工单列表、创建工单、查单个工单、更新工单、知识库问答，加 2 个工作台接口。之前报告写 7 个，是旧口径，已更正。
+现在实际有 9 个 HTTP 接口：健康检查、工单列表、创建工单、查单个工单、更新工单、删除工单、知识库问答，加 2 个工作台接口。之前报告写 7 个，是旧口径，已更正。
 
 ### 7.3 模块 03 接口自动化是什么
 
@@ -176,7 +178,7 @@ SUT 就是被测系统（System Under Test）。代码在 `apps/sut/backend`（F
 
 ## 8. 新手向完整拆解
 
-面向测试小白的逐步讲解已单独成页，包含：每一步做了什么、为什么、涉及的名词、原理、效果；术语速查表；简历写法；面试追问；13 道自测题。
+面向测试小白的逐步讲解已单独成页，包含：每一步做了什么、为什么、涉及的名词、原理、效果；术语速查表；实现说明；常见追问；13 道自测题。
 
 - 在线版：https://shenle2019.github.io/ai-qa-lab/learning/
 - 源文件：`docs/learning/project-walkthrough.md`

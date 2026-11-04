@@ -10,6 +10,7 @@ import markdown
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "docs" / "learning" / "project-walkthrough.md"
+EXTRA = None
 OUTPUT = ROOT / "docs" / "learning" / "index.html"
 
 CSS = """
@@ -44,6 +45,8 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 
 def main() -> None:
     text = SOURCE.read_text(encoding="utf-8")
+    if EXTRA is not None and EXTRA.exists():
+        text += "\n\n---\n\n" + EXTRA.read_text(encoding="utf-8")
     converter = markdown.Markdown(
         extensions=["tables", "fenced_code", "toc"],
         extension_configs={"toc": {"toc_depth": "2"}},
@@ -60,7 +63,7 @@ def main() -> None:
 <body>
 <div class="wrap">
   <div class="top">
-    <span>AI全栈测试开发平台-shenle · 项目学习手册 · v0.3.0</span>
+    <span>AI全栈测试开发平台-shenle · 项目学习手册 · v1.0.1</span>
     <span>
       <a href="../">最新报告</a> ·
       <a href="../reports/">归档索引</a> ·

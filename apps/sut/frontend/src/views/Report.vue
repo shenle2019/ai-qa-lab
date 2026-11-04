@@ -58,7 +58,7 @@ const timeline = [
   {
     time: '11-03',
     title: '模块 07 测试平台',
-    detail: '项目、用例、计划、执行、缺陷、报表闭环；13 个 API，支持导入迷你 pytest 报告。',
+    detail: '项目、用例、计划、执行、缺陷、报表闭环；17 个平台 API，支持导入迷你 pytest 报告。',
   },
   {
     time: '11-03',
@@ -70,11 +70,16 @@ const timeline = [
     title: '模块 01 方法论',
     detail: '8 模块知识图谱、5 层选型决策树、7 步协作流程、10 条检查表；页面 /ui/#/methodology。',
   },
+  {
+    time: '11-03',
+    title: 'CRUD 用例扩充',
+    detail: '接口 29 + Web 28 + App 24 + 平台 26，共 107 个新增用例；全部记录到 CRUD 测试报告。',
+  },
 ]
 
 const metrics = [
-  { value: '93', label: 'pytest 用例' },
-  { value: '30', label: '迷你演示' },
+  { value: '172', label: 'pytest 用例' },
+  { value: '58', label: '迷你演示' },
   { value: '8', label: '模块选型' },
   { value: '8', label: '复刻闭环' },
 ]
@@ -97,7 +102,7 @@ const faqs = [
   },
   {
     q: '2. SUT 在哪里，我能看见吗？',
-    a: '代码在 apps/sut/backend 和 apps/sut/frontend；界面看 /ui/，接口看 /docs，现在共 8 个 HTTP 接口。',
+    a: '代码在 apps/sut/backend 和 apps/sut/frontend；界面看 /ui/，接口看 /docs，现在共 9 个 HTTP 接口。',
   },
   {
     q: '3. 模块 03 接口自动化学的是什么？',
@@ -109,7 +114,7 @@ const faqs = [
   },
   {
     q: '5. 模块 07 测试平台现在有什么？',
-    a: '有 Vue 控制台 + FastAPI 后端的雏形；还缺用例管理、计划、执行历史、缺陷、权限和 CI 闭环。',
+    a: '项目、用例、计划、执行、缺陷和汇总已可用；执行结果目前由前端提交，服务端真实执行在下一迭代。',
   },
 ]
 </script>
@@ -138,13 +143,14 @@ const faqs = [
       <RouterLink to="/workbench" class="quick-link">API 工作台</RouterLink>
       <a class="quick-link" href="/learning/" target="_blank" rel="noreferrer">完整学习手册</a>
       <a class="quick-link" href="https://shenle2019.github.io/ai-qa-lab/reports/" target="_blank" rel="noreferrer">历史报告归档</a>
+      <a class="quick-link" href="/portfolio/test-report-2026-11-03.html" target="_blank" rel="noreferrer">CRUD 测试报告</a>
     </div>
 
     <article class="hero card">
       <div>
         <p class="eyebrow">BEGINNER WALKTHROUGH</p>
         <h2>新手向完整拆解</h2>
-        <p class="muted">每一步做了什么、为什么、涉及哪些测试开发名词、原理是什么、效果是什么；含术语速查、简历写法和 25 道自测题。</p>
+        <p class="muted">每一步做了什么、为什么、涉及哪些测试开发名词、原理是什么、效果是什么；含术语速查、实现说明和 25 道自测题。</p>
       </div>
       <div class="learning-actions">
         <a class="btn" href="/learning/" target="_blank" rel="noreferrer">打开学习手册</a>
@@ -243,14 +249,15 @@ docker run -p 8000:8000 ai-qa-lab
         <table>
           <thead><tr><th>产物</th><th>位置</th><th>状态</th></tr></thead>
           <tbody>
-            <tr><td>SUT 后端</td><td class="mono">apps/sut/backend</td><td>可运行，8 个接口（6 业务 + 2 工作台）</td></tr>
-            <tr><td>Vue 控制台</td><td class="mono">apps/sut/frontend</td><td>7 个页面，已构建</td></tr>
-            <tr><td>接口套件</td><td class="mono">suites/api</td><td>33 tests passing</td></tr>
+            <tr><td>SUT 后端</td><td class="mono">apps/sut/backend</td><td>可运行，9 个接口（7 业务 + 2 工作台）</td></tr>
+            <tr><td>Vue 控制台</td><td class="mono">apps/sut/frontend</td><td>8 个页面，已构建</td></tr>
+            <tr><td>接口套件</td><td class="mono">suites/api</td><td>56 tests passing</td></tr>
             <tr><td>API 工作台</td><td class="mono">/ui/#/workbench</td><td>闭环可用</td></tr>
-            <tr><td>迷你 Playwright</td><td class="mono">libs/miniplaywright</td><td>6 元测试 + 5 个 SUT UI 用例</td></tr>
-            <tr><td>迷你 Appium</td><td class="mono">libs/miniappium</td><td>5 元测试 + 3 个 Settings 用例</td></tr>
+            <tr><td>迷你 Playwright</td><td class="mono">libs/miniplaywright</td><td>6 元测试 + 33 个 SUT UI 用例</td></tr>
+            <tr><td>迷你 Appium</td><td class="mono">libs/miniappium</td><td>29 元测试 + 3 个 Settings 用例</td></tr>
             <tr><td>迷你压测</td><td class="mono">libs/miniload</td><td>5 元测试 + 1 次 SUT 压测；P95 21ms</td></tr>
-            <tr><td>测试平台</td><td class="mono">/ui/#/platform</td><td>项目/用例/计划/执行/缺陷/报表闭环</td></tr>
+            <tr><td>测试平台</td><td class="mono">/ui/#/platform</td><td>项目/用例/计划/执行/缺陷/报表；38 backend tests</td></tr>
+            <tr><td>CRUD 测试报告</td><td class="mono">docs/portfolio/test-report-2026-11-03.html</td><td>107 个新增用例</td></tr>
             <tr><td>LLM 评测</td><td class="mono">libs/minieval</td><td>5 元测试 + 5 条数据；0.52→0.72</td></tr>
             <tr><td>方法论</td><td class="mono">/ui/#/methodology</td><td>8 模块图谱 + 5 层选型 + 检查表</td></tr>
             <tr><td>复刻矩阵</td><td class="mono">docs/requirements/module-matrix.md</td><td>8 模块选型完成</td></tr>
@@ -293,7 +300,7 @@ docker run -p 8000:8000 ai-qa-lab
       </div>
       <p class="muted">
         部署配置已写入仓库：<span class="mono">Dockerfile</span>、<span class="mono">render.yaml</span>、<span class="mono">.dockerignore</span>。
-        启动时通过 <span class="mono">SEED_DEMO=1</span> 自动写入演示工单；数据库为 SQLite，免费平台的临时磁盘在重启后会重置，适合作品集演示。
+        启动时通过 <span class="mono">SEED_DEMO=1</span> 自动写入演示工单；数据库为 SQLite，免费平台的临时磁盘在重启后会重置，适合演示环境。
       </p>
     </article>
 
@@ -334,10 +341,11 @@ docker run -p 8000:8000 ai-qa-lab
           <p>每一步：做了什么 → 为什么 → 名词解释 → 原理 → 效果</p>
         </div>
       </div>
-      <p class="muted">完整拆解已单独成页，包含 10+ 个步骤、术语速查表、简历写法和 13 道自测题。</p>
+      <p class="muted">完整拆解已单独成页，包含 10+ 个步骤、术语速查表、实现说明和 13 道自测题。</p>
       <div class="quick-links" style="margin-top:16px">
         <a class="quick-link" href="https://shenle2019.github.io/ai-qa-lab/learning/" target="_blank" rel="noreferrer">打开完整学习手册</a>
         <a class="quick-link" href="https://shenle2019.github.io/ai-qa-lab/reports/" target="_blank" rel="noreferrer">历史报告归档</a>
+      <a class="quick-link" href="/portfolio/test-report-2026-11-03.html" target="_blank" rel="noreferrer">CRUD 测试报告</a>
       </div>
       <ul class="rules" style="margin-top:14px">
         <li>第 1–2 步：定目标和验收标准、搭仓库与环境。</li>

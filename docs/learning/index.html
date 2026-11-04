@@ -36,7 +36,7 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <body>
 <div class="wrap">
   <div class="top">
-    <span>AI全栈测试开发平台-shenle · 项目学习手册 · v0.3.0</span>
+    <span>AI全栈测试开发平台-shenle · 项目学习手册 · v1.0.1</span>
     <span>
       <a href="../">最新报告</a> ·
       <a href="../reports/">归档索引</a> ·
@@ -66,7 +66,7 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <li><a href="#9">9. 第九步：报告与归档</a></li>
 <li><a href="#10">10. 第十步：本地与远端部署</a></li>
 <li><a href="#11">11. 术语速查表</a></li>
-<li><a href="#12">12. 简历上怎么写（只写真实做过的）</a></li>
+<li><a href="#12">12. 怎么写项目说明（只写真实做过的）</a></li>
 <li><a href="#13">13. 下一步怎么学</a></li>
 <li><a href="#14">14. 自测题</a></li>
 <li><a href="#15-2026-11-03">15. 五个常见问题（2026-11-03）</a></li>
@@ -77,13 +77,14 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <h1 id="ai-shenle">项目学习手册：AI全栈测试开发平台-shenle 是怎么一步步做出来的</h1>
 <blockquote>
 <p>版本：v0.2.0（2026-11-02）
-读者：刚接触测试开发、需要把项目写进简历并能在面试中讲清楚的人
+读者：刚接触测试开发、想弄清这个项目每一步怎么落地的人
 目标：看完这份手册，你能回答“这个项目是什么、每一步做了什么、为什么这么做、涉及哪些名词、原理是什么、效果是什么”。</p>
+<p><strong>2026-11-03 v1.0.0 更新</strong>：8 个模块全部完成，真实 pytest 170+，迷你演示 50+。下面 0.x 章节保留最初 v0.2.0 的搭建过程；最新项目数据与实现说明，见文末。</p>
 </blockquote>
 <hr />
 <h2 id="0">0. 先搞清楚：你在做一个什么项目</h2>
 <h3 id="01-demo">0.1 它不是“一个 demo”</h3>
-<p>你做的不是“随便写个页面 + 跑两个测试”的 Demo，而是一个<strong>可展示、可运行、可复刻的测试开发作品集</strong>：</p>
+<p>你做的不是“随便写个页面 + 跑两个测试”的 Demo，而是一个<strong>可展示、可运行、可复刻的测试开发项目</strong>：</p>
 <ul>
 <li>有一套<strong>被测系统</strong>（SUT），有真实接口和数据；</li>
 <li>有<strong>分层自动化测试</strong>（后端冒烟 + 接口黑盒 + 工具契约测试）；</li>
@@ -96,8 +97,8 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <p>本项目要求每个模块先找 GitHub 上同主题 <strong>star 最高</strong>的项目，然后<strong>理解它的核心机制，自己重写一个可运行的子集</strong>。</p>
 <p>这叫 <strong>clean-room 复刻</strong>：看文档、看行为、看公开接口，然后自己实现；不直接复制源码。这样做的好处：</p>
 <ol>
-<li>能真正理解原理，面试能讲；</li>
-<li>避开了“fork 一个仓库就说是自己做的”的简历风险；</li>
+<li>能真正理解原理，讲得清；</li>
+<li>避开了“fork 一个仓库就说是自己做的”的风险；</li>
 <li>许可证上更安全（我们仍然会记录 license）。</li>
 </ol>
 <h3 id="03-8">0.3 8 个模块和参考项目</h3>
@@ -175,7 +176,7 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <tr>
 <td>3</td>
 <td>自建 SUT（FastAPI + SQLite）</td>
-<td>8 个接口（6 业务 + 2 工作台），<code>/docs</code> 可看</td>
+<td>9 个接口（7 业务 + 2 工作台），<code>/docs</code> 可看</td>
 </tr>
 <tr>
 <td>4</td>
@@ -222,12 +223,12 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <hr />
 <h2 id="1">1. 第一步：定目标和验收标准</h2>
 <h3 id="_1">做了什么</h3>
-<p>先明确：目标是杭州 30K+ 的测试开发（AI 质量方向）岗位；项目要覆盖 8 个模块；每个模块必须有“可运行代码 + 验收网页 + 原理说明 + 使用步骤 + 效果”。然后写进 <code>CLAUDE.md</code> 和 <code>docs/requirements/</code>。</p>
+<p>先明确：项目要覆盖 8 个模块；每个模块必须有“可运行代码 + 验收网页 + 原理说明 + 使用步骤 + 效果”。然后写进 <code>CLAUDE.md</code> 和 <code>docs/requirements/</code>。</p>
 <h3 id="_2">为什么</h3>
-<p>如果不先定义“什么算完成”，后面很容易变成堆功能：今天写个页面，明天加个按钮，最后没有一条完整证据链。面试官看的是“你能不能交付”，不是“你写了多少行”。</p>
+<p>如果不先定义“什么算完成”，后面很容易变成堆功能：今天写个页面，明天加个按钮，最后没有一条完整证据链。衡量标准是“能不能交付”，不是“写了多少行”。</p>
 <h3 id="_3">涉及的名词</h3>
 <ul>
-<li><strong>作品集</strong>：用真实项目证明能力，而不只是简历上写“熟悉 pytest”。</li>
+<li><strong>可验证</strong>：用真实项目与数据说明能力，而不只是口头说“熟悉 pytest”。</li>
 <li><strong>验收标准</strong>：可检查的完成条件，比如“33 个测试通过、页面能打开、报告有截图”。</li>
 <li><strong>MVP</strong>：最小可用版本，先做核心闭环，再加功能。</li>
 <li><strong>clean-room 复刻</strong>：理解后重写，不复制源码。</li>
@@ -279,6 +280,7 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <li><code>POST /api/tickets</code>：创建工单</li>
 <li><code>GET /api/tickets/{id}</code>：查询单条</li>
 <li><code>PATCH /api/tickets/{id}</code>：更新状态/优先级</li>
+<li><code>DELETE /api/tickets/{id}</code>：删除工单</li>
 <li><code>POST /api/kb/query</code>：知识库问答（当前 mock）</li>
 </ul>
 <h3 id="_12">为什么</h3>
@@ -297,7 +299,7 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <li><strong>HTTP 方法</strong>：<code>GET</code> 查、<code>POST</code> 建、<code>PATCH</code> 改、<code>DELETE</code> 删。</li>
 <li><strong>HTTP 状态码</strong>：<code>200</code> 成功、<code>201</code> 已创建、<code>400</code> 请求错误、<code>404</code> 找不到、<code>422</code> 参数校验失败、<code>500</code> 服务器错误。</li>
 <li><strong>JSON</strong>：一种文本数据格式，如 <code>{"title": "登录失败"}</code>。</li>
-<li><strong>CRUD</strong>：Create/Read/Update/Delete，增删改查；本项目实现了 C/R/U，没做 D。</li>
+<li><strong>CRUD</strong>：Create/Read/Update/Delete，增删改查；本项目实现了完整的 C/R/U/D。</li>
 <li><strong>ORM</strong>：对象关系映射，用 Python 类操作数据库表，而不是手写 SQL。</li>
 <li><strong>Schema（模式）</strong>：数据的结构和约束；这里用 Pydantic 定义请求/响应格式。</li>
 <li><strong>SQLite</strong>：一个文件型轻量数据库，适合本地演示，不需要单独装数据库服务。</li>
@@ -315,7 +317,7 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 </code></pre>
 <p><code>/health</code> 为什么先做？因为它是“系统活着”的最小契约：CI、负载均衡、监控都靠它判断服务是否可用。</p>
 <h3 id="_15">效果</h3>
-<p>打开 <code>http://127.0.0.1:8000/docs</code> 能看到可交互的 API 文档；6 个后端测试通过；后续所有测试和页面都围绕这套接口。</p>
+<p>打开 <code>http://127.0.0.1:8000/docs</code> 能看到可交互的 API 文档；38 个后端/平台测试通过；后续所有测试和页面都围绕这套接口。</p>
 <hr />
 <h2 id="4">4. 第四步：写后端冒烟测试</h2>
 <h3 id="_16">做了什么</h3>
@@ -352,7 +354,7 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <li>异常：404、422、空标题、超长字段、非法优先级、非法状态；</li>
 <li>知识库 mock 接口。</li>
 </ul>
-<p>共 22 个用例。</p>
+<p>共 56 个用例（含 29 个新增 CRUD 用例）。</p>
 <h3 id="_22">为什么</h3>
 <p>接口测试是投入产出比最高的一层：比 UI 快、比单元测试更接近真实业务。企业里大量回归靠接口自动化。</p>
 <h3 id="_23">涉及的名词</h3>
@@ -373,11 +375,11 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 </code></pre>
 <p>自动启动 SUT 是为了让测试“一条命令可复现”，不依赖你手动先开服务。</p>
 <h3 id="_25">效果</h3>
-<p>22 个用例约 1.5 秒跑完；正常和异常路径都有覆盖；这部分可以直接写进简历。</p>
+<p>56 个用例约 3 秒跑完；正常和异常路径都有覆盖；这部分有完整测试记录。</p>
 <hr />
 <h2 id="6-vue">6. 第六步：做 Vue 控制台</h2>
 <h3 id="_26">做了什么</h3>
-<p>用 Vue 3 + Vite + Pinia + Vue Router + ECharts 做了 6 个页面：</p>
+<p>用 Vue 3 + Vite + Pinia + Vue Router + ECharts 做了 8 个页面：</p>
 <ul>
 <li>仪表盘：统计卡片 + 状态环形图 + 最近工单；</li>
 <li>工单管理：搜索、筛选、新建、改状态/优先级；</li>
@@ -388,7 +390,7 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 </ul>
 <h3 id="_27">为什么</h3>
 <ol>
-<li>作品集需要“看得见”的成果；</li>
+<li>项目展示需要“看得见”的成果；</li>
 <li>测试开发/平台开发岗位需要前端能力；</li>
 <li>你测 UI 之前，得先理解 UI 是怎么被构建出来的。</li>
 </ol>
@@ -459,7 +461,7 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <li>生成了一份断网也能打开的 HTML 报告，并挂到 SUT 控制台的 <code>/portfolio</code> 下。</li>
 </ul>
 <h3 id="_36">为什么</h3>
-<p>面试官问“你熟悉 pytest 吗”，如果你只能回答“会写 <code>@pytest.mark.parametrize</code>”，那只是会用工具。能解释“用例怎么被发现、fixture 怎么注入、参数化怎么展开、失败位置怎么定位、报告怎么生成”，才说明你理解测试框架。</p>
+<p>如果被问“你熟悉 pytest 吗”，只能回答“会写 <code>@pytest.mark.parametrize</code>”，那只是会用工具。能解释“用例怎么被发现、fixture 怎么注入、参数化怎么展开、失败位置怎么定位、报告怎么生成”，才说明你理解测试框架。</p>
 <p>这个模块还有一个实际作用：后续 Web、App、性能、LLM 评测模块都要复用同一套测试基础设施。先把 runner 做出来，后面不用重复造轮子。</p>
 <h3 id="_37">涉及的名词</h3>
 <ul>
@@ -564,7 +566,7 @@ libs/minipytest/cli.py         命令行入口
 <li>用迷你 pytest 跑了 5 个 SUT UI 用例，真实创建了一条工单。</li>
 </ul>
 <h3 id="_42">为什么</h3>
-<p>面试里说“会 Playwright”，如果只会 <code>page.click()</code>，说不出浏览器和测试脚本之间怎么通信，底层还是空的。自己用 CDP 驱动一遍，就能解释“浏览器怎么被控制、元素怎么定位、自动等待在等什么”。</p>
+<p>如果说“会 Playwright”，只会 <code>page.click()</code>，说不出浏览器和测试脚本之间怎么通信，底层还是空的。自己用 CDP 驱动一遍，就能解释“浏览器怎么被控制、元素怎么定位、自动等待在等什么”。</p>
 <h3 id="_43">涉及的名词</h3>
 <ul>
 <li><strong>CDP</strong>：Chrome DevTools Protocol，浏览器暴露的调试协议。</li>
@@ -625,7 +627,7 @@ libs/miniplaywright/demo/         SUT UI 用例
 <li>用迷你 pytest 跑了 3 个 Settings 演示用例。</li>
 </ul>
 <h3 id="_48">为什么</h3>
-<p>面试里说“会 Appium”，如果只会 <code>driver.find_element()</code>，说不出 Appium 底层怎么和手机通信，还是只会用工具。自己用 ADB/UIAutomator 驱动一遍，就能解释“设备怎么连、控件树怎么来、点击坐标怎么算、等待在等什么”。</p>
+<p>如果说“会 Appium”，只会 <code>driver.find_element()</code>，说不出 Appium 底层怎么和手机通信，还是只会用工具。自己用 ADB/UIAutomator 驱动一遍，就能解释“设备怎么连、控件树怎么来、点击坐标怎么算、等待在等什么”。</p>
 <h3 id="_49">涉及的名词</h3>
 <ul>
 <li><strong>ADB</strong>：Android Debug Bridge，电脑和 Android 设备之间的命令通道。</li>
@@ -679,7 +681,7 @@ libs/miniappium/demo/         Settings 演示用例
 <li>对 SUT 的 <code>/health</code> 做了一次 20 VU、5 秒的压测。</li>
 </ul>
 <h3 id="_54">为什么</h3>
-<p>面试里说“会压测”，如果只会说“我跑了 100 并发”，没有 P95、错误率、阈值判断，等于没有结论。压测的价值是拿数据回答“能不能上线”。</p>
+<p>如果说“会压测”，只会说“我跑了 100 并发”，没有 P95、错误率、阈值判断，等于没有结论。压测的价值是拿数据回答“能不能上线”。</p>
 <h3 id="_55">涉及的名词</h3>
 <ul>
 <li><strong>VU</strong>：虚拟用户，压测里的并发单位。</li>
@@ -909,7 +911,7 @@ CLAUDE.md                                     复刻规则与完成标准
 <li>把截图、报告、验收说明写进仓库。</li>
 </ul>
 <h3 id="_78">为什么</h3>
-<p>简历和面试需要<strong>证据</strong>，不是口头说“我做了”。CI 还能防止你改坏已有功能。</p>
+<p>结论需要<strong>证据</strong>，不是口头说“我做了”。CI 还能防止你改坏已有功能。</p>
 <h3 id="_79">涉及的名词</h3>
 <ul>
 <li><strong>CI（持续集成）</strong>：每次提交自动构建/跑测试，尽早发现问题。</li>
@@ -944,7 +946,7 @@ CLAUDE.md                                     复刻规则与完成标准
 <li>日报记录“过程”；</li>
 <li>里程碑快照记录“阶段性成果”；</li>
 <li>根报告永远是最新状态；</li>
-<li>快照不可变，面试时能回看“我当时做到了什么”。</li>
+<li>快照不可变，能回看“当时做到了什么”。</li>
 </ul>
 <h3 id="_84">涉及的名词</h3>
 <ul>
@@ -1184,23 +1186,23 @@ CLAUDE.md                                     复刻规则与完成标准
 </tbody>
 </table>
 <hr />
-<h2 id="12">12. 简历上怎么写（只写真实做过的）</h2>
+<h2 id="12">12. 怎么写项目说明（只写真实做过的）</h2>
 <h3 id="_92">可以写的</h3>
 <ul>
-<li>独立搭建可运行的 AI 工单/知识库 SUT：FastAPI + SQLAlchemy + SQLite，8 个 HTTP 接口（6 个业务 + 2 个工作台），自动生成 OpenAPI 文档。</li>
-<li>设计并实现 66 个真实 pytest 用例：33 个业务/接口契约 + 33 个迷你 pytest 框架元测试，覆盖 404/422/边界/非法枚举。</li>
+<li>独立搭建可运行的 AI 工单/知识库 SUT：FastAPI + SQLAlchemy + SQLite，9 个 HTTP 接口（7 个业务 + 2 个工作台），自动生成 OpenAPI 文档。</li>
+<li>设计并实现 170+ 个真实 pytest 用例：接口 CRUD、后端/平台、迷你 pytest、Web、App、压测、LLM 评测。</li>
 <li>clean-room 复刻 pytest 核心：收集、fixture、参数化、marker、断言内省、重试、JSON/HTML 报告；20 个演示用例。</li>
 <li>自研 CDP Web 自动化：启动 Edge/Chrome、选择器、自动等待、断言、截图；6 个元测试 + 5 个 SUT UI 用例。</li>
 <li>自研 ADB/UIAutomator Android 自动化：设备发现、元素定位、点击、等待、截图；5 个元测试 + 3 个 Settings 用例。</li>
 <li>自研压测引擎：VU 并发、ramp-up、P95/P99、错误率、阈值判定、离线报告；8239 请求，1371 RPS。</li>
-<li>测试平台闭环：项目、用例、计划、执行、结果、缺陷、报表；13 个 API，支持导入迷你 pytest 报告。</li>
+<li>测试平台闭环：项目、用例、计划、执行、结果、缺陷、报表；17 个平台 API，支持导入迷你 pytest 报告。</li>
 <li>自研 LLM 评测：数据集、Mock/DeepSeek 裁判、5 项指标、阈值、baseline/candidate 对比；0.52→0.72。</li>
 <li>方法论页面：8 模块知识图谱、5 层选型决策树、7 步 AI 协作流程、10 条落地检查表。</li>
-<li>使用 Vue 3 + Vite + Pinia + Router + ECharts 构建 6 页测试控制台，覆盖仪表盘、工单、知识库、API 工作台、报告与模块验收。</li>
+<li>使用 Vue 3 + Vite + Pinia + Router + ECharts 构建 8 页测试控制台，覆盖仪表盘、工单、知识库、API 工作台、报告与模块验收。</li>
 <li>clean-room 复刻 Hoppscotch 核心 API 工作台：请求构建、环境变量、5 类断言、集合保存、批量运行与报告；新增 5 个契约测试。</li>
 <li>建立“日报 + 里程碑快照”的报告归档机制，Git tag 与静态站点可追溯。</li>
 </ul>
-<h3 id="_93">面试可能追问</h3>
+<h3 id="_93">常见追问</h3>
 <ol>
 <li>为什么先做接口测试，而不是 UI 自动化？</li>
 <li>接口快、稳定、ROI 高；UI 慢且易碎，适合覆盖关键路径。</li>
@@ -1268,7 +1270,7 @@ CLAUDE.md                                     复刻规则与完成标准
 <li>为什么接口测试优先？什么情况下才补 Web/App？</li>
 <li>测试策略里的“风险优先”具体看哪四类风险？</li>
 </ol>
-<p>如果这 25 题你能用自己的话答出来，这个项目就可以写进简历并接受面试追问了。</p>
+<p>如果这 25 题能用自己的话答出来，这个项目的实现细节就讲清楚了。</p>
 <hr />
 <h2 id="15-2026-11-03">15. 五个常见问题（2026-11-03）</h2>
 <h3 id="151">15.1 学习页标题为什么改了</h3>
@@ -1285,7 +1287,7 @@ CLAUDE.md                                     复刻规则与完成标准
 <li><code>http://127.0.0.1:8000/ui/</code>：用户界面，能看仪表盘、工单、知识库、API 工作台、报告、模块验收；</li>
 <li><code>http://127.0.0.1:8000/docs</code>：接口文档，能直接点 “Try it out” 发请求。</li>
 </ul>
-<p>现在实际有 8 个 HTTP 接口：</p>
+<p>现在实际有 9 个 HTTP 接口：</p>
 <ol>
 <li><code>GET /health</code>：健康检查；</li>
 <li><code>GET /api/tickets</code>：工单列表；</li>

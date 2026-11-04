@@ -43,5 +43,9 @@ export const useTicketStore = defineStore('tickets', {
       if (index >= 0) this.items[index] = updated
       return updated
     },
+    async remove(id) {
+      await api.deleteTicket(id)
+      this.items = this.items.filter((ticket) => ticket.id !== id)
+    },
   },
 })

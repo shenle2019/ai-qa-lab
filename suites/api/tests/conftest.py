@@ -31,6 +31,9 @@ class ApiClient:
     def patch(self, path: str, **kwargs):
         return self.session.patch(self._url(path), timeout=10, **kwargs)
 
+    def delete(self, path: str, **kwargs):
+        return self.session.delete(self._url(path), timeout=10, **kwargs)
+
     def close(self) -> None:
         self.session.close()
 
