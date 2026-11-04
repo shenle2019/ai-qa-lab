@@ -10,9 +10,11 @@ from . import llm_models, models, platform_models, schemas
 from .db import Base, SessionLocal, engine
 from .model_api import router as model_router
 from .platform_api import router as platform_router
+from .schema_migrations import ensure_columns
 from .workbench import router as workbench_router
 
 Base.metadata.create_all(bind=engine)
+ensure_columns(engine)
 
 if os.getenv("SEED_DEMO") == "1":
     from .seed import seed_demo_data

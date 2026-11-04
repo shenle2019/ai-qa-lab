@@ -35,6 +35,39 @@ class CaseOut(BaseModel):
     priority: str
     steps: str
     expected: str
+    status: str
+    source: str
+    prompt_version: str
+    steps_json: str
+
+
+class GenerateCasesRequest(BaseModel):
+    project_id: int
+    requirement: str = Field(min_length=10, max_length=8000)
+    model_id: int | None = None
+    max_cases: int = Field(default=5, ge=1, le=20)
+
+
+class GeneratedCasesOut(BaseModel):
+    model_name: str
+    prompt_version: str
+    cases: list[CaseOut]
+
+
+class CaseReviewCreate(BaseModel):
+    decision: Literal["approved", "rejected"]
+    reviewer: str = "local"
+    comment: str = ""
+
+
+class CaseReviewOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    case_id: int
+    reviewer: str
+    decision: str
+    comment: str
+    created_at: datetime
 
 
 class PlanCreate(BaseModel):

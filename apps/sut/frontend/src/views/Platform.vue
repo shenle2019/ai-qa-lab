@@ -10,9 +10,12 @@ const executions = ref([])
 const defects = ref([])
 const loading = ref(false)
 const error = ref('')
+const notice = ref('')
+const generating = ref(false)
 
 const projectForm = reactive({ name: '', description: '' })
 const caseForm = reactive({ project_id: null, title: '', module: 'api', priority: 'medium', steps: '', expected: '' })
+const genForm = reactive({ project_id: null, requirement: '', max_cases: 5 })
 const planForm = reactive({ project_id: null, name: '' })
 const defectForm = reactive({ project_id: null, title: '', severity: 'medium' })
 
@@ -41,6 +44,7 @@ async function refresh() {
     executions.value = e
     defects.value = d
     if (!caseForm.project_id && p.length) caseForm.project_id = p[0].id
+    if (!genForm.project_id && p.length) genForm.project_id = p[0].id
     if (!planForm.project_id && p.length) planForm.project_id = p[0].id
     if (!defectForm.project_id && p.length) defectForm.project_id = p[0].id
   } catch (err) {
@@ -78,6 +82,50 @@ async function createCase() {
     caseForm.title = ''
     caseForm.steps = ''
     caseForm.expected = ''
+    await refresh()
+  } catch (err) {
+    error.value = err.message
+  }
+}
+
+async function generateCases() {
+  if (!genForm.project_id || genForm.requirement.trim().length < 10) {
+    error.value = '需求描述至少 10 个字'
+    return
+  }
+  generating.value = true
+  error.value = ''
+  notice.value = ''
+  try {
+    const result = await api.generatePlatformCases({
+      project_id: genForm.project_id,
+      requirement: genForm.requirement.trim(),
+      max_cases: genForm.max_cases,
+    })
+    notice.value = `${result.model_name} 生成 ${result.cases.length} 条草稿用例（${result.prompt_version}）`
+    genForm.requirement = ''
+    await refresh()
+  } catch (err) {
+    error.value = err.message
+  } finally {
+    generating.value = false
+  }
+}
+
+async function submitReview(item) {
+  try {
+    await api.submitPlatformCase(item.id)
+    notice.value = `已提交审核：${item.title}`
+    await refresh()
+  } catch (err) {
+    error.value = err.message
+  }
+}
+
+async function reviewCase(item, decision) {
+  try {
+    await api.reviewPlatformCase(item.id, { decision, reviewer: 'local' })
+    notice.value = decision === 'approved' ? `已通过：${item.title}` : `已驳回：${item.title}`
     await refresh()
   } catch (err) {
     error.value = err.message
@@ -146,6 +194,7 @@ onMounted(refresh)
     </div>
 
     <p v-if="error" class="alert error">{{ error }}</p>
+    <p v-if="notice" class="alert">{{ notice }}</p>
 
     <div class="platform-columns">
       <article class="card">
@@ -174,7 +223,18 @@ onMounted(refresh)
 
       <article class="card">
         <div class="card-head">
-          <div><h2>用例</h2><p>用例挂在项目下</p></div>
+          <div><h2>用例</h2><p>手工新建直接可用；AI 生成需审核</p></div>
+        </div>
+        <div class="gen-panel">
+          <p class="cell-sub">输入需求，生成结构化草稿用例；通过审核后才允许执行。</p>
+          <form class="platform-form" @submit.prevent="generateCases">
+            <select v-model.number="genForm.project_id">
+              <option v-for="item in projects" :key="item.id" :value="item.id">{{ item.name }}</option>
+            </select>
+            <textarea v-model="genForm.requirement" rows="3" placeholder="粘贴需求或接口说明（至少 10 字）"></textarea>
+            <input v-model.number="genForm.max_cases" type="number" min="1" max="20" style="max-width: 90px" title="最多生成条数" />
+            <button class="btn" :disabled="generating">{{ generating ? '生成中…' : 'AI 生成用例' }}</button>
+          </form>
         </div>
         <form class="platform-form" @submit.prevent="createCase">
           <select v-model.number="caseForm.project_id">
@@ -191,15 +251,28 @@ onMounted(refresh)
         </form>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>ID</th><th>用例</th><th>模块</th><th>优先级</th></tr></thead>
+            <thead><tr><th>ID</th><th>用例</th><th>模块</th><th>优先级</th><th>状态</th><th>操作</th></tr></thead>
             <tbody>
               <tr v-for="item in cases" :key="item.id">
                 <td class="mono">#{{ item.id }}</td>
-                <td><strong>{{ item.title }}</strong><p class="cell-sub">{{ item.expected }}</p></td>
+                <td>
+                  <strong>{{ item.title }}</strong>
+                  <p class="cell-sub">{{ item.expected }}</p>
+                  <p v-if="item.source === 'ai'" class="cell-sub">AI · {{ item.prompt_version }}</p>
+                </td>
                 <td>{{ item.module }}</td>
                 <td>{{ item.priority }}</td>
+                <td><span class="badge" :class="item.status === 'approved' ? 'module-done' : 'module-planned'">{{ item.status }}</span></td>
+                <td class="row-actions">
+                  <button v-if="item.status === 'draft'" class="btn ghost" @click="submitReview(item)">提交审核</button>
+                  <template v-else-if="item.status === 'pending_review'">
+                    <button class="btn ghost" @click="reviewCase(item, 'approved')">通过</button>
+                    <button class="btn ghost" @click="reviewCase(item, 'rejected')">驳回</button>
+                  </template>
+                  <span v-else class="muted">-</span>
+                </td>
               </tr>
-              <tr v-if="!cases.length"><td colspan="4" class="empty">还没有用例。</td></tr>
+              <tr v-if="!cases.length"><td colspan="6" class="empty">还没有用例。</td></tr>
             </tbody>
           </table>
         </div>
@@ -296,7 +369,10 @@ onMounted(refresh)
 <style scoped>
 .platform-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .platform-form { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
-.platform-form input, .platform-form select { min-width: 120px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: rgba(4, 8, 16, 0.5); color: var(--text); }
+.platform-form input, .platform-form select, .platform-form textarea { min-width: 120px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: rgba(4, 8, 16, 0.5); color: var(--text); }
+.platform-form textarea { flex: 1 1 100%; font-family: inherit; resize: vertical; }
+.gen-panel { margin: 10px 0 4px; padding: 10px 12px; border: 1px dashed var(--line); border-radius: 10px; }
+.row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
 .execution-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .execution-summary div { padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: rgba(4, 8, 16, 0.35); }
 .execution-summary span { display: block; color: var(--muted); font-size: 11px; }

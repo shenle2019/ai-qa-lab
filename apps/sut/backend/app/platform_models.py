@@ -25,6 +25,21 @@ class TestCase(Base):
     priority: Mapped[str] = mapped_column(String(16), default="medium")
     steps: Mapped[str] = mapped_column(Text, default="")
     expected: Mapped[str] = mapped_column(Text, default="")
+    status: Mapped[str] = mapped_column(String(24), default="approved", index=True)
+    source: Mapped[str] = mapped_column(String(16), default="manual")
+    prompt_version: Mapped[str] = mapped_column(String(40), default="")
+    steps_json: Mapped[str] = mapped_column(Text, default="[]")
+
+
+class CaseReview(Base):
+    __tablename__ = "case_reviews"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    case_id: Mapped[int] = mapped_column(ForeignKey("platform_cases.id"), index=True)
+    reviewer: Mapped[str] = mapped_column(String(80), default="local")
+    decision: Mapped[str] = mapped_column(String(16), default="approved")
+    comment: Mapped[str] = mapped_column(Text, default="")
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
 
 class TestPlan(Base):

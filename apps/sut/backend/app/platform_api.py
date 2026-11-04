@@ -5,6 +5,7 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
+from . import case_generator, llm_client, llm_models
 from . import platform_models as models
 from . import platform_schemas as schemas
 from .db import SessionLocal
@@ -142,6 +143,100 @@ def create_case(payload: schemas.CaseCreate, db: Session = Depends(get_db)):
     return case
 
 
+@router.post("/generate-cases", response_model=schemas.GeneratedCasesOut, status_code=201)
+def generate_cases(payload: schemas.GenerateCasesRequest, db: Session = Depends(get_db)):
+    project = db.get(models.Project, payload.project_id)
+    if project is None:
+        raise HTTPException(status_code=404, detail="project not found")
+
+    if payload.model_id is not None:
+        config = db.get(llm_models.ModelConfig, payload.model_id)
+        if config is None:
+            raise HTTPException(status_code=404, detail="model not found")
+    else:
+        config = (
+            db.query(llm_models.ModelConfig)
+            .filter(llm_models.ModelConfig.enabled.is_(True))
+            .order_by(llm_models.ModelConfig.id)
+            .first()
+        )
+    if config is None or not config.enabled:
+        raise HTTPException(status_code=400, detail="没有启用的模型，请先在模型中心配置")
+
+    try:
+        items = case_generator.generate(db, config, payload.requirement, payload.max_cases)
+    except llm_client.LLMError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+    created: list[models.TestCase] = []
+    for item in items:
+        case = models.TestCase(
+            project_id=project.id,
+            title=item["title"],
+            module=item["module"],
+            priority=item["priority"],
+            steps=case_generator.steps_to_text(item["steps"]),
+            expected=item["expected"],
+            status="draft",
+            source="ai",
+            prompt_version=case_generator.PROMPT_VERSION,
+            steps_json=case_generator.steps_to_json(item["steps"]),
+        )
+        db.add(case)
+        created.append(case)
+    db.commit()
+    for case in created:
+        db.refresh(case)
+    return schemas.GeneratedCasesOut(
+        model_name=config.model_name,
+        prompt_version=case_generator.PROMPT_VERSION,
+        cases=[schemas.CaseOut.model_validate(case) for case in created],
+    )
+
+
+@router.post("/cases/{case_id}/submit-review", response_model=schemas.CaseOut)
+def submit_case_review(case_id: int, db: Session = Depends(get_db)):
+    case = db.get(models.TestCase, case_id)
+    if case is None:
+        raise HTTPException(status_code=404, detail="case not found")
+    if case.status != "draft":
+        raise HTTPException(status_code=409, detail="只有草稿用例可以提交审核")
+    case.status = "pending_review"
+    db.commit()
+    db.refresh(case)
+    return case
+
+
+@router.post("/cases/{case_id}/review", response_model=schemas.CaseReviewOut, status_code=201)
+def review_case(case_id: int, payload: schemas.CaseReviewCreate, db: Session = Depends(get_db)):
+    case = db.get(models.TestCase, case_id)
+    if case is None:
+        raise HTTPException(status_code=404, detail="case not found")
+    if case.status != "pending_review":
+        raise HTTPException(status_code=409, detail="只有待审核用例可以审核")
+    case.status = payload.decision
+    review = models.CaseReview(
+        case_id=case.id,
+        reviewer=payload.reviewer,
+        decision=payload.decision,
+        comment=payload.comment,
+    )
+    db.add(review)
+    db.commit()
+    db.refresh(review)
+    return review
+
+
+@router.get("/cases/{case_id}/reviews", response_model=list[schemas.CaseReviewOut])
+def list_case_reviews(case_id: int, db: Session = Depends(get_db)):
+    return (
+        db.query(models.CaseReview)
+        .filter(models.CaseReview.case_id == case_id)
+        .order_by(models.CaseReview.id.desc())
+        .all()
+    )
+
+
 @router.get("/plans", response_model=list[schemas.PlanOut])
 def list_plans(project_id: int | None = Query(default=None), db: Session = Depends(get_db)):
     query = db.query(models.TestPlan)
@@ -174,6 +269,15 @@ def run_plan(plan_id: int, payload: schemas.ExecutionCreate, db: Session = Depen
     plan = db.get(models.TestPlan, plan_id)
     if plan is None:
         raise HTTPException(status_code=404, detail="plan not found")
+    case_ids = [item.case_id for item in payload.results if item.case_id]
+    if case_ids:
+        blocked = (
+            db.query(models.TestCase)
+            .filter(models.TestCase.id.in_(case_ids), models.TestCase.status != "approved")
+            .count()
+        )
+        if blocked:
+            raise HTTPException(status_code=409, detail="只有已审核通过的用例可以执行")
     return _create_execution(db, plan, payload.results)
 
 

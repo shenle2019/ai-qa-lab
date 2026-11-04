@@ -36,6 +36,12 @@ export const api = {
   platformCases: () => request('/api/platform/cases'),
   createPlatformCase: (payload) =>
     request('/api/platform/cases', { method: 'POST', body: JSON.stringify(payload) }),
+  generatePlatformCases: (payload) =>
+    request('/api/platform/generate-cases', { method: 'POST', body: JSON.stringify(payload) }),
+  submitPlatformCase: (id) =>
+    request(`/api/platform/cases/${id}/submit-review`, { method: 'POST' }),
+  reviewPlatformCase: (id, payload) =>
+    request(`/api/platform/cases/${id}/review`, { method: 'POST', body: JSON.stringify(payload) }),
   platformPlans: () => request('/api/platform/plans'),
   createPlatformPlan: (payload) =>
     request('/api/platform/plans', { method: 'POST', body: JSON.stringify(payload) }),
