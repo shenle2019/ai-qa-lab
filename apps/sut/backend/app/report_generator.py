@@ -6,6 +6,7 @@ import html
 from datetime import datetime
 
 from . import platform_models as models
+from .timeutils import utcnow
 
 
 def render(execution: models.TestExecution, results: list[models.TestResult]) -> str:
@@ -89,7 +90,7 @@ def render(execution: models.TestExecution, results: list[models.TestResult]) ->
     </table>
   </section>
 
-  <p class="muted">生成时间：{datetime.utcnow().isoformat(timespec="seconds")}Z · AI全栈测试开发平台-shenle</p>
+  <p class="muted">生成时间：{utcnow().isoformat(timespec="seconds")}Z · AI全栈测试开发平台-shenle</p>
 </div>
 </body>
 </html>

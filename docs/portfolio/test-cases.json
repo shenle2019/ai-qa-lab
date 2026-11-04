@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-11-04T16:44:35",
-  "total": 195,
-  "passed": 182,
+  "generated_at": "2026-11-04T19:04:50",
+  "total": 196,
+  "passed": 183,
   "skipped": 13,
   "failed": 0,
   "report_url": "/portfolio/test-report-2026-11-04.html",
@@ -17,257 +17,257 @@
         {
           "name": "test_title_valid_equivalence_and_boundary[1]",
           "status": "passed",
-          "duration_ms": 1254.0
+          "duration_ms": 1827.0
         },
         {
           "name": "test_title_valid_equivalence_and_boundary[2]",
           "status": "passed",
-          "duration_ms": 24.0
+          "duration_ms": 26.0
         },
         {
           "name": "test_title_valid_equivalence_and_boundary[10]",
           "status": "passed",
-          "duration_ms": 31.0
+          "duration_ms": 32.0
         },
         {
           "name": "test_title_valid_equivalence_and_boundary[50]",
           "status": "passed",
-          "duration_ms": 8.0
+          "duration_ms": 10.0
         },
         {
           "name": "test_title_valid_equivalence_and_boundary[100]",
           "status": "passed",
-          "duration_ms": 20.0
+          "duration_ms": 9.0
         },
         {
           "name": "test_title_valid_equivalence_and_boundary[199]",
           "status": "passed",
-          "duration_ms": 20.0
+          "duration_ms": 9.0
         },
         {
           "name": "test_title_valid_equivalence_and_boundary[200]",
           "status": "passed",
-          "duration_ms": 6.0
+          "duration_ms": 9.0
         },
         {
           "name": "test_title_invalid_equivalence_and_boundary[0]",
           "status": "passed",
-          "duration_ms": 4.0
+          "duration_ms": 16.0
         },
         {
           "name": "test_title_invalid_equivalence_and_boundary[201]",
           "status": "passed",
-          "duration_ms": 3.0
+          "duration_ms": 6.0
         },
         {
           "name": "test_title_invalid_equivalence_and_boundary[1000]",
           "status": "passed",
-          "duration_ms": 4.0
+          "duration_ms": 25.0
         },
         {
           "name": "test_priority_valid_equivalence[low]",
           "status": "passed",
-          "duration_ms": 6.0
+          "duration_ms": 32.0
         },
         {
           "name": "test_priority_valid_equivalence[medium]",
           "status": "passed",
-          "duration_ms": 5.0
+          "duration_ms": 8.0
         },
         {
           "name": "test_priority_valid_equivalence[high]",
           "status": "passed",
-          "duration_ms": 6.0
+          "duration_ms": 42.0
         },
         {
           "name": "test_priority_invalid_equivalence[urgent]",
           "status": "passed",
-          "duration_ms": 3.0
+          "duration_ms": 18.0
         },
         {
           "name": "test_priority_invalid_equivalence[]",
           "status": "passed",
-          "duration_ms": 3.0
+          "duration_ms": 21.0
         },
         {
           "name": "test_priority_invalid_equivalence[HIGH]",
           "status": "passed",
-          "duration_ms": 3.0
+          "duration_ms": 6.0
         },
         {
           "name": "test_priority_invalid_equivalence[0]",
           "status": "passed",
-          "duration_ms": 3.0
+          "duration_ms": 24.0
         },
         {
           "name": "test_description_valid_boundary[0]",
           "status": "passed",
-          "duration_ms": 5.0
+          "duration_ms": 9.0
         },
         {
           "name": "test_description_valid_boundary[1]",
           "status": "passed",
-          "duration_ms": 5.0
+          "duration_ms": 8.0
         },
         {
           "name": "test_description_valid_boundary[4999]",
           "status": "passed",
-          "duration_ms": 28.0
+          "duration_ms": 29.0
         },
         {
           "name": "test_description_valid_boundary[5000]",
           "status": "passed",
-          "duration_ms": 5.0
+          "duration_ms": 33.0
         },
         {
           "name": "test_description_over_limit",
           "status": "passed",
-          "duration_ms": 3.0
+          "duration_ms": 26.0
         },
         {
           "name": "test_ticket_lifecycle_scenario",
           "status": "passed",
-          "duration_ms": 27.0
+          "duration_ms": 67.0
         },
         {
           "name": "test_status_update_equivalence[open]",
           "status": "passed",
-          "duration_ms": 33.0
+          "duration_ms": 34.0
         },
         {
           "name": "test_status_update_equivalence[in_progress]",
           "status": "passed",
-          "duration_ms": 29.0
+          "duration_ms": 16.0
         },
         {
           "name": "test_status_update_equivalence[closed]",
           "status": "passed",
-          "duration_ms": 31.0
+          "duration_ms": 15.0
         },
         {
           "name": "test_status_update_invalid[done]",
           "status": "passed",
-          "duration_ms": 6.0
+          "duration_ms": 13.0
         },
         {
           "name": "test_status_update_invalid[]",
           "status": "passed",
-          "duration_ms": 21.0
+          "duration_ms": 13.0
         },
         {
           "name": "test_status_update_invalid[OPEN]",
           "status": "passed",
-          "duration_ms": 32.0
+          "duration_ms": 13.0
         },
         {
           "name": "test_status_update_invalid[closed ]",
           "status": "passed",
-          "duration_ms": 6.0
+          "duration_ms": 12.0
         },
         {
           "name": "test_partial_update_keeps_other_fields",
           "status": "passed",
-          "duration_ms": 9.0
+          "duration_ms": 16.0
         },
         {
           "name": "test_update_missing_ticket",
           "status": "passed",
-          "duration_ms": 3.0
+          "duration_ms": 7.0
         },
         {
           "name": "test_get_missing_ticket",
           "status": "passed",
-          "duration_ms": 3.0
+          "duration_ms": 6.0
         },
         {
           "name": "test_delete_missing_ticket",
           "status": "passed",
-          "duration_ms": 3.0
+          "duration_ms": 26.0
         },
         {
           "name": "test_duplicate_titles_are_allowed",
           "status": "passed",
-          "duration_ms": 8.0
+          "duration_ms": 15.0
         },
         {
           "name": "test_unicode_title",
           "status": "passed",
-          "duration_ms": 4.0
+          "duration_ms": 33.0
         },
         {
           "name": "test_emoji_title",
           "status": "passed",
-          "duration_ms": 20.0
+          "duration_ms": 9.0
         },
         {
           "name": "test_special_characters_are_preserved[quotes ' \" `]",
           "status": "passed",
-          "duration_ms": 15.0
+          "duration_ms": 20.0
         },
         {
           "name": "test_special_characters_are_preserved[line1\\nline2\\tend]",
           "status": "passed",
-          "duration_ms": 15.0
+          "duration_ms": 8.0
         },
         {
           "name": "test_special_characters_are_preserved[%%%___---]",
           "status": "passed",
-          "duration_ms": 5.0
+          "duration_ms": 8.0
         },
         {
           "name": "test_special_characters_are_preserved[a  b]",
           "status": "passed",
-          "duration_ms": 25.0
+          "duration_ms": 9.0
         },
         {
           "name": "test_sql_injection_is_stored_literally",
           "status": "passed",
-          "duration_ms": 12.0
+          "duration_ms": 20.0
         },
         {
           "name": "test_xss_payload_is_returned_as_data",
           "status": "passed",
-          "duration_ms": 18.0
+          "duration_ms": 8.0
         },
         {
           "name": "test_invalid_title_payloads[payload0]",
           "status": "passed",
-          "duration_ms": 3.0
+          "duration_ms": 6.0
         },
         {
           "name": "test_invalid_title_payloads[payload1]",
           "status": "passed",
-          "duration_ms": 3.0
+          "duration_ms": 6.0
         },
         {
           "name": "test_invalid_title_payloads[payload2]",
           "status": "passed",
-          "duration_ms": 2.0
+          "duration_ms": 7.0
         },
         {
           "name": "test_invalid_title_payloads[payload3]",
           "status": "passed",
-          "duration_ms": 18.0
+          "duration_ms": 8.0
         },
         {
           "name": "test_invalid_title_payloads[payload4]",
           "status": "passed",
-          "duration_ms": 14.0
+          "duration_ms": 7.0
         },
         {
           "name": "test_unknown_fields_are_ignored",
           "status": "passed",
-          "duration_ms": 5.0
+          "duration_ms": 11.0
         },
         {
           "name": "test_created_ticket_appears_in_list",
           "status": "passed",
-          "duration_ms": 34.0
+          "duration_ms": 17.0
         },
         {
           "name": "test_bulk_create_scenario",
           "status": "passed",
-          "duration_ms": 36.0
+          "duration_ms": 75.0
         }
       ]
     },
@@ -282,157 +282,157 @@
         {
           "name": "test_json_with_utf8_charset",
           "status": "passed",
-          "duration_ms": 1242.0
+          "duration_ms": 1788.0
         },
         {
           "name": "test_text_plain_json_body_is_rejected",
           "status": "passed",
-          "duration_ms": 4.0
+          "duration_ms": 31.0
         },
         {
           "name": "test_missing_content_type_still_parses_json",
           "status": "passed",
-          "duration_ms": 6.0
+          "duration_ms": 10.0
         },
         {
           "name": "test_utf8_bom_json_is_accepted",
           "status": "passed",
-          "duration_ms": 7.0
+          "duration_ms": 11.0
         },
         {
           "name": "test_accept_header_does_not_break_json[application/json]",
           "status": "passed",
-          "duration_ms": 5.0
+          "duration_ms": 9.0
         },
         {
           "name": "test_accept_header_does_not_break_json[text/html]",
           "status": "passed",
-          "duration_ms": 4.0
+          "duration_ms": 7.0
         },
         {
           "name": "test_accept_header_does_not_break_json[application/xml]",
           "status": "passed",
-          "duration_ms": 3.0
+          "duration_ms": 7.0
         },
         {
           "name": "test_accept_header_does_not_break_json[*/*]",
           "status": "passed",
-          "duration_ms": 3.0
+          "duration_ms": 6.0
         },
         {
           "name": "test_unsupported_methods[OPTIONS]",
           "status": "passed",
-          "duration_ms": 2.0
+          "duration_ms": 4.0
         },
         {
           "name": "test_unsupported_methods[HEAD]",
           "status": "passed",
-          "duration_ms": 2.0
+          "duration_ms": 20.0
         },
         {
           "name": "test_unsupported_methods[PUT]",
           "status": "passed",
-          "duration_ms": 2.0
+          "duration_ms": 30.0
         },
         {
           "name": "test_unknown_query_parameters_are_ignored",
           "status": "passed",
-          "duration_ms": 3.0
+          "duration_ms": 29.0
         },
         {
           "name": "test_trailing_slash_redirects",
           "status": "passed",
-          "duration_ms": 2.0
+          "duration_ms": 5.0
         },
         {
           "name": "test_path_is_case_sensitive",
           "status": "passed",
-          "duration_ms": 2.0
+          "duration_ms": 22.0
         },
         {
           "name": "test_ticket_response_schema_is_stable",
           "status": "passed",
-          "duration_ms": 5.0
+          "duration_ms": 10.0
         },
         {
           "name": "test_created_at_is_iso_datetime",
           "status": "passed",
-          "duration_ms": 22.0
+          "duration_ms": 8.0
         },
         {
           "name": "test_health_schema_is_stable",
           "status": "passed",
-          "duration_ms": 3.0
+          "duration_ms": 5.0
         },
         {
           "name": "test_openapi_lists_ticket_endpoints",
           "status": "passed",
-          "duration_ms": 53.0
+          "duration_ms": 82.0
         },
         {
           "name": "test_response_is_utf8_decodable",
           "status": "passed",
-          "duration_ms": 16.0
+          "duration_ms": 9.0
         },
         {
           "name": "test_max_description_round_trip",
           "status": "passed",
-          "duration_ms": 5.0
+          "duration_ms": 27.0
         },
         {
           "name": "test_unknown_field_is_ignored",
           "status": "passed",
-          "duration_ms": 25.0
+          "duration_ms": 30.0
         },
         {
           "name": "test_duplicate_json_keys_last_one_wins",
           "status": "passed",
-          "duration_ms": 15.0
+          "duration_ms": 31.0
         },
         {
           "name": "test_non_object_bodies_are_rejected[body0]",
           "status": "passed",
-          "duration_ms": 3.0
+          "duration_ms": 27.0
         },
         {
           "name": "test_non_object_bodies_are_rejected[body1]",
           "status": "passed",
-          "duration_ms": 3.0
+          "duration_ms": 6.0
         },
         {
           "name": "test_non_object_bodies_are_rejected[string-body]",
           "status": "passed",
-          "duration_ms": 3.0
+          "duration_ms": 24.0
         },
         {
           "name": "test_non_object_bodies_are_rejected[123]",
           "status": "passed",
-          "duration_ms": 3.0
+          "duration_ms": 6.0
         },
         {
           "name": "test_null_and_wrong_typed_optionals_are_rejected[payload0]",
           "status": "passed",
-          "duration_ms": 3.0
+          "duration_ms": 23.0
         },
         {
           "name": "test_null_and_wrong_typed_optionals_are_rejected[payload1]",
           "status": "passed",
-          "duration_ms": 3.0
+          "duration_ms": 15.0
         },
         {
           "name": "test_null_and_wrong_typed_optionals_are_rejected[payload2]",
           "status": "passed",
-          "duration_ms": 3.0
+          "duration_ms": 5.0
         },
         {
           "name": "test_defaults_when_optional_fields_missing",
           "status": "passed",
-          "duration_ms": 20.0
+          "duration_ms": 27.0
         },
         {
           "name": "test_oversized_id_is_rejected",
           "status": "passed",
-          "duration_ms": 13.0
+          "duration_ms": 27.0
         },
         {
           "name": "test_negative_id_is_not_found",
@@ -442,17 +442,17 @@
         {
           "name": "test_delete_returns_empty_204",
           "status": "passed",
-          "duration_ms": 18.0
+          "duration_ms": 16.0
         },
         {
           "name": "test_error_body_has_detail",
           "status": "passed",
-          "duration_ms": 27.0
+          "duration_ms": 6.0
         },
         {
           "name": "test_no_cors_headers_by_default",
           "status": "passed",
-          "duration_ms": 16.0
+          "duration_ms": 8.0
         }
       ]
     },
@@ -467,287 +467,292 @@
         {
           "name": "test_repeated_reads_are_consistent",
           "status": "passed",
-          "duration_ms": 1310.0
+          "duration_ms": 1920.0
         },
         {
           "name": "test_concurrent_reads_succeed",
           "status": "passed",
-          "duration_ms": 62.0
+          "duration_ms": 112.0
         },
         {
           "name": "test_concurrent_writes_succeed",
           "status": "passed",
-          "duration_ms": 126.0
+          "duration_ms": 193.0
         },
         {
           "name": "test_create_delete_recreate",
           "status": "passed",
-          "duration_ms": 14.0
+          "duration_ms": 26.0
         },
         {
           "name": "test_malformed_json_then_valid_request",
           "status": "passed",
-          "duration_ms": 18.0
+          "duration_ms": 12.0
         },
         {
           "name": "test_validation_error_then_valid_request",
           "status": "passed",
-          "duration_ms": 32.0
+          "duration_ms": 29.0
         },
         {
           "name": "test_delete_is_not_idempotent",
           "status": "passed",
-          "duration_ms": 32.0
+          "duration_ms": 19.0
         },
         {
           "name": "test_status_round_trip",
           "status": "passed",
-          "duration_ms": 39.0
+          "duration_ms": 34.0
         },
         {
           "name": "test_repeated_create_delete_cycles",
           "status": "passed",
-          "duration_ms": 144.0
+          "duration_ms": 263.0
         },
         {
           "name": "test_health_survives_burst",
           "status": "passed",
-          "duration_ms": 123.0
+          "duration_ms": 272.0
         },
         {
           "name": "test_error_detail_is_stable",
           "status": "passed",
-          "duration_ms": 6.0
+          "duration_ms": 30.0
         },
         {
           "name": "test_list_is_sorted_by_id_desc",
           "status": "passed",
-          "duration_ms": 34.0
+          "duration_ms": 47.0
         },
         {
           "name": "test_ids_increase_monotonically",
           "status": "passed",
-          "duration_ms": 35.0
+          "duration_ms": 53.0
         },
         {
           "name": "test_workbench_can_call_health",
           "status": "passed",
-          "duration_ms": 209.0
+          "duration_ms": 358.0
         },
         {
           "name": "test_workbench_reports_unreachable_target",
           "status": "passed",
-          "duration_ms": 685.0
+          "duration_ms": 801.0
         },
         {
           "name": "test_workbench_rejects_invalid_url",
           "status": "passed",
-          "duration_ms": 2.0
+          "duration_ms": 26.0
         },
         {
           "name": "test_workbench_blocks_metadata_address",
           "status": "passed",
-          "duration_ms": 2.0
+          "duration_ms": 30.0
         },
         {
           "name": "test_workbench_batch_limit",
           "status": "passed",
-          "duration_ms": 5.0
+          "duration_ms": 9.0
         },
         {
           "name": "test_workbench_batch_ok",
           "status": "passed",
-          "duration_ms": 480.0
+          "duration_ms": 857.0
         },
         {
           "name": "test_execute_without_cases_is_rejected",
           "status": "passed",
-          "duration_ms": 39.0
+          "duration_ms": 36.0
         },
         {
           "name": "test_executor_rejects_absolute_target",
           "status": "passed",
-          "duration_ms": 37.0
+          "duration_ms": 109.0
         },
         {
           "name": "test_missing_execution_report",
           "status": "passed",
-          "duration_ms": 24.0
+          "duration_ms": 6.0
         },
         {
           "name": "test_duplicate_model_name_is_rejected",
           "status": "passed",
-          "duration_ms": 21.0
+          "duration_ms": 20.0
         },
         {
           "name": "test_model_key_is_masked",
           "status": "passed",
-          "duration_ms": 25.0
+          "duration_ms": 10.0
         },
         {
           "name": "test_seed_is_idempotent",
           "status": "passed",
-          "duration_ms": 49.0
+          "duration_ms": 41.0
         },
         {
           "name": "test_server_survives_bad_body_and_stays_healthy",
           "status": "passed",
-          "duration_ms": 29.0
+          "duration_ms": 10.0
         }
       ]
     },
     {
       "name": "Web 测试",
       "method": "UI 等价类 / 边界 / 错误推测 / 场景",
-      "total": 29,
-      "passed": 29,
+      "total": 30,
+      "passed": 30,
       "skipped": 0,
       "failed": 0,
       "cases": [
         {
           "name": "test_tickets_page_loads",
           "status": "passed",
-          "duration_ms": 2155.0
+          "duration_ms": 2916.0
         },
         {
-          "name": "test_sidebar_has_ten_entries",
+          "name": "test_sidebar_has_entries",
           "status": "passed",
-          "duration_ms": 70.0
+          "duration_ms": 166.0
         },
         {
           "name": "test_dashboard_has_four_stat_cards",
           "status": "passed",
-          "duration_ms": 55.0
+          "duration_ms": 69.0
         },
         {
           "name": "test_dashboard_shows_total_label",
           "status": "passed",
-          "duration_ms": 51.0
+          "duration_ms": 71.0
         },
         {
           "name": "test_create_ticket_by_priority[low]",
           "status": "passed",
-          "duration_ms": 189.0
+          "duration_ms": 216.0
         },
         {
           "name": "test_create_ticket_by_priority[medium]",
           "status": "passed",
-          "duration_ms": 189.0
+          "duration_ms": 233.0
         },
         {
           "name": "test_create_ticket_by_priority[high]",
           "status": "passed",
-          "duration_ms": 196.0
+          "duration_ms": 210.0
         },
         {
           "name": "test_create_with_description",
           "status": "passed",
-          "duration_ms": 305.0
+          "duration_ms": 415.0
         },
         {
           "name": "test_create_title_variants[\\u4e2d\\u6587\\u6807\\u9898-\\u6253\\u5370\\u673a\\u65e0\\u6cd5\\u8fde\\u63a5]",
           "status": "passed",
-          "duration_ms": 207.0
+          "duration_ms": 237.0
         },
         {
           "name": "test_create_title_variants[\\u652f\\u4ed8\\u5931\\u8d25 \\U0001f525\\U0001f9fe]",
           "status": "passed",
-          "duration_ms": 192.0
+          "duration_ms": 231.0
         },
         {
           "name": "test_create_title_variants[\\u7279\\u6b8a\\u5b57\\u7b26 <>&\"']",
           "status": "passed",
-          "duration_ms": 189.0
+          "duration_ms": 219.0
         },
         {
           "name": "test_title_input_declares_200_limit",
           "status": "passed",
-          "duration_ms": 99.0
+          "duration_ms": 134.0
         },
         {
           "name": "test_empty_title_shows_error",
           "status": "passed",
-          "duration_ms": 104.0
+          "duration_ms": 111.0
         },
         {
           "name": "test_whitespace_title_shows_error",
           "status": "passed",
-          "duration_ms": 103.0
+          "duration_ms": 118.0
         },
         {
           "name": "test_cancel_modal",
           "status": "passed",
-          "duration_ms": 86.0
+          "duration_ms": 114.0
         },
         {
           "name": "test_search_filters_rows",
           "status": "passed",
-          "duration_ms": 351.0
+          "duration_ms": 385.0
         },
         {
           "name": "test_status_filter",
           "status": "passed",
-          "duration_ms": 229.0
+          "duration_ms": 263.0
         },
         {
           "name": "test_priority_filter",
           "status": "passed",
-          "duration_ms": 235.0
+          "duration_ms": 249.0
         },
         {
           "name": "test_update_status_inline",
           "status": "passed",
-          "duration_ms": 243.0
+          "duration_ms": 229.0
         },
         {
           "name": "test_update_priority_inline",
           "status": "passed",
-          "duration_ms": 220.0
+          "duration_ms": 235.0
         },
         {
           "name": "test_delete_ticket",
           "status": "passed",
-          "duration_ms": 320.0
+          "duration_ms": 341.0
         },
         {
           "name": "test_data_persists_after_reload",
           "status": "passed",
-          "duration_ms": 221.0
+          "duration_ms": 241.0
         },
         {
           "name": "test_navigation_pages[/ui/#/platform-\\u6d4b\\u8bd5\\u5e73\\u53f0]",
           "status": "passed",
-          "duration_ms": 72.0
+          "duration_ms": 107.0
         },
         {
           "name": "test_navigation_pages[/ui/#/models-\\u6a21\\u578b\\u4e2d\\u5fc3]",
           "status": "passed",
-          "duration_ms": 76.0
+          "duration_ms": 100.0
         },
         {
           "name": "test_navigation_pages[/ui/#/testcases-\\u6d4b\\u8bd5\\u7528\\u4f8b]",
           "status": "passed",
-          "duration_ms": 89.0
+          "duration_ms": 84.0
+        },
+        {
+          "name": "test_navigation_pages[/ui/#/login-\\u8bbf\\u95ee\\u5bc6\\u94a5]",
+          "status": "passed",
+          "duration_ms": 123.0
         },
         {
           "name": "test_navigation_pages[/ui/#/report-\\u9879\\u76ee\\u62a5\\u544a]",
           "status": "passed",
-          "duration_ms": 124.0
+          "duration_ms": 197.0
         },
         {
           "name": "test_navigation_pages[/ui/#/portfolio-\\u6a21\\u5757\\u9a8c\\u6536]",
           "status": "passed",
-          "duration_ms": 64.0
+          "duration_ms": 97.0
         },
         {
           "name": "test_navigation_pages[/ui/#/methodology-\\u65b9\\u6cd5\\u8bba]",
           "status": "passed",
-          "duration_ms": 75.0
+          "duration_ms": 207.0
         },
         {
           "name": "test_navigation_pages[/ui/#/knowledge-\\u77e5\\u8bc6\\u5e93\\u95ee\\u7b54]",
           "status": "passed",
-          "duration_ms": 286.0
+          "duration_ms": 262.0
         }
       ]
     },
@@ -762,27 +767,27 @@
         {
           "name": "test_health_under_concurrency[1]",
           "status": "passed",
-          "duration_ms": 2309.0
+          "duration_ms": 2835.0
         },
         {
           "name": "test_health_under_concurrency[2]",
           "status": "passed",
-          "duration_ms": 1052.0
+          "duration_ms": 1055.0
         },
         {
           "name": "test_health_under_concurrency[3]",
           "status": "passed",
-          "duration_ms": 1053.0
+          "duration_ms": 1056.0
         },
         {
           "name": "test_health_under_concurrency[5]",
           "status": "passed",
-          "duration_ms": 1078.0
+          "duration_ms": 1058.0
         },
         {
           "name": "test_health_under_concurrency[8]",
           "status": "passed",
-          "duration_ms": 1055.0
+          "duration_ms": 1060.0
         },
         {
           "name": "test_ticket_list_under_concurrency[1]",
@@ -792,57 +797,57 @@
         {
           "name": "test_ticket_list_under_concurrency[2]",
           "status": "passed",
-          "duration_ms": 1053.0
+          "duration_ms": 1055.0
         },
         {
           "name": "test_ticket_list_under_concurrency[3]",
           "status": "passed",
-          "duration_ms": 1054.0
+          "duration_ms": 1061.0
         },
         {
           "name": "test_ticket_list_under_concurrency[5]",
           "status": "passed",
-          "duration_ms": 1054.0
+          "duration_ms": 1061.0
         },
         {
           "name": "test_sustained_load[2]",
           "status": "passed",
-          "duration_ms": 2052.0
+          "duration_ms": 2056.0
         },
         {
           "name": "test_sustained_load[3]",
           "status": "passed",
-          "duration_ms": 3053.0
+          "duration_ms": 3054.0
         },
         {
           "name": "test_ramp_up_keeps_success[0.2]",
           "status": "passed",
-          "duration_ms": 1254.0
+          "duration_ms": 1275.0
         },
         {
           "name": "test_ramp_up_keeps_success[0.5]",
           "status": "passed",
-          "duration_ms": 1554.0
+          "duration_ms": 1557.0
         },
         {
           "name": "test_p95_thresholds_pass[200]",
           "status": "passed",
-          "duration_ms": 1052.0
+          "duration_ms": 1057.0
         },
         {
           "name": "test_p95_thresholds_pass[500]",
           "status": "passed",
-          "duration_ms": 1052.0
+          "duration_ms": 1054.0
         },
         {
           "name": "test_p95_thresholds_pass[2000]",
           "status": "passed",
-          "duration_ms": 1052.0
+          "duration_ms": 1054.0
         },
         {
           "name": "test_p95_threshold_can_fail",
           "status": "passed",
-          "duration_ms": 1052.0
+          "duration_ms": 1055.0
         },
         {
           "name": "test_404_is_counted_as_error",
@@ -852,12 +857,12 @@
         {
           "name": "test_error_rate_threshold",
           "status": "passed",
-          "duration_ms": 1052.0
+          "duration_ms": 1053.0
         },
         {
           "name": "test_percentiles_are_ordered",
           "status": "passed",
-          "duration_ms": 1053.0
+          "duration_ms": 1056.0
         },
         {
           "name": "test_rps_is_positive",
@@ -867,7 +872,7 @@
         {
           "name": "test_total_exceeds_vus",
           "status": "passed",
-          "duration_ms": 1052.0
+          "duration_ms": 1056.0
         },
         {
           "name": "test_min_rps_threshold",
@@ -877,32 +882,32 @@
         {
           "name": "test_min_rps_can_fail",
           "status": "passed",
-          "duration_ms": 1051.0
+          "duration_ms": 1053.0
         },
         {
           "name": "test_mixed_endpoint_sequence",
           "status": "passed",
-          "duration_ms": 2103.0
+          "duration_ms": 2108.0
         },
         {
           "name": "test_high_concurrency_health",
           "status": "passed",
-          "duration_ms": 1056.0
+          "duration_ms": 1061.0
         },
         {
           "name": "test_status_counts_present",
           "status": "passed",
-          "duration_ms": 1053.0
+          "duration_ms": 1055.0
         },
         {
           "name": "test_average_latency_is_positive",
           "status": "passed",
-          "duration_ms": 1052.0
+          "duration_ms": 1055.0
         },
         {
           "name": "test_thresholds_are_recorded",
           "status": "passed",
-          "duration_ms": 1053.0
+          "duration_ms": 1054.0
         }
       ]
     },
@@ -917,72 +922,72 @@
         {
           "name": "test_element_text",
           "status": "passed",
-          "duration_ms": 2.0
+          "duration_ms": 4.0
         },
         {
           "name": "test_element_resource_id",
           "status": "passed",
-          "duration_ms": 0.0
+          "duration_ms": 1.0
         },
         {
           "name": "test_element_content_desc",
           "status": "passed",
-          "duration_ms": 0.0
+          "duration_ms": 1.0
         },
         {
           "name": "test_element_class_name",
           "status": "passed",
-          "duration_ms": 0.0
+          "duration_ms": 1.0
         },
         {
           "name": "test_element_bounds_parse",
           "status": "passed",
-          "duration_ms": 0.0
+          "duration_ms": 1.0
         },
         {
           "name": "test_element_center",
           "status": "passed",
-          "duration_ms": 0.0
+          "duration_ms": 1.0
         },
         {
           "name": "test_element_visible_with_area",
           "status": "passed",
-          "duration_ms": 0.0
+          "duration_ms": 1.0
         },
         {
           "name": "test_element_invisible_zero_width",
           "status": "passed",
-          "duration_ms": 0.0
+          "duration_ms": 1.0
         },
         {
           "name": "test_element_invisible_without_bounds",
           "status": "passed",
-          "duration_ms": 0.0
+          "duration_ms": 1.0
         },
         {
           "name": "test_element_tap_uses_center",
           "status": "passed",
-          "duration_ms": 0.0
+          "duration_ms": 1.0
         },
         {
           "name": "test_element_tap_without_bounds_raises",
           "status": "passed",
-          "duration_ms": 0.0
+          "duration_ms": 1.0
         },
         {
           "name": "test_element_repr_contains_text",
           "status": "passed",
-          "duration_ms": 0.0
+          "duration_ms": 1.0
         },
         {
           "name": "test_device_model",
           "status": "skipped",
-          "duration_ms": 16.0
+          "duration_ms": 27.0
         },
         {
           "name": "test_device_serial",
           "status": "skipped",
-          "duration_ms": 0.0
+          "duration_ms": 1.0
         },
         {
           "name": "test_settings_home_visible",
@@ -997,17 +1002,17 @@
         {
           "name": "test_settings_entries_visible[Connected devices]",
           "status": "skipped",
-          "duration_ms": 0.0
+          "duration_ms": 1.0
         },
         {
           "name": "test_settings_entries_visible[Apps]",
           "status": "skipped",
-          "duration_ms": 0.0
+          "duration_ms": 1.0
         },
         {
           "name": "test_settings_entries_visible[Notifications]",
           "status": "skipped",
-          "duration_ms": 0.0
+          "duration_ms": 1.0
         },
         {
           "name": "test_settings_entries_visible[Display & touch]",
@@ -1017,7 +1022,7 @@
         {
           "name": "test_open_network",
           "status": "skipped",
-          "duration_ms": 0.0
+          "duration_ms": 1.0
         },
         {
           "name": "test_open_apps_and_back",
@@ -1027,7 +1032,7 @@
         {
           "name": "test_press_home_stays_in_launcher",
           "status": "skipped",
-          "duration_ms": 0.0
+          "duration_ms": 1.0
         },
         {
           "name": "test_screenshot_saved",
@@ -1037,7 +1042,7 @@
         {
           "name": "test_current_activity_is_settings",
           "status": "skipped",
-          "duration_ms": 0.0
+          "duration_ms": 1.0
         }
       ]
     }

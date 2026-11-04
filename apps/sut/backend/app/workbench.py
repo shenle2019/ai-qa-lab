@@ -1,15 +1,61 @@
+import ipaddress
 import json
+import socket
 import time
 from typing import Any, Literal
+from urllib.parse import urlparse
 
 import httpx
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
+from . import settings
+
 router = APIRouter(prefix="/api/workbench", tags=["workbench"])
 
 MAX_BODY_PREVIEW = 200_000
-BLOCKED_HOSTS = {"169.254.169.254"}
+METADATA_HOSTS = {"169.254.169.254", "metadata.google.internal", "metadata"}
+SPECIAL_USE = {"0.0.0.0", "::"}
+
+
+def _forbidden_ip(ip: ipaddress._BaseAddress) -> bool:
+    if str(ip) in SPECIAL_USE:
+        return True
+    if ip.is_multicast or ip.is_unspecified:
+        return True
+    if settings.is_production():
+        return (
+            ip.is_private
+            or ip.is_loopback
+            or ip.is_link_local
+            or ip.is_reserved
+            or ip.is_site_local
+        )
+    return False
+
+
+def _validate_target(url: str) -> None:
+    parsed = urlparse(url)
+    if parsed.scheme not in ("http", "https"):
+        raise HTTPException(status_code=400, detail="url must start with http:// or https://")
+    host = (parsed.hostname or "").lower()
+    if not host:
+        raise HTTPException(status_code=400, detail="url host is missing")
+    if host in METADATA_HOSTS:
+        raise HTTPException(status_code=400, detail="metadata address is blocked")
+    port = parsed.port or (443 if parsed.scheme == "https" else 80)
+    try:
+        infos = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
+    except socket.gaierror as exc:
+        raise HTTPException(status_code=400, detail="url host cannot be resolved") from exc
+    for info in infos:
+        address = info[4][0].split("%", 1)[0]
+        try:
+            ip = ipaddress.ip_address(address)
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail="invalid resolved address") from exc
+        if str(ip) in METADATA_HOSTS or _forbidden_ip(ip):
+            raise HTTPException(status_code=400, detail="target address is blocked")
 
 
 class Assertion(BaseModel):
@@ -24,7 +70,7 @@ class WorkbenchRequest(BaseModel):
     url: str
     headers: dict[str, str] = Field(default_factory=dict)
     body: str | None = None
-    timeout_ms: int = Field(default=10000, ge=100, le=30000)
+    timeout_ms: int = Field(default=10000, ge=100, le=10000)
     assertions: list[Assertion] = Field(default_factory=list)
 
 
@@ -39,7 +85,7 @@ class WorkbenchResult(BaseModel):
 
 
 class RunPayload(BaseModel):
-    requests: list[WorkbenchRequest] = Field(min_length=1, max_length=50)
+    requests: list[WorkbenchRequest] = Field(min_length=1, max_length=10)
 
 
 def _json_path(data: Any, path: str) -> Any:
@@ -101,17 +147,12 @@ def _check_assertion(assertion: Assertion, result: dict[str, Any], text: str) ->
 
 
 async def _execute(request: WorkbenchRequest) -> WorkbenchResult:
-    if not request.url.startswith(("http://", "https://")):
-        raise HTTPException(status_code=400, detail="url must start with http:// or https://")
-
-    host = request.url.split("//", 1)[-1].split("/", 1)[0].split(":", 1)[0]
-    if host in BLOCKED_HOSTS:
-        raise HTTPException(status_code=400, detail="metadata address is blocked")
+    _validate_target(request.url)
 
     started = time.perf_counter()
     try:
         timeout = request.timeout_ms / 1000
-        async with httpx.AsyncClient(timeout=timeout, follow_redirects=True) as client:
+        async with httpx.AsyncClient(timeout=timeout, follow_redirects=False) as client:
             response = await client.request(
                 request.method.upper(),
                 request.url,

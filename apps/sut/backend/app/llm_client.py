@@ -20,6 +20,9 @@ class LLMError(RuntimeError):
     pass
 
 
+KEY_ENV_NAME = "DEEPSEEK_API_KEY"
+
+
 def mask_key(value: str) -> str:
     if not value:
         return ""
@@ -28,8 +31,13 @@ def mask_key(value: str) -> str:
     return f"{value[:4]}…{value[-4:]}"
 
 
-def resolve_api_key(config: llm_models.ModelConfig) -> str:
-    return config.api_key or os.getenv("DEEPSEEK_API_KEY", "")
+def resolve_api_key(config: llm_models.ModelConfig | None = None) -> str:
+    """Keys live only in the environment; the database never stores them."""
+    return os.getenv(KEY_ENV_NAME, "")
+
+
+def key_display() -> str:
+    return f"env:{KEY_ENV_NAME}" if resolve_api_key() else ""
 
 
 def _parse_json(content: str) -> dict:
@@ -52,7 +60,6 @@ def _parse_json(content: str) -> dict:
 
 
 def _record(
-    db: Session,
     config: llm_models.ModelConfig,
     purpose: str,
     prompt_version: str,
@@ -63,20 +70,25 @@ def _record(
     completion_tokens: int = 0,
     error: str = "",
 ) -> None:
-    db.add(
-        llm_models.LLMCall(
-            model_id=config.id,
-            model_name=config.model_name,
-            purpose=purpose,
-            prompt_version=prompt_version,
-            duration_ms=duration_ms,
-            prompt_tokens=prompt_tokens,
-            completion_tokens=completion_tokens,
-            status=status,
-            error=error[:1000],
+    # Use a dedicated session so accounting never commits the caller's
+    # business transaction halfway through.
+    from .db import SessionLocal
+
+    with SessionLocal() as session:
+        session.add(
+            llm_models.LLMCall(
+                model_id=config.id,
+                model_name=config.model_name,
+                purpose=purpose,
+                prompt_version=prompt_version,
+                duration_ms=duration_ms,
+                prompt_tokens=prompt_tokens,
+                completion_tokens=completion_tokens,
+                status=status,
+                error=error[:1000],
+            )
         )
-    )
-    db.commit()
+        session.commit()
 
 
 def chat_json(
@@ -92,7 +104,7 @@ def chat_json(
 ) -> dict:
     api_key = resolve_api_key(config)
     if not api_key:
-        _record(db, config, purpose, prompt_version, 0, "error", error="missing api key")
+        _record(config, purpose, prompt_version, 0, "error", error="missing api key")
         raise LLMError("未配置 API Key")
 
     url = config.base_url.rstrip("/") + "/chat/completions"
@@ -120,7 +132,6 @@ def chat_json(
             raise LLMError(f"模型返回不是合法 JSON（finish={finish}）: {content[:200]}") from exc
         usage = payload.get("usage", {}) or {}
         _record(
-            db,
             config,
             purpose,
             prompt_version,
@@ -132,7 +143,6 @@ def chat_json(
         return parsed
     except Exception as exc:  # noqa: BLE001 - surface provider errors to the caller
         _record(
-            db,
             config,
             purpose,
             prompt_version,

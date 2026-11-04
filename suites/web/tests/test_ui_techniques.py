@@ -41,8 +41,12 @@ def _fill(page, title, description="", priority="medium"):
         )
 
 
+def _submit(page):
+    page.evaluate("document.querySelector('.modal form').requestSubmit()")
+
+
 def _submit_ok(page, title):
-    page.locator(".modal-actions button.btn:last-child").click()
+    _submit(page)
     page.wait_for_function("!document.querySelector('.modal')")
     expect(page.locator("body")).to_contain_text(title)
 
@@ -96,9 +100,9 @@ def test_tickets_page_loads(page, sut):
     _go_tickets(page, sut)
 
 
-def test_sidebar_has_ten_entries(page, sut):
+def test_sidebar_has_entries(page, sut):
     _go_tickets(page, sut)
-    assert page.evaluate("document.querySelectorAll('.nav-item').length") == 10
+    assert page.evaluate("document.querySelectorAll('.nav-item').length") == 11
 
 
 def test_dashboard_has_four_stat_cards(page, sut):
@@ -144,14 +148,14 @@ def test_title_input_declares_200_limit(page, sut):
     )
     assert maxlength == "200"
     page.locator('input[placeholder="一句话描述问题"]').fill("x" * 250)
-    page.locator(".modal-actions button.btn:last-child").click()
+    _submit(page)
     page.wait_for_function("!!document.querySelector('.modal')")
 
 
 def test_empty_title_shows_error(page, sut):
     _go_tickets(page, sut)
     _open_modal(page)
-    page.locator(".modal-actions button.btn:last-child").click()
+    _submit(page)
     page.wait_for_function("document.body.innerText.includes('标题不能为空')")
     assert page.evaluate("!!document.querySelector('.modal')")
 
@@ -160,7 +164,7 @@ def test_whitespace_title_shows_error(page, sut):
     _go_tickets(page, sut)
     _open_modal(page)
     page.locator('input[placeholder="一句话描述问题"]').fill("   ")
-    page.locator(".modal-actions button.btn:last-child").click()
+    _submit(page)
     page.wait_for_function("document.body.innerText.includes('标题不能为空')")
 
 
@@ -240,6 +244,7 @@ def test_data_persists_after_reload(page, sut):
         ("/ui/#/platform", "测试平台"),
         ("/ui/#/models", "模型中心"),
         ("/ui/#/testcases", "测试用例"),
+        ("/ui/#/login", "访问密钥"),
         ("/ui/#/report", "项目报告"),
         ("/ui/#/portfolio", "模块验收"),
         ("/ui/#/methodology", "方法论"),

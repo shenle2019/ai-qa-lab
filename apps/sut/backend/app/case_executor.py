@@ -19,6 +19,7 @@ import httpx
 from sqlalchemy.orm import Session
 
 from . import platform_models as models
+from .timeutils import utcnow
 
 METHODS = {"GET", "POST", "PUT", "PATCH", "DELETE"}
 MAX_STEPS = 30
@@ -107,57 +108,65 @@ def execute_case(case: models.TestCase, base_url: str, timeout: float = DEFAULT_
     }
 
 
-def execute_plan(
-    db: Session,
-    plan: models.TestPlan,
-    cases: list[models.TestCase],
+def _run_case(case: models.TestCase, target: str) -> dict:
+    if case.module != "api":
+        return {
+            "status": "skipped",
+            "duration_ms": 0,
+            "message": f"暂不支持 module={case.module} 的自动执行",
+        }
+    return execute_case(case, target)
+
+
+def run_execution(
+    execution_id: int,
+    plan_id: int,
+    case_ids: list[int],
     base_url: str | None = None,
-) -> models.TestExecution:
-    target = (base_url or default_base_url()).rstrip("/")
+) -> None:
+    """Background worker: run cases without holding the request session."""
+    from .db import SessionLocal
 
-    # Run the requests before opening a write transaction. Some cases call back
-    # into this same service, and SQLite would otherwise lock itself.
-    outcomes: list[tuple[models.TestCase, dict]] = []
-    started = time.perf_counter()
-    for case in cases[:MAX_CASES]:
-        if case.module != "api":
-            result = {
-                "status": "skipped",
-                "duration_ms": 0,
-                "message": f"暂不支持 module={case.module} 的自动执行",
-            }
-        else:
-            result = execute_case(case, target)
-        outcomes.append((case, result))
+    db = SessionLocal()
+    try:
+        plan = db.get(models.TestPlan, plan_id)
+        execution = db.get(models.TestExecution, execution_id)
+        if plan is None or execution is None:
+            return
+        query = db.query(models.TestCase).filter(models.TestCase.id.in_(case_ids))
+        cases = query.order_by(models.TestCase.id).all() if case_ids else []
+        target = (base_url or default_base_url()).rstrip("/")
 
-    passed = sum(1 for _, item in outcomes if item["status"] == "passed")
-    failed = sum(1 for _, item in outcomes if item["status"] == "failed")
-    skipped = sum(1 for _, item in outcomes if item["status"] == "skipped")
+        outcomes = [(case, _run_case(case, target)) for case in cases[:MAX_CASES]]
+        passed = sum(1 for _, item in outcomes if item["status"] == "passed")
+        failed = sum(1 for _, item in outcomes if item["status"] == "failed")
+        skipped = sum(1 for _, item in outcomes if item["status"] == "skipped")
 
-    execution = models.TestExecution(
-        plan_id=plan.id,
-        status="failed" if failed else ("skipped" if skipped and not passed else "passed"),
-        total=len(outcomes),
-        passed=passed,
-        failed=failed,
-        skipped=skipped,
-        duration_ms=int((time.perf_counter() - started) * 1000),
-        started_at=datetime.utcnow(),
-    )
-    db.add(execution)
-    db.flush()
-    for case, result in outcomes:
-        db.add(
-            models.TestResult(
-                execution_id=execution.id,
-                case_id=case.id,
-                case_name=case.title,
-                status=result["status"],
-                duration_ms=result["duration_ms"],
-                message=result["message"],
+        execution.status = "failed" if failed else ("skipped" if skipped and not passed else "passed")
+        execution.total = len(outcomes)
+        execution.passed = passed
+        execution.failed = failed
+        execution.skipped = skipped
+        execution.duration_ms = sum(item["duration_ms"] for _, item in outcomes)
+        for case, result in outcomes:
+            db.add(
+                models.TestResult(
+                    execution_id=execution.id,
+                    case_id=case.id,
+                    case_name=case.title,
+                    status=result["status"],
+                    duration_ms=result["duration_ms"],
+                    message=result["message"],
+                )
             )
-        )
-    plan.status = execution.status
-    db.commit()
-    db.refresh(execution)
-    return execution
+        plan.status = execution.status
+        db.commit()
+    except Exception:
+        db.rollback()
+        execution = db.get(models.TestExecution, execution_id)
+        if execution is not None:
+            execution.status = "error"
+            db.commit()
+        raise
+    finally:
+        db.close()

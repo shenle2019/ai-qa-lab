@@ -22,12 +22,18 @@ def _create_model(**overrides):
     return response.json()
 
 
-def test_create_model_masks_key():
+def test_create_model_never_returns_key():
     model = _create_model()
     assert "api_key" not in model
-    assert model["has_api_key"] is True
-    assert model["api_key_masked"] == "sk-t…7890"
+    assert model["api_key_masked"] in ("", "env:DEEPSEEK_API_KEY")
     assert model["enabled"] is True
+
+
+def test_env_key_is_reported(monkeypatch):
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "sk-test")
+    model = _create_model()
+    assert model["has_api_key"] is True
+    assert model["api_key_masked"] == "env:DEEPSEEK_API_KEY"
 
 
 def test_model_name_is_unique():

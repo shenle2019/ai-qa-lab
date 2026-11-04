@@ -1,27 +1,55 @@
+import logging
 import os
 from pathlib import Path
 
 from fastapi import Depends, FastAPI, HTTPException, Response
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from . import llm_models, models, platform_models, schemas
-from .db import Base, SessionLocal, engine
+from . import kb, llm_models, models, platform_models, schemas, settings
+from .auth import auth_guard
+from .db import Base, engine
+from .deps import get_db
+from .middleware import request_context
 from .model_api import router as model_router
 from .platform_api import router as platform_router
 from .schema_migrations import ensure_columns
 from .workbench import router as workbench_router
 
+logging.basicConfig(level=logging.INFO, format="%(message)s")
+
 Base.metadata.create_all(bind=engine)
 ensure_columns(engine)
 
-if os.getenv("SEED_DEMO") == "1":
+if settings.seed_enabled():
     from .seed import seed_demo_data
 
     seed_demo_data()
 
-app = FastAPI(title="AI Knowledge Ops SUT", version="0.1.0")
+app = FastAPI(
+    title="AI Knowledge Ops SUT",
+    version="0.1.0",
+    docs_url="/docs" if settings.docs_enabled() else None,
+    redoc_url="/redoc" if settings.docs_enabled() else None,
+    openapi_url="/openapi.json" if settings.docs_enabled() else None,
+)
+
+origins = settings.cors_origins()
+if origins:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+        allow_headers=["Authorization", "Content-Type", "X-API-Key", "X-Request-ID"],
+    )
+
+app.middleware("http")(auth_guard)
+app.middleware("http")(request_context)
+
 app.include_router(workbench_router)
 app.include_router(platform_router)
 app.include_router(model_router)
@@ -31,17 +59,20 @@ LEARNING_DIR = Path(__file__).resolve().parents[4] / "docs" / "learning"
 PORTFOLIO_DIR = Path(__file__).resolve().parents[4] / "docs" / "portfolio"
 
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
 
 @app.get("/health")
 def health() -> dict:
     return {"status": "ok", "service": "sut", "version": app.version}
+
+
+@app.get("/ready")
+def ready() -> dict:
+    try:
+        with engine.connect() as connection:
+            connection.execute(text("SELECT 1"))
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=503, detail=f"database not ready: {exc}") from exc
+    return {"status": "ready"}
 
 
 @app.get("/", include_in_schema=False)
@@ -50,8 +81,20 @@ def root():
 
 
 @app.get("/api/tickets", response_model=list[schemas.TicketOut])
-def list_tickets(db: Session = Depends(get_db)):
-    return db.query(models.Ticket).order_by(models.Ticket.id.desc()).all()
+def list_tickets(
+    limit: int = 100,
+    offset: int = 0,
+    db: Session = Depends(get_db),
+):
+    limit = max(1, min(limit, 500))
+    offset = max(0, offset)
+    return (
+        db.query(models.Ticket)
+        .order_by(models.Ticket.id.desc())
+        .offset(offset)
+        .limit(limit)
+        .all()
+    )
 
 
 @app.post("/api/tickets", response_model=schemas.TicketOut, status_code=201)
@@ -68,7 +111,7 @@ SQLITE_MAX_INT = 2**63 - 1
 
 def _ensure_sqlite_int(value: int) -> None:
     if value > SQLITE_MAX_INT or value < -SQLITE_MAX_INT - 1:
-        raise HTTPException(status_code=404, detail="ticket not found")
+        raise HTTPException(status_code=422, detail="ticket id out of range")
 
 
 @app.get("/api/tickets/{ticket_id}", response_model=schemas.TicketOut)
@@ -109,11 +152,11 @@ def delete_ticket(ticket_id: int, db: Session = Depends(get_db)):
 
 
 @app.post("/api/kb/query")
-def query_knowledge_base(payload: schemas.KBQuery) -> dict:
-    # Week 0 mock: replaced by a real RAG pipeline in module 08.
+def query_knowledge_base(payload: schemas.KBQuery, db: Session = Depends(get_db)) -> dict:
+    matches = kb.search(db, payload.question, payload.top_k)
     return {
-        "answer": f"[mock] 关于“{payload.question}”的知识库回答",
-        "sources": [],
+        "answer": kb.answer(payload.question, matches),
+        "sources": matches,
         "top_k": payload.top_k,
     }
 

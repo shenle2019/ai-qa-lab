@@ -53,7 +53,7 @@ function useSuggestion(text) {
       <div>
         <p class="eyebrow">KNOWLEDGE BASE</p>
         <h2>用问题驱动知识检索</h2>
-        <p class="muted">当前是模块 08 之前的 mock 链路，返回结构与真实 RAG 保持一致，便于先写测试契约。</p>
+        <p class="muted">当前基于工单与内置知识做词法检索，返回真实来源；向量检索与自动评测是后续项。</p>
       </div>
       <div class="hero-metric">
         <strong>{{ latency ?? '—' }}</strong>

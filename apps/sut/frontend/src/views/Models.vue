@@ -13,7 +13,6 @@ const form = reactive({
   provider: 'deepseek',
   base_url: 'https://api.deepseek.com',
   model_name: 'deepseek-chat',
-  api_key: '',
 })
 
 const totalTokens = computed(() =>
@@ -43,8 +42,7 @@ async function createModel() {
   error.value = ''
   try {
     await api.createPlatformModel({ ...form, name: form.name.trim() })
-    form.api_key = ''
-    notice.value = '模型已保存，密钥仅保存在服务端'
+    notice.value = '模型已保存；密钥只从服务端环境变量 DEEPSEEK_API_KEY 读取'
     await refresh()
   } catch (err) {
     error.value = err.message
@@ -80,7 +78,7 @@ onMounted(refresh)
       <div>
         <p class="eyebrow">MODEL CENTER</p>
         <h2>模型注册、连通性测试与调用记录</h2>
-        <p class="muted">模型配置只保存在服务端，接口只返回掩码。每次调用都记录用途、耗时与 token，便于核账。</p>
+        <p class="muted">密钥只从服务端环境变量读取，数据库不保存明文；每次调用都记录用途、耗时与 token。</p>
       </div>
       <div class="hero-metrics">
         <div><strong>{{ models.length }}</strong><span>模型</span></div>
@@ -100,7 +98,6 @@ onMounted(refresh)
         <input v-model="form.name" placeholder="配置名称" />
         <input v-model="form.base_url" placeholder="Base URL" />
         <input v-model="form.model_name" placeholder="模型名" />
-        <input v-model="form.api_key" type="password" placeholder="API Key（留空则读环境变量）" />
         <button class="btn">保存模型</button>
       </form>
     </article>
@@ -118,7 +115,7 @@ onMounted(refresh)
               <td class="mono">#{{ item.id }}</td>
               <td><strong>{{ item.name }}</strong><p class="cell-sub">{{ item.base_url }}</p></td>
               <td class="mono">{{ item.model_name }}</td>
-              <td>{{ item.api_key_masked || (item.has_api_key ? '环境变量' : '未配置') }}</td>
+              <td>{{ item.api_key_masked || '未配置环境变量' }}</td>
               <td><span class="badge" :class="item.enabled ? 'module-done' : 'module-planned'">{{ item.enabled ? '启用' : '停用' }}</span></td>
               <td class="row-actions">
                 <button class="btn ghost" @click="testModel(item)">测试</button>

@@ -1,6 +1,5 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import * as echarts from 'echarts'
 import { useTicketStore } from '../stores/tickets'
 import { api } from '../api/client'
 import StatusBadge from '../components/StatusBadge.vue'
@@ -17,9 +16,12 @@ const kbError = ref('')
 const counts = computed(() => store.counts)
 const recent = computed(() => store.items.slice(0, 6))
 
-function renderChart() {
+async function renderChart() {
   if (!chartEl.value) return
-  if (!chart) chart = echarts.init(chartEl.value)
+  if (!chart) {
+    const echarts = await import('echarts')
+    chart = echarts.init(chartEl.value)
+  }
   chart.setOption({
     tooltip: { trigger: 'item' },
     legend: { bottom: 0, textStyle: { color: '#9fb0c9' }, itemWidth: 10, itemHeight: 10 },
@@ -116,7 +118,7 @@ async function askKnowledge() {
         <div class="card-head">
           <div>
             <h2>知识库快问</h2>
-            <p>调用 /api/kb/query 的 mock 链路</p>
+            <p>基于工单与内置知识的检索问答</p>
           </div>
         </div>
         <form class="inline-form" @submit.prevent="askKnowledge">
@@ -125,7 +127,7 @@ async function askKnowledge() {
         </form>
         <p v-if="kbError" class="alert error">{{ kbError }}</p>
         <div v-if="kbAnswer" class="answer-box">
-          <span class="answer-tag">mock answer</span>
+          <span class="answer-tag">retrieved answer</span>
           <p>{{ kbAnswer }}</p>
         </div>
         <p v-else class="muted">输入问题后，答案会显示在这里。模块 08 会替换为真实 RAG 链路。</p>

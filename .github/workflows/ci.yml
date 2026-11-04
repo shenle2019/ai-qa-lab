@@ -14,10 +14,21 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements-dev.txt
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: apps/sut/frontend/package-lock.json
+      - name: Build frontend
+        run: |
+          npm ci --prefix apps/sut/frontend
+          npm run build --prefix apps/sut/frontend
       - name: Run pytest suites
         run: pytest apps/sut/backend suites/api suites/web suites/app suites/perf libs/minipytest/tests libs/miniplaywright/tests libs/miniappium/tests libs/miniload/tests libs/minieval/tests -q
       - name: Run mini pytest acceptance demo
         run: python -m libs.minipytest libs/minipytest/demo/acceptance
       - name: Run mini Playwright demo
         run: python -m libs.minipytest libs/miniplaywright/demo
+      - name: Build container image
+        run: docker build -t ai-qa-lab:ci .

@@ -11,6 +11,9 @@ const showForm = ref(false)
 const submitting = ref(false)
 const formError = ref('')
 const form = reactive({ title: '', description: '', priority: 'medium' })
+const editing = ref(null)
+const editError = ref('')
+const editForm = reactive({ title: '', description: '', priority: 'medium', status: 'open' })
 
 const statusOptions = [
   { value: 'open', label: '待处理' },
@@ -80,6 +83,35 @@ async function changePriority(ticket, event) {
   }
 }
 
+function openEdit(ticket) {
+  editing.value = ticket
+  editError.value = ''
+  Object.assign(editForm, {
+    title: ticket.title,
+    description: ticket.description,
+    priority: ticket.priority,
+    status: ticket.status,
+  })
+}
+
+async function saveEdit() {
+  if (!editForm.title.trim()) {
+    editError.value = '标题不能为空'
+    return
+  }
+  try {
+    await store.update(editing.value.id, {
+      title: editForm.title.trim(),
+      description: editForm.description.trim(),
+      priority: editForm.priority,
+      status: editForm.status,
+    })
+    editing.value = null
+  } catch (error) {
+    editError.value = error.message
+  }
+}
+
 async function removeTicket(ticket) {
   if (!window.confirm(`删除工单 #${ticket.id}？`)) return
   try {
@@ -145,7 +177,11 @@ async function removeTicket(ticket) {
                 </select>
               </td>
               <td class="muted">{{ new Date(ticket.created_at).toLocaleString('zh-CN', { hour12: false }) }}</td>
-              <td><StatusBadge :status="ticket.status" /> <button class="btn ghost delete-ticket" @click="removeTicket(ticket)">删除</button></td>
+              <td>
+                <StatusBadge :status="ticket.status" />
+                <button class="btn ghost edit-ticket" @click="openEdit(ticket)">编辑</button>
+                <button class="btn ghost delete-ticket" @click="removeTicket(ticket)">删除</button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -180,6 +216,45 @@ async function removeTicket(ticket) {
           <div class="modal-actions">
             <button type="button" class="btn ghost" @click="showForm = false">取消</button>
             <button class="btn" :disabled="submitting">{{ submitting ? '创建中…' : '创建' }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div v-if="editing" class="modal-mask" @click.self="editing = null">
+      <div class="modal card">
+        <div class="card-head">
+          <div>
+            <h2>编辑工单 #{{ editing.id }}</h2>
+            <p>修改标题、描述、优先级和状态</p>
+          </div>
+          <button class="icon-btn" @click="editing = null">×</button>
+        </div>
+        <form class="stack-sm" @submit.prevent="saveEdit">
+          <label>
+            <span>标题</span>
+            <input v-model="editForm.title" maxlength="200" />
+          </label>
+          <label>
+            <span>描述</span>
+            <textarea v-model="editForm.description" rows="4" maxlength="5000"></textarea>
+          </label>
+          <label>
+            <span>优先级</span>
+            <select v-model="editForm.priority">
+              <option v-for="item in priorityOptions" :key="item.value" :value="item.value">{{ item.label }}</option>
+            </select>
+          </label>
+          <label>
+            <span>状态</span>
+            <select v-model="editForm.status">
+              <option v-for="item in statusOptions" :key="item.value" :value="item.value">{{ item.label }}</option>
+            </select>
+          </label>
+          <p v-if="editError" class="alert error">{{ editError }}</p>
+          <div class="modal-actions">
+            <button type="button" class="btn ghost" @click="editing = null">取消</button>
+            <button class="btn">保存</button>
           </div>
         </form>
       </div>

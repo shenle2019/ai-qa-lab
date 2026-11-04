@@ -1,4 +1,5 @@
 <script setup>
+const showDocs = ['localhost', '127.0.0.1'].includes(window.location.hostname)
 const timeline = [
   {
     time: '17:02',
@@ -78,12 +79,12 @@ const timeline = [
   {
     time: '11-04',
     title: '平台闭环',
-    detail: '模型中心、AI 生成用例、审核门禁、服务端真实执行、HTML 报告；341 个 pytest 用例通过。',
+    detail: '模型中心、AI 生成用例、审核门禁、服务端真实执行、HTML 报告；351 个 pytest 用例通过。',
   },
 ]
 
 const metrics = [
-  { value: '383', label: 'pytest 用例' },
+  { value: '393', label: 'pytest 用例' },
   { value: '58', label: '迷你演示' },
   { value: '8', label: '模块选型' },
   { value: '8', label: '复刻闭环' },
@@ -95,7 +96,7 @@ const endpoints = [
   ['POST', '/api/tickets', '创建工单'],
   ['GET', '/api/tickets/{id}', '查询单个工单'],
   ['PATCH', '/api/tickets/{id}', '更新状态/优先级'],
-  ['POST', '/api/kb/query', '知识库问答（mock）'],
+  ['POST', '/api/kb/query', '知识库问答（检索）'],
   ['POST', '/api/workbench/send', 'API 工作台单请求'],
   ['POST', '/api/workbench/run', 'API 工作台批量运行'],
 ]
@@ -107,7 +108,7 @@ const faqs = [
   },
   {
     q: '2. SUT 在哪里，我能看见吗？',
-    a: '代码在 apps/sut/backend 和 apps/sut/frontend；界面看 /ui/，接口看 /docs，现在共 9 个 HTTP 接口。',
+    a: '代码在 apps/sut/backend 和 apps/sut/frontend；界面看 /ui/，本地接口看 /docs（生产已关闭），现在共 9 个 SUT 接口。',
   },
   {
     q: '3. 模块 03 接口自动化学的是什么？',
@@ -143,7 +144,7 @@ const faqs = [
 
     <div class="quick-links">
       <a class="quick-link" href="https://github.com/shenle2019/ai-qa-lab" target="_blank" rel="noreferrer">GitHub 仓库</a>
-      <a class="quick-link" href="/docs" target="_blank" rel="noreferrer">OpenAPI</a>
+      <a v-if="showDocs" class="quick-link" href="/docs" target="_blank" rel="noreferrer">OpenAPI</a>
       <RouterLink to="/portfolio" class="quick-link">模块验收</RouterLink>
       <RouterLink to="/workbench" class="quick-link">API 工作台</RouterLink>
       <a class="quick-link" href="/learning/" target="_blank" rel="noreferrer">完整学习手册</a>
@@ -238,7 +239,7 @@ bash scripts/start_sut.sh</pre>
           <h3>部署</h3>
           <pre class="response-body">docker build -t ai-qa-lab .
 docker run -p 8000:8000 ai-qa-lab
-# 或 Render Blueprint：render.yaml</pre>
+# 线上：Railway（Docker），生产环境 /docs 已关闭</pre>
         </div>
       </div>
     </article>
@@ -331,8 +332,8 @@ docker run -p 8000:8000 ai-qa-lab
         </div>
       </div>
       <ul class="rules">
-        <li>当前没有登录/权限体系；模块 07 复刻 MeterSphere 时补。</li>
-        <li>知识库仍是 mock；模块 08 接入 DeepSeek + 真实检索与评测。</li>
+        <li>写接口已加服务级访问密钥；细粒度用户、JWT 与 RBAC 仍未做。</li>
+        <li>知识库已接工单与内置知识的检索问答；向量检索与自动评测仍是后续项。</li>
         <li>API 工作台只做 REST，不做 GraphQL/WebSocket/请求链路变量提取。</li>
         <li>SQLite 适合演示，不适合多用户生产；后续可切 PostgreSQL。</li>
         <li>完整应用已部署到 Railway；静态报告在 GitHub Pages。</li>

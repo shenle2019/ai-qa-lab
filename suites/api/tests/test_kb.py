@@ -1,7 +1,7 @@
 import pytest
 
 
-def test_kb_query_returns_mock_answer(api):
+def test_kb_query_returns_sources(api):
     question = "工单如何升级优先级？"
 
     response = api.post(
@@ -13,7 +13,16 @@ def test_kb_query_returns_mock_answer(api):
     body = response.json()
     assert question in body["answer"]
     assert body["top_k"] == 2
+    assert body["sources"]
+    assert any("优先级" in item["title"] for item in body["sources"])
+
+
+def test_kb_query_unknown_question_has_no_sources(api):
+    response = api.post("/api/kb/query", json={"question": "完全不相关的火星天气"})
+    body = response.json()
+    assert response.status_code == 200
     assert body["sources"] == []
+    assert "没有" in body["answer"]
 
 
 def test_kb_query_default_top_k(api):

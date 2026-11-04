@@ -1,27 +1,20 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Dashboard from './views/Dashboard.vue'
-import Tickets from './views/Tickets.vue'
-import Knowledge from './views/Knowledge.vue'
-import Workbench from './views/Workbench.vue'
-import Report from './views/Report.vue'
-import Portfolio from './views/Portfolio.vue'
-import Platform from './views/Platform.vue'
-import Models from './views/Models.vue'
-import TestCases from './views/TestCases.vue'
-import Methodology from './views/Methodology.vue'
+
+const routes = [
+  { path: '/', component: () => import('./views/Dashboard.vue'), meta: { title: '仪表盘' } },
+  { path: '/tickets', component: () => import('./views/Tickets.vue'), meta: { title: '工单管理' } },
+  { path: '/knowledge', component: () => import('./views/Knowledge.vue'), meta: { title: '知识库问答' } },
+  { path: '/workbench', component: () => import('./views/Workbench.vue'), meta: { title: 'API 工作台' } },
+  { path: '/report', component: () => import('./views/Report.vue'), meta: { title: '项目报告' } },
+  { path: '/portfolio', component: () => import('./views/Portfolio.vue'), meta: { title: '模块验收' } },
+  { path: '/platform', component: () => import('./views/Platform.vue'), meta: { title: '测试平台' } },
+  { path: '/models', component: () => import('./views/Models.vue'), meta: { title: '模型中心' } },
+  { path: '/testcases', component: () => import('./views/TestCases.vue'), meta: { title: '测试用例' } },
+  { path: '/methodology', component: () => import('./views/Methodology.vue'), meta: { title: '方法论' } },
+  { path: '/login', component: () => import('./views/Login.vue'), meta: { title: '访问密钥' } },
+]
 
 export default createRouter({
   history: createWebHashHistory(),
-  routes: [
-    { path: '/', component: Dashboard, meta: { title: '仪表盘' } },
-    { path: '/tickets', component: Tickets, meta: { title: '工单管理' } },
-    { path: '/knowledge', component: Knowledge, meta: { title: '知识库问答' } },
-    { path: '/workbench', component: Workbench, meta: { title: 'API 工作台' } },
-    { path: '/report', component: Report, meta: { title: '项目报告' } },
-    { path: '/portfolio', component: Portfolio, meta: { title: '模块验收' } },
-    { path: '/platform', component: Platform, meta: { title: '测试平台' } },
-    { path: '/models', component: Models, meta: { title: '模型中心' } },
-    { path: '/testcases', component: TestCases, meta: { title: '测试用例' } },
-    { path: '/methodology', component: Methodology, meta: { title: '方法论' } },
-  ],
+  routes,
 })

@@ -1,34 +1,34 @@
 from __future__ import annotations
 
 from datetime import datetime
+from uuid import uuid4
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, Request, Response
 from fastapi.responses import HTMLResponse
 from sqlalchemy.orm import Session
 
-from . import case_executor, case_generator, llm_client, llm_models, report_generator
+from . import case_executor, case_generator, llm_client, llm_models, rate_limit, report_generator, settings
 from . import platform_models as models
 from . import platform_schemas as schemas
-from .db import SessionLocal
+from .deps import get_db
+from .timeutils import utcnow
 
 router = APIRouter(prefix="/api/platform", tags=["platform"])
 
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
-
-def _execution_out(db: Session, execution: models.TestExecution) -> schemas.ExecutionOut:
-    results = (
-        db.query(models.TestResult)
-        .filter(models.TestResult.execution_id == execution.id)
-        .order_by(models.TestResult.id)
-        .all()
-    )
+def _execution_out(
+    db: Session,
+    execution: models.TestExecution,
+    results: list[models.TestResult] | None = None,
+) -> schemas.ExecutionOut:
+    if results is None:
+        results = (
+            db.query(models.TestResult)
+            .filter(models.TestResult.execution_id == execution.id)
+            .order_by(models.TestResult.id)
+            .all()
+        )
     return schemas.ExecutionOut(
         id=execution.id,
         plan_id=execution.plan_id,
@@ -56,7 +56,7 @@ def _create_execution(db: Session, plan: models.TestPlan, results: list[schemas.
         failed=failed,
         skipped=skipped,
         duration_ms=sum(item.duration_ms for item in results),
-        started_at=datetime.utcnow(),
+        started_at=utcnow(),
     )
     db.add(execution)
     db.flush()
@@ -85,10 +85,15 @@ def summary(db: Session = Depends(get_db)):
     executions = db.query(models.TestExecution).count()
     defects = db.query(models.Defect).count()
     open_defects = db.query(models.Defect).filter(models.Defect.status == "open").count()
-    latest = db.query(models.TestExecution).order_by(models.TestExecution.id.desc()).first()
-    pass_rate = 0.0
-    if latest and latest.passed + latest.failed:
-        pass_rate = latest.passed / (latest.passed + latest.failed)
+    recent = (
+        db.query(models.TestExecution)
+        .order_by(models.TestExecution.id.desc())
+        .limit(10)
+        .all()
+    )
+    passed = sum(item.passed for item in recent)
+    failed = sum(item.failed for item in recent)
+    pass_rate = passed / (passed + failed) if passed + failed else 0.0
     return schemas.SummaryOut(
         projects=projects,
         cases=cases,
@@ -101,14 +106,29 @@ def summary(db: Session = Depends(get_db)):
 
 
 @router.get("/projects", response_model=list[schemas.ProjectOut])
-def list_projects(db: Session = Depends(get_db)):
-    return db.query(models.Project).order_by(models.Project.id.desc()).all()
+def list_projects(
+    limit: int = Query(default=100, ge=1, le=500),
+    offset: int = Query(default=0, ge=0),
+    db: Session = Depends(get_db),
+):
+    return (
+        db.query(models.Project)
+        .order_by(models.Project.id.desc())
+        .offset(offset)
+        .limit(limit)
+        .all()
+    )
 
 
 @router.post("/projects", response_model=schemas.ProjectOut, status_code=201)
-def create_project(payload: schemas.ProjectCreate, db: Session = Depends(get_db)):
+def create_project(
+    payload: schemas.ProjectCreate,
+    response: Response,
+    db: Session = Depends(get_db),
+):
     existing = db.query(models.Project).filter(models.Project.name == payload.name).first()
     if existing:
+        response.status_code = 200
         return existing
     project = models.Project(name=payload.name, description=payload.description)
     db.add(project)
@@ -126,11 +146,16 @@ def get_project(project_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/cases", response_model=list[schemas.CaseOut])
-def list_cases(project_id: int | None = Query(default=None), db: Session = Depends(get_db)):
+def list_cases(
+    project_id: int | None = Query(default=None),
+    limit: int = Query(default=100, ge=1, le=500),
+    offset: int = Query(default=0, ge=0),
+    db: Session = Depends(get_db),
+):
     query = db.query(models.TestCase)
     if project_id is not None:
         query = query.filter(models.TestCase.project_id == project_id)
-    return query.order_by(models.TestCase.id.desc()).all()
+    return query.order_by(models.TestCase.id.desc()).offset(offset).limit(limit).all()
 
 
 @router.post("/cases", response_model=schemas.CaseOut, status_code=201)
@@ -145,7 +170,12 @@ def create_case(payload: schemas.CaseCreate, db: Session = Depends(get_db)):
 
 
 @router.post("/generate-cases", response_model=schemas.GeneratedCasesOut, status_code=201)
-def generate_cases(payload: schemas.GenerateCasesRequest, db: Session = Depends(get_db)):
+def generate_cases(
+    payload: schemas.GenerateCasesRequest,
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    rate_limit.enforce_llm_quota(request)
     project = db.get(models.Project, payload.project_id)
     if project is None:
         raise HTTPException(status_code=404, detail="project not found")
@@ -239,11 +269,16 @@ def list_case_reviews(case_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/plans", response_model=list[schemas.PlanOut])
-def list_plans(project_id: int | None = Query(default=None), db: Session = Depends(get_db)):
+def list_plans(
+    project_id: int | None = Query(default=None),
+    limit: int = Query(default=100, ge=1, le=500),
+    offset: int = Query(default=0, ge=0),
+    db: Session = Depends(get_db),
+):
     query = db.query(models.TestPlan)
     if project_id is not None:
         query = query.filter(models.TestPlan.project_id == project_id)
-    return query.order_by(models.TestPlan.id.desc()).all()
+    return query.order_by(models.TestPlan.id.desc()).offset(offset).limit(limit).all()
 
 
 @router.post("/plans", response_model=schemas.PlanOut, status_code=201)
@@ -267,6 +302,11 @@ def get_plan(plan_id: int, db: Session = Depends(get_db)):
 
 @router.post("/plans/{plan_id}/run", response_model=schemas.ExecutionOut, status_code=201)
 def run_plan(plan_id: int, payload: schemas.ExecutionCreate, db: Session = Depends(get_db)):
+    if settings.is_production():
+        raise HTTPException(
+            status_code=410,
+            detail="client-reported results are disabled in production; use /execute",
+        )
     plan = db.get(models.TestPlan, plan_id)
     if plan is None:
         raise HTTPException(status_code=404, detail="plan not found")
@@ -282,9 +322,10 @@ def run_plan(plan_id: int, payload: schemas.ExecutionCreate, db: Session = Depen
     return _create_execution(db, plan, payload.results)
 
 
-@router.post("/plans/{plan_id}/execute", response_model=schemas.ExecutionOut, status_code=201)
+@router.post("/plans/{plan_id}/execute", response_model=schemas.ExecutionOut, status_code=202)
 def execute_plan(
     plan_id: int,
+    background_tasks: BackgroundTasks,
     payload: schemas.ExecutePlanRequest | None = None,
     db: Session = Depends(get_db),
 ):
@@ -306,17 +347,48 @@ def execute_plan(
     if base_url and not base_url.startswith(("http://", "https://")):
         raise HTTPException(status_code=400, detail="base_url 必须以 http:// 或 https:// 开头")
 
-    execution = case_executor.execute_plan(db, plan, cases, base_url)
-    return _execution_out(db, execution)
+    execution = models.TestExecution(
+        plan_id=plan.id,
+        status="running",
+        started_at=utcnow(),
+    )
+    db.add(execution)
+    db.commit()
+    db.refresh(execution)
+    background_tasks.add_task(
+        case_executor.run_execution,
+        execution.id,
+        plan.id,
+        [case.id for case in cases],
+        base_url,
+    )
+    return _execution_out(db, execution, [])
 
 
 @router.get("/executions", response_model=list[schemas.ExecutionOut])
-def list_executions(plan_id: int | None = Query(default=None), db: Session = Depends(get_db)):
+def list_executions(
+    plan_id: int | None = Query(default=None),
+    limit: int = Query(default=50, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
+    db: Session = Depends(get_db),
+):
     query = db.query(models.TestExecution)
     if plan_id is not None:
         query = query.filter(models.TestExecution.plan_id == plan_id)
-    executions = query.order_by(models.TestExecution.id.desc()).all()
-    return [_execution_out(db, execution) for execution in executions]
+    executions = query.order_by(models.TestExecution.id.desc()).offset(offset).limit(limit).all()
+    if not executions:
+        return []
+    execution_ids = [execution.id for execution in executions]
+    grouped: dict[int, list[models.TestResult]] = {execution_id: [] for execution_id in execution_ids}
+    results = (
+        db.query(models.TestResult)
+        .filter(models.TestResult.execution_id.in_(execution_ids))
+        .order_by(models.TestResult.id)
+        .all()
+    )
+    for result in results:
+        grouped.setdefault(result.execution_id, []).append(result)
+    return [_execution_out(db, execution, grouped.get(execution.id, [])) for execution in executions]
 
 
 @router.get("/executions/{execution_id}", response_model=schemas.ExecutionOut)
@@ -342,11 +414,16 @@ def execution_report(execution_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/defects", response_model=list[schemas.DefectOut])
-def list_defects(project_id: int | None = Query(default=None), db: Session = Depends(get_db)):
+def list_defects(
+    project_id: int | None = Query(default=None),
+    limit: int = Query(default=100, ge=1, le=500),
+    offset: int = Query(default=0, ge=0),
+    db: Session = Depends(get_db),
+):
     query = db.query(models.Defect)
     if project_id is not None:
         query = query.filter(models.Defect.project_id == project_id)
-    return query.order_by(models.Defect.id.desc()).all()
+    return query.order_by(models.Defect.id.desc()).offset(offset).limit(limit).all()
 
 
 @router.post("/defects", response_model=schemas.DefectOut, status_code=201)
@@ -386,7 +463,7 @@ def import_minipytest(payload: schemas.ImportRequest, db: Session = Depends(get_
             db.flush()
         plan = models.TestPlan(
             project_id=project.id,
-            name=f"minipytest {report.get('started_at', '')}",
+            name=f"minipytest {report.get('started_at', '')} {uuid4().hex[:6]}",
         )
         db.add(plan)
         db.flush()
@@ -402,13 +479,16 @@ def import_minipytest(payload: schemas.ImportRequest, db: Session = Depends(get_
     results: list[schemas.ResultIn] = []
     for item in report.get("tests", []):
         failure = item.get("failure") or {}
+        message = str(failure.get("message", ""))
+        if len(message) > 2000:
+            message = message[:1997] + "…"
         results.append(
             schemas.ResultIn(
                 case_id=None,
                 case_name=item.get("name", "") or item.get("id", ""),
                 status=status_map.get(item.get("status", "error"), "error"),
                 duration_ms=int(item.get("duration_ms", 0)),
-                message=str(failure.get("message", ""))[:2000],
+                message=message,
             )
         )
     return _create_execution(db, plan, results)

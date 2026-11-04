@@ -1,6 +1,7 @@
 """Reliability cases: repeatability, concurrency, recovery, platform safety."""
 
 import json
+import time
 from concurrent.futures import ThreadPoolExecutor
 from uuid import uuid4
 
@@ -187,6 +188,16 @@ def test_workbench_batch_ok(api):
     assert all(item["passed"] for item in response.json())
 
 
+def _wait_execution(api, execution_id, timeout=10):
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        body = api.get(f"/api/platform/executions/{execution_id}").json()
+        if body["status"] != "running":
+            return body
+        time.sleep(0.05)
+    raise AssertionError("execution did not finish in time")
+
+
 def _project(api):
     suffix = uuid4().hex[:8]
     return api.post(
@@ -223,8 +234,8 @@ def test_executor_rejects_absolute_target(api):
         "/api/platform/plans", json={"project_id": project["id"], "name": "safety plan"}
     ).json()
     response = api.post(f"/api/platform/plans/{plan['id']}/execute", json={})
-    assert response.status_code == 201
-    body = response.json()
+    assert response.status_code == 202
+    body = _wait_execution(api, response.json()["id"])
     assert body["failed"] == 1
     assert "相对路径" in body["results"][0]["message"]
     assert case["id"] == body["results"][0]["case_id"]
@@ -247,12 +258,11 @@ def test_model_key_is_masked(api):
         json={
             "name": f"mask {uuid4().hex[:8]}",
             "base_url": "https://api.deepseek.com",
-            "api_key": "sk-abcdefgh1234",
         },
     )
     body = response.json()
     assert "api_key" not in body
-    assert body["api_key_masked"].endswith("1234")
+    assert body["api_key_masked"] in ("", "env:DEEPSEEK_API_KEY")
 
 
 def test_seed_is_idempotent(api):

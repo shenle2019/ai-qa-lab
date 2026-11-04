@@ -35,11 +35,11 @@ Every suite is browsable in the running app at `/ui/#/testcases`.
 | API techniques | 51 |
 | Compatibility | 35 |
 | Reliability | 26 |
-| Web UI | 29 |
+| Web UI | 30 |
 | Performance | 29 |
 | App | 25 |
 
-- 195 cases total: 182 passed, 13 skipped because no Android device is attached.
+- 196 cases total: 183 passed, 13 skipped because no Android device is attached.
 - Filter by category, status, or name; the page reads `/portfolio/test-cases.json`, generated from the same JUnit run as the report.
 - Regenerate with `.venv/Scripts/python.exe scripts/build_test_report_2026_11_04.py`.
 - Full report: `/portfolio/test-report-2026-11-04.html`.
@@ -78,7 +78,7 @@ cd ../../..
 # Run SUT (serves API + UI)
 .venv\Scripts\python.exe -m uvicorn app.main:app --app-dir apps/sut/backend --port 8000 --reload
 
-# Tests (383 real pytest cases, Android device tests skip automatically)
+# Tests (393 real pytest cases, Android device tests skip automatically)
 .venv\Scripts\python.exe -m pytest apps/sut/backend suites/api suites/web suites/app suites/perf libs/minipytest/tests libs/miniplaywright/tests libs/miniappium/tests libs/miniload/tests libs/minieval/tests -q
 
 # Mini pytest acceptance demo (20 cases, starts a temporary SUT)
@@ -107,45 +107,20 @@ cd ../../..
 
 ## Deploy
 
-**Live demo:** https://ai-qa-lab-production.up.railway.app/ui/
+Railway is the single maintained deployment target.
 
-> Status: the full app is live at https://ai-qa-lab-production.up.railway.app/ui/ (Railway, Docker). Static reports stay on GitHub Pages.
-
-Full-stack (FastAPI + Vue) runs in one container:
-
-```bash
-docker build -t ai-qa-lab .
-docker run -p 8000:8000 ai-qa-lab
-```
-
-Render Blueprint is included in `render.yaml`. One-click:
-
-https://render.com/deploy?repo=https://github.com/shenle2019/ai-qa-lab
-
-GitHub Pages only hosts the static report under `docs/`; it cannot run the Python backend.
-
-### Hugging Face Spaces
-
-The Space files are in `deploy/huggingface/` (README metadata + Dockerfile). The Dockerfile clones this public repo at build time, builds the Vue frontend, and starts FastAPI on port 7860.
-
-**Web UI (no token needed):**
-
-1. Open https://huggingface.co/new-space
-2. SDK: Docker, template: Blank, name: `ai-qa-lab`, visibility: Public
-3. Replace the Space `README.md` with `deploy/huggingface/README.md`
-4. Add `deploy/huggingface/Dockerfile` at the Space root
-5. Commit; the Space builds automatically
-6. App URL: `https://<username>-ai-qa-lab.hf.space`
-
-**Automated (recommended):**
-
-```bash
-.venv/Scripts/python.exe -m pip install -r requirements-deploy.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
-# put a HF write token in .hf_token (never commit it)
-.venv/Scripts/python.exe scripts/deploy_hf.py
-```
-
-The script creates the Space, uploads the two files, and prints the public URL. After pushing new commits to GitHub, use "Factory rebuild" in the Space settings to pick them up.
+- Live demo: https://ai-qa-lab-production.up.railway.app/ui/
+- Build: `docker build -t ai-qa-lab .`
+- Environment variables:
+  - `APP_ENV=production`
+  - `APP_API_KEY=<write access key>` — required; write requests use `Authorization: Bearer <key>` or `X-API-Key`
+  - `DATABASE_URL=sqlite:////app/data/sut.db`
+  - `DEEPSEEK_API_KEY` — optional, only needed for AI case generation
+  - `SEED_DEMO=1` — local only, never set in production
+- Mount a persistent volume at `/app/data`.
+- In production `/docs`, `/redoc` and `/openapi.json` are disabled.
+- The UI includes an “访问密钥” page that stores the key in browser localStorage; 401 responses redirect there.
+- Render and Hugging Face configs are archived under `docs/archive/deploy/` and are not maintained.
 
 ## License
 

@@ -2,21 +2,14 @@ from __future__ import annotations
 
 import time
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from sqlalchemy.orm import Session
 
-from . import llm_client, llm_models, llm_schemas
-from .db import SessionLocal
+from . import llm_client, llm_models, llm_schemas, rate_limit
+from .deps import get_db
 
 router = APIRouter(prefix="/api/platform", tags=["models"])
 
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 def _to_out(config: llm_models.ModelConfig) -> llm_schemas.ModelConfigOut:
@@ -27,8 +20,8 @@ def _to_out(config: llm_models.ModelConfig) -> llm_schemas.ModelConfigOut:
         base_url=config.base_url,
         model_name=config.model_name,
         enabled=config.enabled,
-        has_api_key=bool(llm_client.resolve_api_key(config)),
-        api_key_masked=llm_client.mask_key(config.api_key),
+        has_api_key=bool(llm_client.resolve_api_key()),
+        api_key_masked=llm_client.key_display(),
         created_at=config.created_at,
     )
 
@@ -63,7 +56,8 @@ def update_model(model_id: int, payload: llm_schemas.ModelConfigUpdate, db: Sess
 
 
 @router.post("/models/{model_id}/test", response_model=llm_schemas.ModelTestResult)
-def test_model(model_id: int, db: Session = Depends(get_db)):
+def test_model(model_id: int, request: Request, db: Session = Depends(get_db)):
+    rate_limit.enforce_llm_quota(request)
     config = db.get(llm_models.ModelConfig, model_id)
     if config is None:
         raise HTTPException(status_code=404, detail="model not found")

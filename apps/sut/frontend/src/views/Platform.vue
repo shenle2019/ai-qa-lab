@@ -136,8 +136,15 @@ async function executePlan(item) {
   notice.value = `正在执行：${item.name}…`
   error.value = ''
   try {
-    const execution = await api.executePlatformPlan(item.id)
-    notice.value = `执行完成：${execution.passed}/${execution.total} 通过，${execution.duration_ms} ms`
+    let execution = await api.executePlatformPlan(item.id)
+    for (let index = 0; index < 60 && execution.status === 'running'; index += 1) {
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      execution = await api.platformExecution(execution.id)
+    }
+    notice.value =
+      execution.status === 'running'
+        ? '执行仍在进行，请稍后刷新'
+        : `执行完成：${execution.passed}/${execution.total} 通过，${execution.duration_ms} ms`
     await refresh()
   } catch (err) {
     error.value = err.message

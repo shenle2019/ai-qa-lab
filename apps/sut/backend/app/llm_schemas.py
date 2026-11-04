@@ -8,7 +8,6 @@ class ModelConfigCreate(BaseModel):
     provider: str = "deepseek"
     base_url: str = "https://api.deepseek.com"
     model_name: str = "deepseek-chat"
-    api_key: str = ""
     enabled: bool = True
 
 
@@ -17,7 +16,6 @@ class ModelConfigUpdate(BaseModel):
     provider: str | None = None
     base_url: str | None = None
     model_name: str | None = None
-    api_key: str | None = None
     enabled: bool | None = None
 
 

@@ -1,4 +1,5 @@
 import json
+import time
 from uuid import uuid4
 
 from fastapi.testclient import TestClient
@@ -7,6 +8,16 @@ from app import case_executor
 from app.main import app
 
 client = TestClient(app)
+
+
+def _wait(execution_id, timeout=10):
+    deadline = time.time() + timeout
+    while time.time() < deadline:
+        body = client.get(f"/api/platform/executions/{execution_id}").json()
+        if body["status"] != "running":
+            return body
+        time.sleep(0.05)
+    raise AssertionError("execution did not finish in time")
 
 
 def _project():
@@ -65,8 +76,8 @@ def test_execute_plan_runs_api_case(monkeypatch):
     monkeypatch.setattr(case_executor.httpx, "request", fake_request)
 
     response = client.post(f"/api/platform/plans/{plan['id']}/execute", json={})
-    assert response.status_code == 201, response.text
-    body = response.json()
+    assert response.status_code == 202, response.text
+    body = _wait(response.json()["id"])
     assert body["status"] == "passed"
     assert body["total"] == 1
     assert body["passed"] == 1
@@ -81,7 +92,8 @@ def test_execute_plan_reports_failure(monkeypatch):
     monkeypatch.setattr(case_executor.httpx, "request", lambda *args, **kwargs: FakeResponse(500))
 
     response = client.post(f"/api/platform/plans/{plan['id']}/execute", json={})
-    body = response.json()
+    assert response.status_code == 202, response.text
+    body = _wait(response.json()["id"])
     assert body["status"] == "failed"
     assert body["failed"] == 1
     assert "期望 200" in body["results"][0]["message"]
@@ -93,7 +105,8 @@ def test_non_api_case_is_skipped(monkeypatch):
     plan = _plan(project["id"])
 
     response = client.post(f"/api/platform/plans/{plan['id']}/execute", json={})
-    body = response.json()
+    assert response.status_code == 202, response.text
+    body = _wait(response.json()["id"])
     assert body["status"] == "skipped"
     assert body["skipped"] == 1
     assert "暂不支持" in body["results"][0]["message"]
@@ -112,7 +125,9 @@ def test_execution_report_renders(monkeypatch):
     case = _case(project["id"])
     plan = _plan(project["id"])
     monkeypatch.setattr(case_executor.httpx, "request", lambda *args, **kwargs: FakeResponse(200))
-    execution = client.post(f"/api/platform/plans/{plan['id']}/execute", json={}).json()
+    started = client.post(f"/api/platform/plans/{plan['id']}/execute", json={})
+    assert started.status_code == 202
+    execution = _wait(started.json()["id"])
 
     response = client.get(f"/api/platform/executions/{execution['id']}/report")
     assert response.status_code == 200
@@ -133,6 +148,7 @@ def test_relative_target_is_enforced(monkeypatch):
     plan = _plan(project["id"])
 
     response = client.post(f"/api/platform/plans/{plan['id']}/execute", json={})
-    body = response.json()
+    assert response.status_code == 202, response.text
+    body = _wait(response.json()["id"])
     assert body["status"] == "failed"
     assert "相对路径" in body["results"][0]["message"]

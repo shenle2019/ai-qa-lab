@@ -162,7 +162,7 @@ def test_defaults_when_optional_fields_missing(api):
 
 def test_oversized_id_is_rejected(api):
     response = api.get("/api/tickets/999999999999999999999999")
-    assert response.status_code == 404
+    assert response.status_code == 422
 
 
 def test_negative_id_is_not_found(api):

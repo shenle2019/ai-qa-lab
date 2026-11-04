@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { api } from './api/client'
 
@@ -7,6 +7,8 @@ const route = useRoute()
 const online = ref(false)
 const checking = ref(true)
 const title = computed(() => route.meta.title || 'AI全栈测试开发平台-shenle')
+const showDocs = ['localhost', '127.0.0.1'].includes(window.location.hostname)
+let healthTimer = null
 
 async function checkHealth() {
   checking.value = true
@@ -20,7 +22,14 @@ async function checkHealth() {
   }
 }
 
-onMounted(checkHealth)
+onMounted(() => {
+  checkHealth()
+  healthTimer = setInterval(checkHealth, 30000)
+})
+
+onUnmounted(() => {
+  if (healthTimer) clearInterval(healthTimer)
+})
 </script>
 
 <template>
@@ -52,6 +61,7 @@ onMounted(checkHealth)
           <span class="dot" :class="online ? 'ok' : 'bad'"></span>
           {{ checking ? '检测中' : online ? 'SUT 在线' : 'SUT 离线' }}
         </div>
+        <RouterLink to="/login" class="nav-item"><span class="nav-icon">⚿</span>访问密钥</RouterLink>
         <p>v1.0.1 · FastAPI + Vue 3</p>
       </div>
     </aside>
@@ -64,7 +74,7 @@ onMounted(checkHealth)
         </div>
         <div class="topbar-actions">
           <button class="btn ghost" :disabled="checking" @click="checkHealth">刷新状态</button>
-          <a class="btn" href="/docs" target="_blank" rel="noreferrer">API 文档</a>
+          <a v-if="showDocs" class="btn" href="/docs" target="_blank" rel="noreferrer">API 文档</a>
         </div>
       </header>
 
