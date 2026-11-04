@@ -28,7 +28,11 @@ STATUS_PATTERN = re.compile(r"status\s*[=: ]\s*(\d{3})", re.IGNORECASE)
 
 
 def default_base_url() -> str:
-    return os.getenv("EXEC_BASE_URL", "http://127.0.0.1:8000")
+    explicit = os.getenv("EXEC_BASE_URL")
+    if explicit:
+        return explicit
+    port = os.getenv("PORT", "8000")
+    return f"http://127.0.0.1:{port}"
 
 
 def _expected_status(text: str) -> int | None:
