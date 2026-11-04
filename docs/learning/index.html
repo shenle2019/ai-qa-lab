@@ -70,6 +70,7 @@ hr { border:0; border-top:1px solid var(--line); margin:28px 0; }
 <li><a href="#13">13. 下一步怎么学</a></li>
 <li><a href="#14">14. 自测题</a></li>
 <li><a href="#15-2026-11-03">15. 五个常见问题（2026-11-03）</a></li>
+<li><a href="#16-2026-11-04">16. 2026-11-04：从“管理台”到“真执行”</a></li>
 </ul>
 </li>
 </ul>
@@ -1322,16 +1323,51 @@ CLAUDE.md                                     复刻规则与完成标准
 <p>产物是 <code>docs/requirements/module-matrix.md</code> 和 <code>CLAUDE.md</code> 里的规则。模块 01 排在最后，因为它要把整个项目总结成一张知识地图和选型决策页，不适合一开始就写。</p>
 <h3 id="155-07">15.5 模块 07 测试平台现在有什么</h3>
 <p>参考 MeterSphere（13,600 星），它是一个持续测试平台，管理项目、用例、计划、执行、缺陷、报表。</p>
-<p>现在有 Vue 控制台 + FastAPI 后端，能看仪表盘、工单、知识库、API 工作台、报告、模块验收，所以叫“控制台雏形”。</p>
-<p>还缺：</p>
+<p>现在有 Vue 控制台 + FastAPI 后端，已经具备项目、用例、计划、执行、缺陷和报表；2026-11-04 又补上了模型中心、AI 生成用例、审核门禁、服务端真实执行和 HTML 报告。</p>
+<p>仍未做：用户与权限、定时调度、分布式执行机、CI 自动回传、可视化流程编排。</p>
+<h2 id="16-2026-11-04">16. 2026-11-04：从“管理台”到“真执行”</h2>
+<p>这一节解释新增的五个能力，以及为什么这样设计。</p>
+<h3 id="161">16.1 为什么要补这一块</h3>
+<p>原来的测试平台能建项目、写用例、排计划，但点“运行”时，结果是前端伪造后提交给后端的。它更像一个管理台，不是执行平台。要形成闭环，必须让服务端真的做四件事：调用模型、生成用例、卡审核、跑请求。</p>
+<h3 id="162">16.2 模型中心</h3>
+<p>表 <code>model_configs</code> 保存模型名、Base URL、模型标识和密钥；表 <code>llm_calls</code> 记录每次调用的用途、耗时、token 和错误。</p>
+<p>两个关键点：</p>
 <ul>
-<li>测试用例管理；</li>
-<li>测试计划和执行历史；</li>
-<li>缺陷跟踪；</li>
-<li>用户、角色、权限；</li>
-<li>和 CI 的完整集成。</li>
+<li>密钥只存在服务端，接口只返回 <code>has_api_key</code> 和掩码，前端永远拿不到明文。</li>
+<li>每次调用都落一条记录，失败也记，这样“模型到底花了多少、错在哪”有据可查。</li>
 </ul>
-<p>这些是模块 07 要补的完整闭环，不是现在这一版的交付范围。</p>
+<h3 id="163-ai">16.3 AI 生成用例</h3>
+<p>输入一段需求，拼成 system prompt + user prompt，调用兼容 OpenAI 的 <code>chat/completions</code>，要求模型只返回 JSON。返回后做四层校验：</p>
+<ol>
+<li>必须有 <code>cases</code> 数组；</li>
+<li>标题不能为空，重复标题丢弃；</li>
+<li>module 和 priority 限定在枚举内；</li>
+<li>步骤必须是对象数组，最多 30 步。</li>
+</ol>
+<p>通过的用例以 <code>draft</code> 状态入库，同时保存 <code>source=ai</code>、<code>prompt_version</code> 和结构化 <code>steps_json</code>。结构化是为了后面能执行，纯文本步骤机器读不懂。</p>
+<h3 id="164">16.4 审核门禁</h3>
+<p>状态机只有四条边：<code>draft → pending_review → approved / rejected</code>。</p>
+<ul>
+<li>提交审核只允许草稿；</li>
+<li>审核只允许待审核；</li>
+<li>执行查询强制 <code>status=approved</code>；</li>
+<li>即使前端绕过，<code>/run</code> 接口也会再校验一次用例状态。</li>
+</ul>
+<p>这就是“人工在环”：AI 可以批量生成，但不能直接进生产执行。</p>
+<h3 id="165">16.5 真实执行</h3>
+<p>执行器只接受一种步骤格式：</p>
+<pre><code class="language-json">{&quot;action&quot;: &quot;GET&quot;, &quot;target&quot;: &quot;/api/tickets&quot;, &quot;data&quot;: &quot;&quot;, &quot;assert&quot;: &quot;status=200&quot;}
+</code></pre>
+<p>安全约束：<code>target</code> 必须是相对路径，避免用例被写成任意 URL 去打内网。执行时用 httpx 逐条发请求，从 <code>assert</code> 里解析期望状态码，不匹配就判失败，并记录第几步、期望值、实际值和响应片段。</p>
+<p>非 API 模块暂不自动执行，明确标记为 <code>skipped</code>，不假装通过。</p>
+<h3 id="166-html">16.6 HTML 报告</h3>
+<p>每次执行生成一个独立 HTML 页面：总数、通过、失败、跳过、通过率、耗时、逐条结果、失败原因。报告是执行结果的只读视图，不重新计算，避免“报告和数据库对不上”。</p>
+<h3 id="167">16.7 怎么验证</h3>
+<ul>
+<li>后端测试：模型中心 5 条、生成与审核 5 条、执行与报告 6 条。</li>
+<li>全量 pytest：158 通过、29 跳过（跳过的是没有连接 Android 设备的用例）。</li>
+<li>端到端：真实启动服务后，创建用例和计划，调用 <code>/api/platform/plans/{id}/execute</code>，返回 <code>passed 1/1</code>，耗时 226 ms。</li>
+</ul>
 </div>
 </body>
 </html>

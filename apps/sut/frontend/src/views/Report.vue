@@ -75,10 +75,15 @@ const timeline = [
     title: 'CRUD 用例扩充',
     detail: '接口 29 + Web 28 + App 24 + 平台 26，共 107 个新增用例；全部记录到 CRUD 测试报告。',
   },
+  {
+    time: '11-04',
+    title: '平台闭环',
+    detail: '模型中心、AI 生成用例、审核门禁、服务端真实执行、HTML 报告；158 个 pytest 用例通过。',
+  },
 ]
 
 const metrics = [
-  { value: '172', label: 'pytest 用例' },
+  { value: '187', label: 'pytest 用例' },
   { value: '58', label: '迷你演示' },
   { value: '8', label: '模块选型' },
   { value: '8', label: '复刻闭环' },
@@ -114,7 +119,7 @@ const faqs = [
   },
   {
     q: '5. 模块 07 测试平台现在有什么？',
-    a: '项目、用例、计划、执行、缺陷和汇总已可用；执行结果目前由前端提交，服务端真实执行在下一迭代。',
+    a: '项目、用例、计划、执行、缺陷和汇总已可用；支持 AI 生成用例、审核门禁、服务端真实执行和 HTML 报告；未做定时调度与分布式执行。',
   },
 ]
 </script>
@@ -250,7 +255,7 @@ docker run -p 8000:8000 ai-qa-lab
           <thead><tr><th>产物</th><th>位置</th><th>状态</th></tr></thead>
           <tbody>
             <tr><td>SUT 后端</td><td class="mono">apps/sut/backend</td><td>可运行，9 个接口（7 业务 + 2 工作台）</td></tr>
-            <tr><td>Vue 控制台</td><td class="mono">apps/sut/frontend</td><td>8 个页面，已构建</td></tr>
+            <tr><td>Vue 控制台</td><td class="mono">apps/sut/frontend</td><td>9 个页面，已构建</td></tr>
             <tr><td>接口套件</td><td class="mono">suites/api</td><td>56 tests passing</td></tr>
             <tr><td>API 工作台</td><td class="mono">/ui/#/workbench</td><td>闭环可用</td></tr>
             <tr><td>迷你 Playwright</td><td class="mono">libs/miniplaywright</td><td>6 元测试 + 33 个 SUT UI 用例</td></tr>
