@@ -165,6 +165,41 @@ def test_rejected_case_cannot_run(monkeypatch):
     assert blocked.status_code == 409
 
 
+def test_generator_coerces_natural_language_steps(monkeypatch):
+    def fake_chat_json(*args, **kwargs):
+        return {
+            "cases": [
+                {
+                    "title": "中文步骤也能转成可执行",
+                    "module": "api",
+                    "priority": "high",
+                    "steps": [
+                        {
+                            "action": "发送 GET 请求",
+                            "target": "/api/tickets",
+                            "data": "无请求体",
+                            "assert": "响应状态码为 200",
+                        },
+                        {
+                            "action": "解析响应体",
+                            "target": "响应 JSON",
+                            "data": "无",
+                            "assert": "包含数组",
+                        },
+                    ],
+                    "expected": "200",
+                }
+            ]
+        }
+
+    monkeypatch.setattr(case_generator.llm_client, "chat_json", fake_chat_json)
+    items = case_generator.generate(None, None, "需求", 3)
+    assert len(items) == 1
+    assert items[0]["steps"] == [
+        {"action": "GET", "target": "/api/tickets", "data": "", "assert": "status=200"}
+    ]
+
+
 def test_generate_cases_requires_existing_model():
     project = _project()
     response = client.post(

@@ -32,6 +32,25 @@ def resolve_api_key(config: llm_models.ModelConfig) -> str:
     return config.api_key or os.getenv("DEEPSEEK_API_KEY", "")
 
 
+def _parse_json(content: str) -> dict:
+    """Parse model output that may be wrapped in markdown or extra text."""
+    text = (content or "").strip()
+    if text.startswith("```"):
+        lines = text.splitlines()
+        if len(lines) >= 2 and lines[-1].strip().startswith("```"):
+            text = "\n".join(lines[1:-1])
+        else:
+            text = "\n".join(lines[1:])
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        start = text.find("{")
+        end = text.rfind("}")
+        if start >= 0 and end > start:
+            return json.loads(text[start : end + 1])
+        raise
+
+
 def _record(
     db: Session,
     config: llm_models.ModelConfig,
@@ -94,7 +113,11 @@ def chat_json(
         response.raise_for_status()
         payload = response.json()
         content = payload["choices"][0]["message"]["content"]
-        parsed = json.loads(content)
+        try:
+            parsed = _parse_json(content)
+        except json.JSONDecodeError as exc:
+            finish = payload["choices"][0].get("finish_reason")
+            raise LLMError(f"模型返回不是合法 JSON（finish={finish}）: {content[:200]}") from exc
         usage = payload.get("usage", {}) or {}
         _record(
             db,

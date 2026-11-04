@@ -72,11 +72,11 @@ def test_model(model_id: int, db: Session = Depends(get_db)):
         llm_client.chat_json(
             db,
             config,
-            [{"role": "user", "content": '只回复 JSON: {"ok": true}'}],
+            [{"role": "user", "content": '只输出一个 JSON 对象：{"ok": true}'}],
             purpose="connectivity_test",
             prompt_version="test",
-            timeout=20.0,
-            max_tokens=20,
+            timeout=30.0,
+            max_tokens=64,
         )
         return llm_schemas.ModelTestResult(
             ok=True,
