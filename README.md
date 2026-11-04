@@ -88,7 +88,9 @@ cd ../../..
 
 ## Deploy
 
-> Status: all 8 modules are complete (v0.1) and archived as v1.0.0. The static report site is live; the full FastAPI + Vue app is deployment-ready and needs a Render/HF account authorization.
+**Live demo:** https://ai-qa-lab-production.up.railway.app/ui/
+
+> Status: the full app is live at https://ai-qa-lab-production.up.railway.app/ui/ (Railway, Docker). Static reports stay on GitHub Pages.
 
 Full-stack (FastAPI + Vue) runs in one container:
 

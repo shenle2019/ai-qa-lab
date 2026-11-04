@@ -1,5 +1,6 @@
 # 5 分钟演示脚本
 
+> 线上地址：https://ai-qa-lab-production.up.railway.app/ui/
 > 目标：在公网地址上完整走一遍“AI 生成用例 → 人工审核 → 服务端执行 → 查看报告”。
 
 ## 演示前

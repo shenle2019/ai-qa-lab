@@ -291,14 +291,14 @@ docker run -p 8000:8000 ai-qa-lab
       <div class="alert" style="border: 1px solid rgba(52, 211, 153, 0.28); color: #a7f3d0; background: rgba(52, 211, 153, 0.08)">
         结论：完整项目可以部署到公网；GitHub Pages 只能托管静态报告，FastAPI 后端需要容器平台（Render / Hugging Face Spaces / 任何 Docker 主机）。
       </div>
-      <p class="muted">当前决策：先本地开发，等 8 个模块全部完成后再统一上云；Docker / HF / Render 配置保留在仓库，不阻塞开发。</p>
+      <p class="muted">已部署到 Railway（Docker），公网地址：https://ai-qa-lab-production.up.railway.app/ui/；静态报告仍在 GitHub Pages。</p>
       <div class="table-wrap">
         <table>
           <thead><tr><th>方式</th><th>能运行什么</th><th>是否需要账号</th><th>当前状态</th></tr></thead>
           <tbody>
             <tr><td>GitHub Pages</td><td>项目报告、截图、文档</td><td>已有 GitHub</td><td>可立即部署</td></tr>
-            <tr><td>Render Docker</td><td>完整 SUT + Vue + API 工作台</td><td>需要 Render 账号</td><td>配置已就绪，待授权</td></tr>
-            <tr><td>Hugging Face Spaces</td><td>完整 SUT + Vue + API 工作台</td><td>需要 HF 账号</td><td>备选方案</td></tr>
+            <tr><td>Railway Docker</td><td>完整 SUT + Vue + 模型中心 + 执行报告</td><td>已有账号</td><td>已上线</td></tr>
+            <tr><td>Hugging Face Spaces</td><td>完整应用</td><td>需要 HF 账号</td><td>备选（当前网络不可达）</td></tr>
             <tr><td>本地</td><td>全部功能</td><td>无</td><td>已运行</td></tr>
           </tbody>
         </table>
@@ -335,7 +335,7 @@ docker run -p 8000:8000 ai-qa-lab
         <li>知识库仍是 mock；模块 08 接入 DeepSeek + 真实检索与评测。</li>
         <li>API 工作台只做 REST，不做 GraphQL/WebSocket/请求链路变量提取。</li>
         <li>SQLite 适合演示，不适合多用户生产；后续可切 PostgreSQL。</li>
-        <li>已完成 v1.0.0 归档与推送；完整应用部署待 Render/HF 账号授权。</li>
+        <li>完整应用已部署到 Railway；静态报告在 GitHub Pages。</li>
       </ul>
     </article>
 
