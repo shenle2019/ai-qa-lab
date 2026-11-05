@@ -1,0 +1,3104 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "AI Knowledge Ops SUT",
+  "version": "1.1.0"
+ },
+ "paths": {
+  "/api/workbench/send": {
+   "post": {
+    "tags": [
+     "workbench"
+    ],
+    "summary": "Send",
+    "operationId": "send_api_workbench_send_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/WorkbenchRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/WorkbenchResult"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/workbench/run": {
+   "post": {
+    "tags": [
+     "workbench"
+    ],
+    "summary": "Run",
+    "operationId": "run_api_workbench_run_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RunPayload"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/WorkbenchResult"
+         },
+         "type": "array",
+         "title": "Response Run Api Workbench Run Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/summary": {
+   "get": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "Summary",
+    "operationId": "summary_api_platform_summary_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SummaryOut"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/projects": {
+   "get": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "List Projects",
+    "operationId": "list_projects_api_platform_projects_get",
+    "parameters": [
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 500,
+       "minimum": 1,
+       "default": 100,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "offset",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "minimum": 0,
+       "default": 0,
+       "title": "Offset"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/ProjectOut"
+         },
+         "title": "Response List Projects Api Platform Projects Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "Create Project",
+    "operationId": "create_project_api_platform_projects_post",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ProjectCreate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ProjectOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/projects/{project_id}": {
+   "get": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "Get Project",
+    "operationId": "get_project_api_platform_projects__project_id__get",
+    "parameters": [
+     {
+      "name": "project_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Project Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ProjectOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/cases": {
+   "get": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "List Cases",
+    "operationId": "list_cases_api_platform_cases_get",
+    "parameters": [
+     {
+      "name": "project_id",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Project Id"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 500,
+       "minimum": 1,
+       "default": 100,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "offset",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "minimum": 0,
+       "default": 0,
+       "title": "Offset"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/CaseOut"
+         },
+         "title": "Response List Cases Api Platform Cases Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "Create Case",
+    "operationId": "create_case_api_platform_cases_post",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CaseCreate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CaseOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/generate-cases": {
+   "post": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "Generate Cases",
+    "operationId": "generate_cases_api_platform_generate_cases_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/GenerateCasesRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/GeneratedCasesOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/cases/{case_id}/submit-review": {
+   "post": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "Submit Case Review",
+    "operationId": "submit_case_review_api_platform_cases__case_id__submit_review_post",
+    "parameters": [
+     {
+      "name": "case_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Case Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CaseOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/cases/{case_id}/review": {
+   "post": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "Review Case",
+    "operationId": "review_case_api_platform_cases__case_id__review_post",
+    "parameters": [
+     {
+      "name": "case_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Case Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/CaseReviewCreate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/CaseReviewOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/cases/{case_id}/reviews": {
+   "get": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "List Case Reviews",
+    "operationId": "list_case_reviews_api_platform_cases__case_id__reviews_get",
+    "parameters": [
+     {
+      "name": "case_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Case Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/CaseReviewOut"
+         },
+         "title": "Response List Case Reviews Api Platform Cases  Case Id  Reviews Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/plans": {
+   "get": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "List Plans",
+    "operationId": "list_plans_api_platform_plans_get",
+    "parameters": [
+     {
+      "name": "project_id",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Project Id"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 500,
+       "minimum": 1,
+       "default": 100,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "offset",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "minimum": 0,
+       "default": 0,
+       "title": "Offset"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/PlanOut"
+         },
+         "title": "Response List Plans Api Platform Plans Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "Create Plan",
+    "operationId": "create_plan_api_platform_plans_post",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PlanCreate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PlanOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/plans/{plan_id}": {
+   "get": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "Get Plan",
+    "operationId": "get_plan_api_platform_plans__plan_id__get",
+    "parameters": [
+     {
+      "name": "plan_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Plan Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/PlanOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/plans/{plan_id}/run": {
+   "post": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "Run Plan",
+    "operationId": "run_plan_api_platform_plans__plan_id__run_post",
+    "parameters": [
+     {
+      "name": "plan_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Plan Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ExecutionCreate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ExecutionOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/plans/{plan_id}/execute": {
+   "post": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "Execute Plan",
+    "operationId": "execute_plan_api_platform_plans__plan_id__execute_post",
+    "parameters": [
+     {
+      "name": "plan_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Plan Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "anyOf": [
+         {
+          "$ref": "#/components/schemas/ExecutePlanRequest"
+         },
+         {
+          "type": "null"
+         }
+        ],
+        "title": "Payload"
+       }
+      }
+     }
+    },
+    "responses": {
+     "202": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ExecutionOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/executions": {
+   "get": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "List Executions",
+    "operationId": "list_executions_api_platform_executions_get",
+    "parameters": [
+     {
+      "name": "plan_id",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Plan Id"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 200,
+       "minimum": 1,
+       "default": 50,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "offset",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "minimum": 0,
+       "default": 0,
+       "title": "Offset"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/ExecutionOut"
+         },
+         "title": "Response List Executions Api Platform Executions Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/executions/{execution_id}": {
+   "get": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "Get Execution",
+    "operationId": "get_execution_api_platform_executions__execution_id__get",
+    "parameters": [
+     {
+      "name": "execution_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Execution Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ExecutionOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/executions/{execution_id}/report": {
+   "get": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "Execution Report",
+    "operationId": "execution_report_api_platform_executions__execution_id__report_get",
+    "parameters": [
+     {
+      "name": "execution_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Execution Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "text/html": {
+        "schema": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/defects": {
+   "get": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "List Defects",
+    "operationId": "list_defects_api_platform_defects_get",
+    "parameters": [
+     {
+      "name": "project_id",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Project Id"
+      }
+     },
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 500,
+       "minimum": 1,
+       "default": 100,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "offset",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "minimum": 0,
+       "default": 0,
+       "title": "Offset"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/DefectOut"
+         },
+         "title": "Response List Defects Api Platform Defects Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "Create Defect",
+    "operationId": "create_defect_api_platform_defects_post",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/DefectCreate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/DefectOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/defects/{defect_id}": {
+   "patch": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "Update Defect",
+    "operationId": "update_defect_api_platform_defects__defect_id__patch",
+    "parameters": [
+     {
+      "name": "defect_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Defect Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/DefectUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/DefectOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/import/minipytest": {
+   "post": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "Import Minipytest",
+    "operationId": "import_minipytest_api_platform_import_minipytest_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ImportRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ExecutionOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/seed": {
+   "post": {
+    "tags": [
+     "platform"
+    ],
+    "summary": "Seed Demo",
+    "operationId": "seed_demo_api_platform_seed_post",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SummaryOut"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/models": {
+   "get": {
+    "tags": [
+     "models"
+    ],
+    "summary": "List Models",
+    "operationId": "list_models_api_platform_models_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/ModelConfigOut"
+         },
+         "type": "array",
+         "title": "Response List Models Api Platform Models Get"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "models"
+    ],
+    "summary": "Create Model",
+    "operationId": "create_model_api_platform_models_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ModelConfigCreate"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ModelConfigOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/models/{model_id}": {
+   "patch": {
+    "tags": [
+     "models"
+    ],
+    "summary": "Update Model",
+    "operationId": "update_model_api_platform_models__model_id__patch",
+    "parameters": [
+     {
+      "name": "model_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Model Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/ModelConfigUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ModelConfigOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/models/{model_id}/test": {
+   "post": {
+    "tags": [
+     "models"
+    ],
+    "summary": "Test Model",
+    "operationId": "test_model_api_platform_models__model_id__test_post",
+    "parameters": [
+     {
+      "name": "model_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Model Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/ModelTestResult"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/platform/model-calls": {
+   "get": {
+    "tags": [
+     "models"
+    ],
+    "summary": "List Model Calls",
+    "operationId": "list_model_calls_api_platform_model_calls_get",
+    "parameters": [
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 200,
+       "minimum": 1,
+       "default": 20,
+       "title": "Limit"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/LLMCallOut"
+         },
+         "title": "Response List Model Calls Api Platform Model Calls Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/health": {
+   "get": {
+    "summary": "Health",
+    "operationId": "health_health_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "title": "Response Health Health Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/ready": {
+   "get": {
+    "summary": "Ready",
+    "operationId": "ready_ready_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "title": "Response Ready Ready Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/auth/verify": {
+   "post": {
+    "summary": "Verify Api Key",
+    "description": "Return 200 only when the supplied key passes the auth guard.\n\nThe UI calls this right after saving a key so a typo is reported as a\nwrong key instead of surfacing later as a failed write.",
+    "operationId": "verify_api_key_api_auth_verify_post",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "title": "Response Verify Api Key Api Auth Verify Post"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/tickets": {
+   "get": {
+    "summary": "List Tickets",
+    "operationId": "list_tickets_api_tickets_get",
+    "parameters": [
+     {
+      "name": "limit",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "default": 100,
+       "title": "Limit"
+      }
+     },
+     {
+      "name": "offset",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "default": 0,
+       "title": "Offset"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/TicketOut"
+         },
+         "title": "Response List Tickets Api Tickets Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "summary": "Create Ticket",
+    "operationId": "create_ticket_api_tickets_post",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TicketCreate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TicketOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/tickets/{ticket_id}": {
+   "get": {
+    "summary": "Get Ticket",
+    "operationId": "get_ticket_api_tickets__ticket_id__get",
+    "parameters": [
+     {
+      "name": "ticket_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ticket Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TicketOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "patch": {
+    "summary": "Update Ticket",
+    "operationId": "update_ticket_api_tickets__ticket_id__patch",
+    "parameters": [
+     {
+      "name": "ticket_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ticket Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/TicketUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/TicketOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "summary": "Delete Ticket",
+    "operationId": "delete_ticket_api_tickets__ticket_id__delete",
+    "parameters": [
+     {
+      "name": "ticket_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Ticket Id"
+      }
+     }
+    ],
+    "responses": {
+     "204": {
+      "description": "Successful Response"
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/kb/query": {
+   "post": {
+    "summary": "Query Knowledge Base",
+    "operationId": "query_knowledge_base_api_kb_query_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/KBQuery"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "title": "Response Query Knowledge Base Api Kb Query Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "Assertion": {
+    "properties": {
+     "type": {
+      "type": "string",
+      "enum": [
+       "status",
+       "max_ms",
+       "body_contains",
+       "json_path_exists",
+       "json_path_equals"
+      ],
+      "title": "Type"
+     },
+     "path": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Path"
+     },
+     "expected": {
+      "title": "Expected"
+     }
+    },
+    "type": "object",
+    "required": [
+     "type"
+    ],
+    "title": "Assertion"
+   },
+   "CaseCreate": {
+    "properties": {
+     "project_id": {
+      "type": "integer",
+      "title": "Project Id"
+     },
+     "title": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Title"
+     },
+     "module": {
+      "type": "string",
+      "title": "Module",
+      "default": "api"
+     },
+     "priority": {
+      "type": "string",
+      "enum": [
+       "low",
+       "medium",
+       "high"
+      ],
+      "title": "Priority",
+      "default": "medium"
+     },
+     "steps": {
+      "type": "string",
+      "title": "Steps",
+      "default": ""
+     },
+     "expected": {
+      "type": "string",
+      "title": "Expected",
+      "default": ""
+     },
+     "steps_json": {
+      "type": "string",
+      "title": "Steps Json",
+      "default": "[]"
+     }
+    },
+    "type": "object",
+    "required": [
+     "project_id",
+     "title"
+    ],
+    "title": "CaseCreate"
+   },
+   "CaseOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "project_id": {
+      "type": "integer",
+      "title": "Project Id"
+     },
+     "title": {
+      "type": "string",
+      "title": "Title"
+     },
+     "module": {
+      "type": "string",
+      "title": "Module"
+     },
+     "priority": {
+      "type": "string",
+      "title": "Priority"
+     },
+     "steps": {
+      "type": "string",
+      "title": "Steps"
+     },
+     "expected": {
+      "type": "string",
+      "title": "Expected"
+     },
+     "status": {
+      "type": "string",
+      "title": "Status"
+     },
+     "source": {
+      "type": "string",
+      "title": "Source"
+     },
+     "prompt_version": {
+      "type": "string",
+      "title": "Prompt Version"
+     },
+     "steps_json": {
+      "type": "string",
+      "title": "Steps Json"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "project_id",
+     "title",
+     "module",
+     "priority",
+     "steps",
+     "expected",
+     "status",
+     "source",
+     "prompt_version",
+     "steps_json"
+    ],
+    "title": "CaseOut"
+   },
+   "CaseReviewCreate": {
+    "properties": {
+     "decision": {
+      "type": "string",
+      "enum": [
+       "approved",
+       "rejected"
+      ],
+      "title": "Decision"
+     },
+     "reviewer": {
+      "type": "string",
+      "title": "Reviewer",
+      "default": "local"
+     },
+     "comment": {
+      "type": "string",
+      "title": "Comment",
+      "default": ""
+     }
+    },
+    "type": "object",
+    "required": [
+     "decision"
+    ],
+    "title": "CaseReviewCreate"
+   },
+   "CaseReviewOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "case_id": {
+      "type": "integer",
+      "title": "Case Id"
+     },
+     "reviewer": {
+      "type": "string",
+      "title": "Reviewer"
+     },
+     "decision": {
+      "type": "string",
+      "title": "Decision"
+     },
+     "comment": {
+      "type": "string",
+      "title": "Comment"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "case_id",
+     "reviewer",
+     "decision",
+     "comment",
+     "created_at"
+    ],
+    "title": "CaseReviewOut"
+   },
+   "DefectCreate": {
+    "properties": {
+     "project_id": {
+      "type": "integer",
+      "title": "Project Id"
+     },
+     "title": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Title"
+     },
+     "severity": {
+      "type": "string",
+      "enum": [
+       "low",
+       "medium",
+       "high",
+       "critical"
+      ],
+      "title": "Severity",
+      "default": "medium"
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "open",
+       "fixed",
+       "closed"
+      ],
+      "title": "Status",
+      "default": "open"
+     },
+     "execution_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Execution Id"
+     },
+     "case_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Case Id"
+     }
+    },
+    "type": "object",
+    "required": [
+     "project_id",
+     "title"
+    ],
+    "title": "DefectCreate"
+   },
+   "DefectOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "project_id": {
+      "type": "integer",
+      "title": "Project Id"
+     },
+     "execution_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Execution Id"
+     },
+     "case_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Case Id"
+     },
+     "title": {
+      "type": "string",
+      "title": "Title"
+     },
+     "severity": {
+      "type": "string",
+      "title": "Severity"
+     },
+     "status": {
+      "type": "string",
+      "title": "Status"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "project_id",
+     "execution_id",
+     "case_id",
+     "title",
+     "severity",
+     "status",
+     "created_at"
+    ],
+    "title": "DefectOut"
+   },
+   "DefectUpdate": {
+    "properties": {
+     "status": {
+      "type": "string",
+      "enum": [
+       "open",
+       "fixed",
+       "closed"
+      ],
+      "title": "Status"
+     }
+    },
+    "type": "object",
+    "required": [
+     "status"
+    ],
+    "title": "DefectUpdate"
+   },
+   "ExecutePlanRequest": {
+    "properties": {
+     "case_ids": {
+      "anyOf": [
+       {
+        "items": {
+         "type": "integer"
+        },
+        "type": "array"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Case Ids"
+     },
+     "base_url": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Base Url"
+     }
+    },
+    "type": "object",
+    "title": "ExecutePlanRequest"
+   },
+   "ExecutionCreate": {
+    "properties": {
+     "results": {
+      "items": {
+       "$ref": "#/components/schemas/ResultIn"
+      },
+      "type": "array",
+      "title": "Results"
+     }
+    },
+    "type": "object",
+    "required": [
+     "results"
+    ],
+    "title": "ExecutionCreate"
+   },
+   "ExecutionOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "plan_id": {
+      "type": "integer",
+      "title": "Plan Id"
+     },
+     "status": {
+      "type": "string",
+      "title": "Status"
+     },
+     "total": {
+      "type": "integer",
+      "title": "Total"
+     },
+     "passed": {
+      "type": "integer",
+      "title": "Passed"
+     },
+     "failed": {
+      "type": "integer",
+      "title": "Failed"
+     },
+     "skipped": {
+      "type": "integer",
+      "title": "Skipped"
+     },
+     "duration_ms": {
+      "type": "integer",
+      "title": "Duration Ms"
+     },
+     "started_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Started At"
+     },
+     "results": {
+      "items": {
+       "$ref": "#/components/schemas/ResultOut"
+      },
+      "type": "array",
+      "title": "Results",
+      "default": []
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "plan_id",
+     "status",
+     "total",
+     "passed",
+     "failed",
+     "skipped",
+     "duration_ms",
+     "started_at"
+    ],
+    "title": "ExecutionOut"
+   },
+   "GenerateCasesRequest": {
+    "properties": {
+     "project_id": {
+      "type": "integer",
+      "title": "Project Id"
+     },
+     "requirement": {
+      "type": "string",
+      "maxLength": 8000,
+      "minLength": 10,
+      "title": "Requirement"
+     },
+     "model_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Model Id"
+     },
+     "max_cases": {
+      "type": "integer",
+      "maximum": 20.0,
+      "minimum": 1.0,
+      "title": "Max Cases",
+      "default": 5
+     }
+    },
+    "type": "object",
+    "required": [
+     "project_id",
+     "requirement"
+    ],
+    "title": "GenerateCasesRequest"
+   },
+   "GeneratedCasesOut": {
+    "properties": {
+     "model_name": {
+      "type": "string",
+      "title": "Model Name"
+     },
+     "prompt_version": {
+      "type": "string",
+      "title": "Prompt Version"
+     },
+     "cases": {
+      "items": {
+       "$ref": "#/components/schemas/CaseOut"
+      },
+      "type": "array",
+      "title": "Cases"
+     }
+    },
+    "type": "object",
+    "required": [
+     "model_name",
+     "prompt_version",
+     "cases"
+    ],
+    "title": "GeneratedCasesOut"
+   },
+   "HTTPValidationError": {
+    "properties": {
+     "detail": {
+      "items": {
+       "$ref": "#/components/schemas/ValidationError"
+      },
+      "type": "array",
+      "title": "Detail"
+     }
+    },
+    "type": "object",
+    "title": "HTTPValidationError"
+   },
+   "ImportRequest": {
+    "properties": {
+     "plan_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Plan Id"
+     },
+     "report": {
+      "type": "object",
+      "title": "Report"
+     }
+    },
+    "type": "object",
+    "required": [
+     "report"
+    ],
+    "title": "ImportRequest"
+   },
+   "KBQuery": {
+    "properties": {
+     "question": {
+      "type": "string",
+      "maxLength": 1000,
+      "minLength": 1,
+      "title": "Question"
+     },
+     "top_k": {
+      "type": "integer",
+      "maximum": 10.0,
+      "minimum": 1.0,
+      "title": "Top K",
+      "default": 3
+     }
+    },
+    "type": "object",
+    "required": [
+     "question"
+    ],
+    "title": "KBQuery"
+   },
+   "LLMCallOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "model_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Model Id"
+     },
+     "model_name": {
+      "type": "string",
+      "title": "Model Name"
+     },
+     "purpose": {
+      "type": "string",
+      "title": "Purpose"
+     },
+     "prompt_version": {
+      "type": "string",
+      "title": "Prompt Version"
+     },
+     "duration_ms": {
+      "type": "integer",
+      "title": "Duration Ms"
+     },
+     "prompt_tokens": {
+      "type": "integer",
+      "title": "Prompt Tokens"
+     },
+     "completion_tokens": {
+      "type": "integer",
+      "title": "Completion Tokens"
+     },
+     "status": {
+      "type": "string",
+      "title": "Status"
+     },
+     "error": {
+      "type": "string",
+      "title": "Error"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "model_id",
+     "model_name",
+     "purpose",
+     "prompt_version",
+     "duration_ms",
+     "prompt_tokens",
+     "completion_tokens",
+     "status",
+     "error",
+     "created_at"
+    ],
+    "title": "LLMCallOut"
+   },
+   "ModelConfigCreate": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "maxLength": 80,
+      "minLength": 1,
+      "title": "Name"
+     },
+     "provider": {
+      "type": "string",
+      "title": "Provider",
+      "default": "deepseek"
+     },
+     "base_url": {
+      "type": "string",
+      "title": "Base Url",
+      "default": "https://api.deepseek.com"
+     },
+     "model_name": {
+      "type": "string",
+      "title": "Model Name",
+      "default": "deepseek-chat"
+     },
+     "enabled": {
+      "type": "boolean",
+      "title": "Enabled",
+      "default": true
+     }
+    },
+    "type": "object",
+    "required": [
+     "name"
+    ],
+    "title": "ModelConfigCreate"
+   },
+   "ModelConfigOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "provider": {
+      "type": "string",
+      "title": "Provider"
+     },
+     "base_url": {
+      "type": "string",
+      "title": "Base Url"
+     },
+     "model_name": {
+      "type": "string",
+      "title": "Model Name"
+     },
+     "enabled": {
+      "type": "boolean",
+      "title": "Enabled"
+     },
+     "has_api_key": {
+      "type": "boolean",
+      "title": "Has Api Key"
+     },
+     "api_key_masked": {
+      "type": "string",
+      "title": "Api Key Masked"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "name",
+     "provider",
+     "base_url",
+     "model_name",
+     "enabled",
+     "has_api_key",
+     "api_key_masked",
+     "created_at"
+    ],
+    "title": "ModelConfigOut"
+   },
+   "ModelConfigUpdate": {
+    "properties": {
+     "name": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 80,
+        "minLength": 1
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Name"
+     },
+     "provider": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Provider"
+     },
+     "base_url": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Base Url"
+     },
+     "model_name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Model Name"
+     },
+     "enabled": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Enabled"
+     }
+    },
+    "type": "object",
+    "title": "ModelConfigUpdate"
+   },
+   "ModelTestResult": {
+    "properties": {
+     "ok": {
+      "type": "boolean",
+      "title": "Ok"
+     },
+     "latency_ms": {
+      "type": "integer",
+      "title": "Latency Ms"
+     },
+     "message": {
+      "type": "string",
+      "title": "Message"
+     }
+    },
+    "type": "object",
+    "required": [
+     "ok",
+     "latency_ms",
+     "message"
+    ],
+    "title": "ModelTestResult"
+   },
+   "PlanCreate": {
+    "properties": {
+     "project_id": {
+      "type": "integer",
+      "title": "Project Id"
+     },
+     "name": {
+      "type": "string",
+      "maxLength": 160,
+      "minLength": 1,
+      "title": "Name"
+     }
+    },
+    "type": "object",
+    "required": [
+     "project_id",
+     "name"
+    ],
+    "title": "PlanCreate"
+   },
+   "PlanOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "project_id": {
+      "type": "integer",
+      "title": "Project Id"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "status": {
+      "type": "string",
+      "title": "Status"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "project_id",
+     "name",
+     "status",
+     "created_at"
+    ],
+    "title": "PlanOut"
+   },
+   "ProjectCreate": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "maxLength": 120,
+      "minLength": 1,
+      "title": "Name"
+     },
+     "description": {
+      "type": "string",
+      "title": "Description",
+      "default": ""
+     }
+    },
+    "type": "object",
+    "required": [
+     "name"
+    ],
+    "title": "ProjectCreate"
+   },
+   "ProjectOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "description": {
+      "type": "string",
+      "title": "Description"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "name",
+     "description",
+     "created_at"
+    ],
+    "title": "ProjectOut"
+   },
+   "ResultIn": {
+    "properties": {
+     "case_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Case Id"
+     },
+     "case_name": {
+      "type": "string",
+      "title": "Case Name",
+      "default": ""
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "passed",
+       "failed",
+       "error",
+       "skipped",
+       "xfailed",
+       "xpassed"
+      ],
+      "title": "Status"
+     },
+     "duration_ms": {
+      "type": "integer",
+      "title": "Duration Ms",
+      "default": 0
+     },
+     "message": {
+      "type": "string",
+      "title": "Message",
+      "default": ""
+     }
+    },
+    "type": "object",
+    "required": [
+     "status"
+    ],
+    "title": "ResultIn"
+   },
+   "ResultOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "execution_id": {
+      "type": "integer",
+      "title": "Execution Id"
+     },
+     "case_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Case Id"
+     },
+     "case_name": {
+      "type": "string",
+      "title": "Case Name"
+     },
+     "status": {
+      "type": "string",
+      "title": "Status"
+     },
+     "duration_ms": {
+      "type": "integer",
+      "title": "Duration Ms"
+     },
+     "message": {
+      "type": "string",
+      "title": "Message"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "execution_id",
+     "case_id",
+     "case_name",
+     "status",
+     "duration_ms",
+     "message"
+    ],
+    "title": "ResultOut"
+   },
+   "RunPayload": {
+    "properties": {
+     "requests": {
+      "items": {
+       "$ref": "#/components/schemas/WorkbenchRequest"
+      },
+      "type": "array",
+      "maxItems": 10,
+      "minItems": 1,
+      "title": "Requests"
+     }
+    },
+    "type": "object",
+    "required": [
+     "requests"
+    ],
+    "title": "RunPayload"
+   },
+   "SummaryOut": {
+    "properties": {
+     "projects": {
+      "type": "integer",
+      "title": "Projects"
+     },
+     "cases": {
+      "type": "integer",
+      "title": "Cases"
+     },
+     "plans": {
+      "type": "integer",
+      "title": "Plans"
+     },
+     "executions": {
+      "type": "integer",
+      "title": "Executions"
+     },
+     "defects": {
+      "type": "integer",
+      "title": "Defects"
+     },
+     "open_defects": {
+      "type": "integer",
+      "title": "Open Defects"
+     },
+     "pass_rate": {
+      "type": "number",
+      "title": "Pass Rate"
+     }
+    },
+    "type": "object",
+    "required": [
+     "projects",
+     "cases",
+     "plans",
+     "executions",
+     "defects",
+     "open_defects",
+     "pass_rate"
+    ],
+    "title": "SummaryOut"
+   },
+   "TicketCreate": {
+    "properties": {
+     "title": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Title"
+     },
+     "description": {
+      "type": "string",
+      "maxLength": 5000,
+      "title": "Description",
+      "default": ""
+     },
+     "priority": {
+      "type": "string",
+      "enum": [
+       "low",
+       "medium",
+       "high"
+      ],
+      "title": "Priority",
+      "default": "medium"
+     }
+    },
+    "type": "object",
+    "required": [
+     "title"
+    ],
+    "title": "TicketCreate"
+   },
+   "TicketOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "title": {
+      "type": "string",
+      "title": "Title"
+     },
+     "description": {
+      "type": "string",
+      "title": "Description"
+     },
+     "status": {
+      "type": "string",
+      "enum": [
+       "open",
+       "in_progress",
+       "closed"
+      ],
+      "title": "Status"
+     },
+     "priority": {
+      "type": "string",
+      "enum": [
+       "low",
+       "medium",
+       "high"
+      ],
+      "title": "Priority"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "title",
+     "description",
+     "status",
+     "priority",
+     "created_at"
+    ],
+    "title": "TicketOut"
+   },
+   "TicketUpdate": {
+    "properties": {
+     "title": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 200,
+        "minLength": 1
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Title"
+     },
+     "description": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 5000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Description"
+     },
+     "status": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "open",
+         "in_progress",
+         "closed"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Status"
+     },
+     "priority": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "low",
+         "medium",
+         "high"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Priority"
+     }
+    },
+    "type": "object",
+    "title": "TicketUpdate"
+   },
+   "ValidationError": {
+    "properties": {
+     "loc": {
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "integer"
+        }
+       ]
+      },
+      "type": "array",
+      "title": "Location"
+     },
+     "msg": {
+      "type": "string",
+      "title": "Message"
+     },
+     "type": {
+      "type": "string",
+      "title": "Error Type"
+     }
+    },
+    "type": "object",
+    "required": [
+     "loc",
+     "msg",
+     "type"
+    ],
+    "title": "ValidationError"
+   },
+   "WorkbenchRequest": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "title": "Name",
+      "default": "request"
+     },
+     "method": {
+      "type": "string",
+      "title": "Method",
+      "default": "GET"
+     },
+     "url": {
+      "type": "string",
+      "title": "Url"
+     },
+     "headers": {
+      "additionalProperties": {
+       "type": "string"
+      },
+      "type": "object",
+      "title": "Headers"
+     },
+     "body": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Body"
+     },
+     "timeout_ms": {
+      "type": "integer",
+      "maximum": 10000.0,
+      "minimum": 100.0,
+      "title": "Timeout Ms",
+      "default": 10000
+     },
+     "assertions": {
+      "items": {
+       "$ref": "#/components/schemas/Assertion"
+      },
+      "type": "array",
+      "title": "Assertions"
+     }
+    },
+    "type": "object",
+    "required": [
+     "url"
+    ],
+    "title": "WorkbenchRequest"
+   },
+   "WorkbenchResult": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "passed": {
+      "type": "boolean",
+      "title": "Passed"
+     },
+     "status": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Status"
+     },
+     "elapsed_ms": {
+      "type": "integer",
+      "title": "Elapsed Ms"
+     },
+     "size": {
+      "type": "integer",
+      "title": "Size"
+     },
+     "failures": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Failures"
+     },
+     "body_preview": {
+      "type": "string",
+      "title": "Body Preview"
+     }
+    },
+    "type": "object",
+    "required": [
+     "name",
+     "passed",
+     "status",
+     "elapsed_ms",
+     "size",
+     "failures",
+     "body_preview"
+    ],
+    "title": "WorkbenchResult"
+   }
+  }
+ }
+}

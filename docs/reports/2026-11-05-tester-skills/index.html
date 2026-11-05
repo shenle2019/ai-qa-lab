@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2026-11-05 · tester-skills 应用存档 · ai-qa-lab</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { font: 15px/1.75 -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif; max-width: 920px; margin: 0 auto; padding: 40px 20px 80px; color: #1c2430; background: #f6f7f9; }
+  h1 { font-size: 28px; margin: 0 0 6px; }
+  .sub { color: #66707d; margin: 0 0 28px; }
+  h2 { font-size: 19px; margin: 34px 0 12px; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 22px 0; }
+  .kpi { background: #fff; border: 1px solid #e3e6ea; border-radius: 10px; padding: 14px 16px; }
+  .kpi b { display: block; font-size: 26px; }
+  .kpi span { color: #66707d; font-size: 13px; }
+  table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #e3e6ea; border-radius: 10px; overflow: hidden; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #eceff2; font-size: 14px; }
+  th { background: #f1f3f6; font-weight: 600; }
+  tr:last-child td { border-bottom: 0; }
+  .ok { color: #1f7a46; font-weight: 600; }
+  .warn { color: #9a6700; font-weight: 600; }
+  .bad { color: #a33a2f; font-weight: 600; }
+  ul { padding-left: 20px; }
+  a { color: #2458b3; }
+  .note { color: #66707d; font-size: 13px; margin-top: 24px; }
+  @media (prefers-color-scheme: dark) {
+    body { color: #d9dde3; background: #12161c; }
+    .kpi, table { background: #1a2028; border-color: #2a323c; }
+    th { background: #212933; }
+    td, th { border-bottom-color: #2a323c; }
+    .sub, .kpi span, .note { color: #8d98a6; }
+    a { color: #7aa8ff; }
+  }
+</style>
+</head>
+<body>
+  <h1>2026-11-05 · tester-skills 应用存档</h1>
+  <p class="sub">用 <a href="https://github.com/SeaZhusp/tester-skills">SeaZhusp/tester-skills</a> 对 ai-qa-lab 做接口自动化测试的快照。被测：<a href="https://ai-qa-lab-production.up.railway.app/ui/#/">线上 SUT</a>。</p>
+
+  <div class="kpis">
+    <div class="kpi"><b>39</b><span>接口操作</span></div>
+    <div class="kpi"><b>35</b><span>自动生成用例</span></div>
+    <div class="kpi"><b>29</b><span>修正版执行用例</span></div>
+    <div class="kpi"><b>100%</b><span>最终通过率</span></div>
+  </div>
+
+  <h2>Skills 应用情况</h2>
+  <table>
+    <thead><tr><th>Skill</th><th>应用情况</th><th>结论</th></tr></thead>
+    <tbody>
+      <tr><td>api-testcase-generator</td><td>OpenAPI（39 接口）→ 35 条用例（Excel + Pytest）</td><td class="ok">已应用</td></tr>
+      <tr><td>defect-report-generator</td><td>执行结果 CSV → 自包含 HTML 报告</td><td class="ok">已应用</td></tr>
+      <tr><td>docx</td><td>生成 Word 版最终测试报告</td><td class="ok">已应用</td></tr>
+      <tr><td>api-index-sync-apifoxmcp</td><td>依赖 Apifox MCP + 内部 knowledge-base</td><td class="warn">未适用</td></tr>
+      <tr><td>api-script-gen-with-apifoxmcp</td><td>依赖 Apifox MCP + api-auto-test 框架</td><td class="warn">未适用</td></tr>
+      <tr><td>fireworks-tech-graph</td><td>仓库该目录仅含 LICENSE，缺 SKILL.md</td><td class="bad">不可用</td></tr>
+    </tbody>
+  </table>
+
+  <h2>三轮执行</h2>
+  <table>
+    <thead><tr><th>轮次</th><th>用例</th><th>通过</th><th>失败</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>35</td><td>7</td><td>28</td><td>未带认证，401 为主</td></tr>
+      <tr><td>2</td><td>35</td><td>7</td><td>28</td><td>补 APP_API_KEY 后 401 消失，422 仍在</td></tr>
+      <tr><td>3</td><td>29</td><td>29</td><td>0</td><td>修正版：真实 ID + 合法请求体 + 认证头</td></tr>
+    </tbody>
+  </table>
+
+  <h2>产物</h2>
+  <ul>
+    <li><a href="artifacts/defect-report.html">defect-report.html</a> — 完整 HTML 报告</li>
+    <li><a href="artifacts/final-test-report.docx">final-test-report.docx</a> — Word 报告</li>
+    <li><a href="artifacts/testcases.xlsx">testcases.xlsx</a> — 生成的用例表</li>
+    <li><a href="artifacts/junit-results.xml">junit-results.xml</a> · <a href="artifacts/qa-results.csv">qa-results.csv</a> — 结构化结果</li>
+    <li><a href="artifacts/openapi.json">openapi.json</a> — SUT 接口定义</li>
+    <li><a href="artifacts/test_aiqa_api.py">test_aiqa_api.py</a> — 修正版可复跑脚本</li>
+    <li><a href="report.md">report.md</a> · <a href="metrics.json">metrics.json</a></li>
+  </ul>
+
+  <h2>生成器缺陷</h2>
+  <ul>
+    <li>函数名含连字符（如 <code>test_platform_model-calls_get</code>）→ Python 语法错误；</li>
+    <li>路径参数是 <code>&lt;id&gt;</code> 占位符；</li>
+    <li>请求体为空 <code>{}</code>，缺 <code>title</code> / <code>name</code> / <code>project_id</code> 等必填字段。</li>
+  </ul>
+
+  <p class="note">生产环境特殊规则已单独断言：<code>/api/platform/plans/{id}/run</code> 返回 410（生产禁用客户端上报），真实执行走 <code>/execute</code>（202）。</p>
+</body>
+</html>

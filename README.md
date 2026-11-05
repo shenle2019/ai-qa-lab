@@ -96,6 +96,7 @@ cd ../../..
 - **Learning guide (beginner-friendly): https://shenle2019.github.io/ai-qa-lab/learning/**
 - Latest report: https://shenle2019.github.io/ai-qa-lab/
 - Archive index: https://shenle2019.github.io/ai-qa-lab/reports/
+- **2026-11-05 tester-skills snapshot: https://shenle2019.github.io/ai-qa-lab/reports/2026-11-05-tester-skills/** — SeaZhusp/tester-skills 对 SUT 的接口自动化测试（39 接口 → 35 条生成用例；修正版 29/29 通过）
 - Rule: daily logs live in `docs/progress/`; milestone reports are immutable snapshots in `docs/reports/YYYY-MM-DD-vX.Y.Z/` (see `docs/reports/README.md`).
 - Create a snapshot:
 

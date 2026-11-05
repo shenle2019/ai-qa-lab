@@ -1,0 +1,22 @@
+{
+  "version": "2026-11-05-tester-skills",
+  "date": "2026-11-05",
+  "title": "tester-skills 应用存档",
+  "target": "https://ai-qa-lab-production.up.railway.app",
+  "source_repo": "https://github.com/shenle2019/ai-qa-lab",
+  "skills_repo": "https://github.com/SeaZhusp/tester-skills",
+  "api_endpoints": 39,
+  "generated_cases": 35,
+  "executed_cases": 29,
+  "passed": 29,
+  "failed": 0,
+  "pass_rate": 1.0,
+  "rounds": [
+    { "round": 1, "cases": 35, "passed": 7, "failed": 28, "note": "no auth" },
+    { "round": 2, "cases": 35, "passed": 7, "failed": 28, "note": "auth added, 422 remains" },
+    { "round": 3, "cases": 29, "passed": 29, "failed": 0, "note": "corrected suite" }
+  ],
+  "skills_applied": ["api-testcase-generator", "defect-report-generator", "docx"],
+  "skills_not_applicable": ["api-index-sync-apifoxmcp", "api-script-gen-with-apifoxmcp"],
+  "skills_unavailable": ["fireworks-tech-graph"]
+}

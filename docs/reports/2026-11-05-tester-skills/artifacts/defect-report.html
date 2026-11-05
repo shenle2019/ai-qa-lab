@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ai-qa-lab 接口自动化测试报告（修正版）</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+         color:#1f2937; background:#f4f6fb; line-height:1.6; }
+  .wrap { max-width: 1080px; margin:0 auto; padding:32px 24px 64px; }
+  header.top { background: linear-gradient(135deg,#1e3a8a,#2563eb); color:#fff; border-radius:16px;
+         padding:28px 32px; box-shadow:0 8px 24px rgba(30,58,138,.25); }
+  header.top h1 { margin:0 0 6px; font-size:26px; letter-spacing:.5px; }
+  header.top .sub { opacity:.9; font-size:14px; }
+  header.top .meta { margin-top:14px; display:flex; flex-wrap:wrap; gap:10px 26px; font-size:13px; }
+  header.top .meta span b { font-weight:600; }
+  .cards { display:grid; grid-template-columns:repeat(5,1fr); gap:14px; margin:24px 0; }
+  .card { background:#fff; border-radius:12px; padding:18px 16px; box-shadow:0 2px 10px rgba(0,0,0,.05);
+          border:1px solid #eef1f6; text-align:center; }
+  .card .num { font-size:30px; font-weight:700; }
+  .card .lbl { font-size:13px; color:#6b7280; margin-top:4px; }
+  .card.c1 .num { color:#2563eb; } .card.c2 .num { color:#22a06b; }
+  .card.c3 .num { color:#9ca3af; } .card.c4 .num { color:#f59e0b; }
+  .card.c5 .num { color:#ef4444; }
+  section { background:#fff; border-radius:14px; padding:24px 26px; margin:20px 0;
+            box-shadow:0 2px 10px rgba(0,0,0,.05); border:1px solid #eef1f6; }
+  section h2 { font-size:18px; margin:0 0 16px; padding-left:12px; border-left:4px solid #2563eb; }
+  .grid2 { display:grid; grid-template-columns: 280px 1fr; gap:24px; align-items:center; }
+  .donut { text-align:center; }
+  .donut svg { width:220px; height:220px; }
+  .donut .center { font-size:13px; fill:#374151; }
+  .legend { display:flex; flex-direction:column; gap:8px; }
+  .legend-item { display:flex; align-items:center; gap:8px; font-size:14px; }
+  .dot { width:12px; height:12px; border-radius:3px; display:inline-block; }
+  .legend-item b { min-width:28px; text-align:right; }
+  .lp { color:#9ca3af; font-size:12px; }
+  .bar-row { display:flex; align-items:center; margin:7px 0; font-size:13px; }
+  .bar-label { width:100px; flex:none; text-align:right; padding-right:10px; color:#374151;
+               overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .bar-track { flex:1; background:#f1f5f9; border-radius:6px; position:relative; height:22px; }
+  .bar-fill { height:22px; border-radius:6px; min-width:2px; max-width:100%; }
+  .bar-val { position:absolute; right:8px; top:0; line-height:22px; font-size:12px; color:#334155; font-weight:600; }
+  table { width:100%; border-collapse:collapse; font-size:13px; margin-top:4px; }
+  th, td { padding:9px 10px; border-bottom:1px solid #eef1f6; text-align:center; }
+  th { background:#f8fafc; color:#475569; font-weight:600; }
+  td.t-left, th.t-left { text-align:left; }
+  .mod-name { text-align:left; font-weight:600; color:#334155; white-space:nowrap; }
+  .title-cell { text-align:left; max-width:360px; }
+  .st { font-weight:600; }
+  .st-已验收 { color:#22a06b; } .st-已拒绝 { color:#9ca3af; } .st-已修复 { color:#3b82f6; }
+  .st-修复中 { color:#f59e0b; } .st-待确认 { color:#a855f7; } .st-其他 { color:#64748b; }
+  .badge-ok { color:#22a06b; font-size:12px; } .badge-open { color:#ef4444; font-size:12px; font-weight:600; }
+  .pill { color:#fff; padding:2px 10px; border-radius:20px; font-size:12px; }
+  .over { color:#ef4444; font-weight:600; }
+  .note { background:#fffbeb; border:1px solid #fde68a; border-radius:10px; padding:14px 18px;
+          font-size:13px; color:#92400e; }
+  .concl li { margin:6px 0; }
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  footer { text-align:center; color:#9ca3af; font-size:12px; margin-top:30px; }
+  @media (max-width:760px) { .cards{grid-template-columns:repeat(2,1fr);} .grid2{grid-template-columns:1fr;}
+          .two-col{grid-template-columns:1fr;} }
+</style></head>
+<body><div class="wrap">
+
+<header class="top">
+  <h1>ai-qa-lab 接口自动化测试报告（修正版）</h1>
+  <div class="sub">基于缺陷/任务清单的测试质量分析</div>
+  <div class="meta"><span><b>项目：</b>ai-qa-lab (SUT v1.1.0)</span><span><b>测试周期：</b>2026-11-05</span><span><b>报告生成：</b>2026-11-05</span><span><b>缺陷总数：</b>29</span></div>
+</header>
+
+<div class="cards">
+  <div class="card c1"><div class="num">29</div><div class="lbl">缺陷总数</div></div>
+  <div class="card c2"><div class="num">29</div><div class="lbl">已验收关闭 (100.0%)</div></div>
+  <div class="card c3"><div class="num">0</div><div class="lbl">已拒绝 (0.0%)</div></div>
+  <div class="card c4"><div class="num">0</div><div class="lbl">未关闭 (0.0%)</div></div>
+  <div class="card c5"><div class="num">0</div><div class="lbl">逾期任务</div></div>
+</div>
+
+<section>
+  <h2>一、缺陷状态分布</h2>
+  <div class="grid2">
+    <div class="donut">
+      <svg viewBox="0 0 220 220">
+        <path d="M 110.00 10.00 A 100 100 0 1 1 110.00 10.00 L 110.00 48.00 A 62 62 0 1 0 110.00 48.00 Z" fill="#22a06b"></path>
+        <text x="110" y="104" text-anchor="middle" class="center" style="font-size:15px;font-weight:700">29</text>
+        <text x="110" y="124" text-anchor="middle" class="center" style="font-size:11px">缺陷总数</text>
+      </svg>
+    </div>
+    <div class="legend"><div class="legend-item"><span class="dot" style="background:#22a06b"></span>已验收 <b>29</b> <span class="lp">100.0%</span></div></div>
+  </div>
+  <div class="note" style="margin-top:18px">
+    解决进度：已验收(29) + 已拒绝(0) = <b>29</b> 项已处理完毕，
+    解决率 <b>100.0%</b>；其中经测试确认关闭率 <b>100.0%</b>。
+    仍有 <b>0</b> 项未关闭（已修复 0、修复中 0、待确认 0）。
+  </div>
+</section>
+
+<section>
+  <h2>二、缺陷模块分布</h2>
+  <p style="font-size:13px;color:#6b7280;margin-top:0">按功能模块统计缺陷数量（取数量最多的前 10 个模块，其余合并为"其他模块"）。</p>
+  <div class="bar-row"><div class="bar-label" title="test_aiqa_api">test_aiqa_api</div><div class="bar-track"><div class="bar-fill" style="width:100.0%;background:#3b82f6"></div><span class="bar-val">14</span></div></div>
+<div class="bar-row"><div class="bar-label" title="/api/platform/cases">/api/platform/cases</div><div class="bar-track"><div class="bar-fill" style="width:7.1%;background:#3b82f6"></div><span class="bar-val">1</span></div></div>
+<div class="bar-row"><div class="bar-label" title="/api/platform/defects">/api/platform/defects</div><div class="bar-track"><div class="bar-fill" style="width:7.1%;background:#3b82f6"></div><span class="bar-val">1</span></div></div>
+<div class="bar-row"><div class="bar-label" title="/api/platform/executions">/api/platform/executions</div><div class="bar-track"><div class="bar-fill" style="width:7.1%;background:#3b82f6"></div><span class="bar-val">1</span></div></div>
+<div class="bar-row"><div class="bar-label" title="/api/platform/executions/3">/api/platform/executions/3</div><div class="bar-track"><div class="bar-fill" style="width:7.1%;background:#3b82f6"></div><span class="bar-val">1</span></div></div>
+<div class="bar-row"><div class="bar-label" title="/api/platform/model-calls">/api/platform/model-calls</div><div class="bar-track"><div class="bar-fill" style="width:7.1%;background:#3b82f6"></div><span class="bar-val">1</span></div></div>
+<div class="bar-row"><div class="bar-label" title="/api/platform/models">/api/platform/models</div><div class="bar-track"><div class="bar-fill" style="width:7.1%;background:#3b82f6"></div><span class="bar-val">1</span></div></div>
+<div class="bar-row"><div class="bar-label" title="/api/platform/plans">/api/platform/plans</div><div class="bar-track"><div class="bar-fill" style="width:7.1%;background:#3b82f6"></div><span class="bar-val">1</span></div></div>
+<div class="bar-row"><div class="bar-label" title="/api/platform/plans/2">/api/platform/plans/2</div><div class="bar-track"><div class="bar-fill" style="width:7.1%;background:#3b82f6"></div><span class="bar-val">1</span></div></div>
+<div class="bar-row"><div class="bar-label" title="/api/platform/projects">/api/platform/projects</div><div class="bar-track"><div class="bar-fill" style="width:7.1%;background:#3b82f6"></div><span class="bar-val">1</span></div></div><div class="bar-row"><div class="bar-label">其他模块</div><div class="bar-track"><div class="bar-fill" style="width:42.9%;background:#cbd5e1"></div><span class="bar-val">6</span></div></div>
+</section>
+
+<section>
+  <h2>三、各模块状态明细</h2>
+  <table>
+    <thead><tr><th class="t-left">模块</th><th>总数</th><th>已验收</th><th>已拒绝</th><th>已修复</th><th>修复中</th><th>待确认</th><th>其他</th><th>清况</th></tr></thead>
+    <tbody><tr><td class="mod-name">test_aiqa_api</td><td>14</td><td class="st st-已验收">14</td><td class="st st-已拒绝">0</td><td class="st st-已修复">0</td><td class="st st-修复中">0</td><td class="st st-待确认">0</td><td class="st st-其他">0</td><td><span class="badge-ok">已清</span></td></tr><tr><td class="mod-name">/api/platform/cases</td><td>1</td><td class="st st-已验收">1</td><td class="st st-已拒绝">0</td><td class="st st-已修复">0</td><td class="st st-修复中">0</td><td class="st st-待确认">0</td><td class="st st-其他">0</td><td><span class="badge-ok">已清</span></td></tr><tr><td class="mod-name">/api/platform/defects</td><td>1</td><td class="st st-已验收">1</td><td class="st st-已拒绝">0</td><td class="st st-已修复">0</td><td class="st st-修复中">0</td><td class="st st-待确认">0</td><td class="st st-其他">0</td><td><span class="badge-ok">已清</span></td></tr><tr><td class="mod-name">/api/platform/executions</td><td>1</td><td class="st st-已验收">1</td><td class="st st-已拒绝">0</td><td class="st st-已修复">0</td><td class="st st-修复中">0</td><td class="st st-待确认">0</td><td class="st st-其他">0</td><td><span class="badge-ok">已清</span></td></tr><tr><td class="mod-name">/api/platform/executions/3</td><td>1</td><td class="st st-已验收">1</td><td class="st st-已拒绝">0</td><td class="st st-已修复">0</td><td class="st st-修复中">0</td><td class="st st-待确认">0</td><td class="st st-其他">0</td><td><span class="badge-ok">已清</span></td></tr><tr><td class="mod-name">/api/platform/model-calls</td><td>1</td><td class="st st-已验收">1</td><td class="st st-已拒绝">0</td><td class="st st-已修复">0</td><td class="st st-修复中">0</td><td class="st st-待确认">0</td><td class="st st-其他">0</td><td><span class="badge-ok">已清</span></td></tr><tr><td class="mod-name">/api/platform/models</td><td>1</td><td class="st st-已验收">1</td><td class="st st-已拒绝">0</td><td class="st st-已修复">0</td><td class="st st-修复中">0</td><td class="st st-待确认">0</td><td class="st st-其他">0</td><td><span class="badge-ok">已清</span></td></tr><tr><td class="mod-name">/api/platform/plans</td><td>1</td><td class="st st-已验收">1</td><td class="st st-已拒绝">0</td><td class="st st-已修复">0</td><td class="st st-修复中">0</td><td class="st st-待确认">0</td><td class="st st-其他">0</td><td><span class="badge-ok">已清</span></td></tr><tr><td class="mod-name">/api/platform/plans/2</td><td>1</td><td class="st st-已验收">1</td><td class="st st-已拒绝">0</td><td class="st st-已修复">0</td><td class="st st-修复中">0</td><td class="st st-待确认">0</td><td class="st st-其他">0</td><td><span class="badge-ok">已清</span></td></tr><tr><td class="mod-name">/api/platform/projects</td><td>1</td><td class="st st-已验收">1</td><td class="st st-已拒绝">0</td><td class="st st-已修复">0</td><td class="st st-修复中">0</td><td class="st st-待确认">0</td><td class="st st-其他">0</td><td><span class="badge-ok">已清</span></td></tr><tr><td class="mod-name">/api/platform/projects/5</td><td>1</td><td class="st st-已验收">1</td><td class="st st-已拒绝">0</td><td class="st st-已修复">0</td><td class="st st-修复中">0</td><td class="st st-待确认">0</td><td class="st st-其他">0</td><td><span class="badge-ok">已清</span></td></tr><tr><td class="mod-name">/api/platform/summary</td><td>1</td><td class="st st-已验收">1</td><td class="st st-已拒绝">0</td><td class="st st-已修复">0</td><td class="st st-修复中">0</td><td class="st st-待确认">0</td><td class="st st-其他">0</td><td><span class="badge-ok">已清</span></td></tr><tr><td class="mod-name">/api/tickets</td><td>1</td><td class="st st-已验收">1</td><td class="st st-已拒绝">0</td><td class="st st-已修复">0</td><td class="st st-修复中">0</td><td class="st st-待确认">0</td><td class="st st-其他">0</td><td><span class="badge-ok">已清</span></td></tr><tr><td class="mod-name">/api/tickets/1</td><td>1</td><td class="st st-已验收">1</td><td class="st st-已拒绝">0</td><td class="st st-已修复">0</td><td class="st st-修复中">0</td><td class="st st-待确认">0</td><td class="st st-其他">0</td><td><span class="badge-ok">已清</span></td></tr><tr><td class="mod-name">/health</td><td>1</td><td class="st st-已验收">1</td><td class="st st-已拒绝">0</td><td class="st st-已修复">0</td><td class="st st-修复中">0</td><td class="st st-待确认">0</td><td class="st st-其他">0</td><td><span class="badge-ok">已清</span></td></tr><tr><td class="mod-name">/ready</td><td>1</td><td class="st st-已验收">1</td><td class="st st-已拒绝">0</td><td class="st st-已修复">0</td><td class="st st-修复中">0</td><td class="st st-待确认">0</td><td class="st st-其他">0</td><td><span class="badge-ok">已清</span></td></tr></tbody>
+  </table>
+</section>
+
+<section>
+  <h2>四、负责人分布</h2>
+  <div class="bar-row"><div class="bar-label" title="QA-Agent">QA-Agent</div><div class="bar-track"><div class="bar-fill" style="width:100.0%;background:#0ea5e9"></div><span class="bar-val">29</span></div></div>
+</section>
+
+<section>
+  <h2>五、未完成（未关闭）缺陷清单</h2>
+  <p style="font-size:13px;color:#6b7280;margin-top:0">以下 0 项仍处于未关闭状态，需在后续迭代中跟进处理与回归验证。</p>
+  <table>
+    <thead><tr><th>任务ID</th><th>模块</th><th class="t-left">标题</th><th>状态</th><th>负责人</th><th>计划截止</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</section>
+
+<section>
+  <h2>六、逾期情况</h2>
+  <p style="font-size:13px;color:#6b7280">本次清单中无逾期任务。</p>
+</section>
+
+<section>
+  <h2>七、测试结论与建议</h2>
+  <div class="two-col">
+    <div>
+      <h3 style="font-size:15px;margin:0 0 8px">结论</h3>
+      <ul class="concl">
+        <li>本轮共记录缺陷 <b>29</b> 项，整体解决率 <b>100.0%</b>，测试确认关闭率 <b>100.0%</b>。</li>
+        <li>缺陷最集中模块：<b>test_aiqa_api</b>（14 项），建议作为后续回归重点。</li>
+        <li>仍有 <b>0</b> 项未关闭，需在截止前完成验证或处理。</li>
+        <li>逾期 <b>0</b> 项，进度风险可控。</li>
+        <li>已拒绝 0 项（占比 0.0%），建议复盘以减少无效提单。</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="font-size:15px;margin:0 0 8px">改进建议</h3>
+      <ul class="concl">
+        <li><b>尽快收敛未关闭缺陷：</b>优先验证"已修复"的 0 项，推动"修复中/待确认"各 0/0 项明确结论。</li>
+        <li><b>重点模块专项回归：</b>对缺陷最多的模块补充针对性用例。</li>
+        <li><b>规范缺陷提交：</b>减少"已拒绝"比例，提交前自查是否重复/可复现/符合预期设计。</li>
+        <li><b>补充缺陷属性：</b>建议增加严重程度/优先级/发现版本字段，便于量化风险与排期。</li>
+        <li><b>进度监控：</b>对临期任务设置预警，避免再次出现逾期。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>八、数据说明与局限</h2>
+  <div class="note">
+    <ul style="margin:0;padding-left:18px">
+      <li>本报告由 <b>defect-report-generator</b> 技能自动生成，源文件共 29 条记录。</li>
+      <li>状态映射：<b>已验收</b>=测试确认关闭；<b>已拒绝</b>=开发拒绝/非缺陷（视为已处理）；<b>已修复</b>=待验证；<b>修复中/待确认</b>=未关闭。无法归类的状态计入"其他"。</li>
+      <li>模块由任务标题首段【】/[]自动解析；若无括号则尝试使用模块列，否则记"未分类"。</li>
+      <li>原始数据若缺少严重程度、优先级、发现/关闭时间等字段，本报告未做相应分析。</li>
+    </ul>
+  </div>
+</section>
+
+<footer>报告由 defect-report-generator 技能生成 · 数据基准日 2026-11-05 · 共 29 条缺陷记录</footer>
+</div></body></html>
