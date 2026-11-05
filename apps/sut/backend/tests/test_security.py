@@ -34,6 +34,29 @@ def test_write_endpoints_require_key_in_production(monkeypatch):
     assert allowed.status_code == 201
 
 
+def test_readonly_post_stays_public_in_production(monkeypatch):
+    monkeypatch.setenv("APP_ENV", "production")
+    monkeypatch.setenv("APP_API_KEY", "secret-key")
+    response = client.post("/api/kb/query", json={"question": "如何关闭工单", "top_k": 3})
+    assert response.status_code == 200
+    assert "answer" in response.json()
+
+    # The workbench proxy executes server-side requests, so it stays gated.
+    assert client.post(
+        "/api/workbench/send",
+        json={"name": "x", "method": "GET", "url": "/health"},
+    ).status_code == 401
+
+
+def test_key_verification_endpoint(monkeypatch):
+    monkeypatch.setenv("APP_ENV", "production")
+    monkeypatch.setenv("APP_API_KEY", "secret-key")
+    assert client.post("/api/auth/verify").status_code == 401
+    ok = client.post("/api/auth/verify", headers={"Authorization": "Bearer secret-key"})
+    assert ok.status_code == 200
+    assert ok.json() == {"ok": True}
+
+
 def test_missing_server_key_fails_closed(monkeypatch):
     monkeypatch.setenv("APP_ENV", "production")
     monkeypatch.delenv("APP_API_KEY", raising=False)

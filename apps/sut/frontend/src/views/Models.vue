@@ -8,12 +8,14 @@ const loading = ref(false)
 const error = ref('')
 const notice = ref('')
 
-const form = reactive({
+const defaultForm = {
   name: 'DeepSeek 默认',
   provider: 'deepseek',
   base_url: 'https://api.deepseek.com',
   model_name: 'deepseek-chat',
-})
+}
+const form = reactive({ ...defaultForm })
+const editingId = ref(null)
 
 const totalTokens = computed(() =>
   calls.value.reduce((sum, item) => sum + item.prompt_tokens + item.completion_tokens, 0),
@@ -37,16 +39,46 @@ async function refresh() {
   }
 }
 
-async function createModel() {
-  if (!form.name.trim()) return
+async function saveModel() {
+  if (!form.name.trim()) {
+    error.value = '请输入配置名称'
+    return
+  }
   error.value = ''
+  const payload = { ...form, name: form.name.trim() }
   try {
-    await api.createPlatformModel({ ...form, name: form.name.trim() })
-    notice.value = '模型已保存；密钥只从服务端环境变量 DEEPSEEK_API_KEY 读取'
+    if (editingId.value) {
+      await api.updatePlatformModel(editingId.value, payload)
+      notice.value = `已保存模型 #${editingId.value} 的修改`
+    } else {
+      await api.createPlatformModel(payload)
+      notice.value = '模型已保存；密钥只从服务端环境变量 DEEPSEEK_API_KEY 读取'
+    }
+    editingId.value = null
+    Object.assign(form, defaultForm)
     await refresh()
   } catch (err) {
     error.value = err.message
   }
+}
+
+function startEdit(item) {
+  editingId.value = item.id
+  Object.assign(form, {
+    name: item.name,
+    provider: item.provider,
+    base_url: item.base_url,
+    model_name: item.model_name,
+  })
+  error.value = ''
+  notice.value = `正在编辑模型 #${item.id}，修改后点“保存修改”`
+}
+
+function cancelEdit() {
+  editingId.value = null
+  Object.assign(form, defaultForm)
+  error.value = ''
+  notice.value = ''
 }
 
 async function toggleModel(item) {
@@ -78,7 +110,7 @@ onMounted(refresh)
       <div>
         <p class="eyebrow">MODEL CENTER</p>
         <h2>模型注册、连通性测试与调用记录</h2>
-        <p class="muted">密钥只从服务端环境变量读取，数据库不保存明文；每次调用都记录用途、耗时与 token。</p>
+        <p class="muted">密钥只从服务端环境变量 DEEPSEEK_API_KEY 读取，数据库不保存明文；每次调用都记录用途、耗时与 token。</p>
       </div>
       <div class="hero-metrics">
         <div><strong>{{ models.length }}</strong><span>模型</span></div>
@@ -92,13 +124,14 @@ onMounted(refresh)
 
     <article class="card">
       <div class="card-head">
-        <div><h2>注册模型</h2><p>兼容 OpenAI 格式的 chat completions 接口</p></div>
+        <div><h2>{{ editingId ? '编辑模型' : '注册模型' }}</h2><p>兼容 OpenAI 格式的 chat completions 接口</p></div>
       </div>
-      <form class="model-form" @submit.prevent="createModel">
-        <input v-model="form.name" placeholder="配置名称" />
+      <form class="model-form" @submit.prevent="saveModel">
+        <input v-model="form.name" maxlength="80" placeholder="配置名称" />
         <input v-model="form.base_url" placeholder="Base URL" />
         <input v-model="form.model_name" placeholder="模型名" />
-        <button class="btn">保存模型</button>
+        <button class="btn">{{ editingId ? '保存修改' : '保存模型' }}</button>
+        <button v-if="editingId" type="button" class="btn ghost" @click="cancelEdit">取消编辑</button>
       </form>
     </article>
 
@@ -118,6 +151,7 @@ onMounted(refresh)
               <td>{{ item.api_key_masked || '未配置环境变量' }}</td>
               <td><span class="badge" :class="item.enabled ? 'module-done' : 'module-planned'">{{ item.enabled ? '启用' : '停用' }}</span></td>
               <td class="row-actions">
+                <button class="btn ghost" @click="startEdit(item)">编辑</button>
                 <button class="btn ghost" @click="testModel(item)">测试</button>
                 <button class="btn ghost" @click="toggleModel(item)">{{ item.enabled ? '停用' : '启用' }}</button>
               </td>

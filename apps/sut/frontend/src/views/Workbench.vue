@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { clearApiKey, getApiKey } from '../api/client'
 
 const STORAGE_COLLECTIONS = 'aiqa.workbench.collections'
 const STORAGE_ENV = 'aiqa.workbench.env'
@@ -133,21 +134,30 @@ function prettyBody(text) {
   }
 }
 
+async function postWorkbench(path, payload) {
+  const headers = { 'Content-Type': 'application/json' }
+  const key = getApiKey()
+  if (key) headers.Authorization = `Bearer ${key}`
+  const res = await fetch(path, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(payload),
+  })
+  if (res.ok) return res.json()
+  if (res.status === 401) {
+    clearApiKey()
+    throw new Error('需要访问密钥：发送与批量运行由服务端代理执行，请先在左侧“访问密钥”页面保存有效密钥')
+  }
+  const body = await res.json().catch(() => ({}))
+  throw new Error(typeof body.detail === 'string' ? body.detail : `请求失败（${res.status}）`)
+}
+
 async function send() {
   sending.value = true
   error.value = ''
   response.value = null
   try {
-    const res = await fetch('/api/workbench/send', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(toPayload()),
-    })
-    if (!res.ok) {
-      const body = await res.json().catch(() => ({}))
-      throw new Error(body.detail || `${res.status} ${res.statusText}`)
-    }
-    response.value = await res.json()
+    response.value = await postWorkbench('/api/workbench/send', toPayload())
     history.value.unshift({ name: request.name, url: substitute(request.url), at: new Date().toLocaleTimeString('zh-CN', { hour12: false }) })
     history.value = history.value.slice(0, 10)
   } catch (err) {
@@ -201,16 +211,9 @@ async function runCollection() {
   error.value = ''
   runResults.value = []
   try {
-    const res = await fetch('/api/workbench/run', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ requests: collections.value.map((item) => toPayload(item)) }),
+    runResults.value = await postWorkbench('/api/workbench/run', {
+      requests: collections.value.map((item) => toPayload(item)),
     })
-    if (!res.ok) {
-      const body = await res.json().catch(() => ({}))
-      throw new Error(body.detail || `${res.status} ${res.statusText}`)
-    }
-    runResults.value = await res.json()
   } catch (err) {
     error.value = err.message
   } finally {
@@ -247,7 +250,7 @@ function saveEnv() {
       <div>
         <p class="eyebrow">MODULE 03 · REFERENCE HOPPSCOTCH 80,721★</p>
         <h2>API Workbench</h2>
-        <p class="muted">请求构建 → 变量替换 → 发送 → 断言 → 集合批量运行 → 报告。复刻 Hoppscotch 的核心闭环，后端由 FastAPI 代理执行。</p>
+        <p class="muted">请求构建 → 变量替换 → 发送 → 断言 → 集合批量运行 → 报告。复刻 Hoppscotch 的核心闭环，后端由 FastAPI 代理执行；发送与批量运行需要访问密钥。</p>
       </div>
       <div class="hero-metrics">
         <div><strong>{{ collections.length }}</strong><span>集合请求</span></div>

@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { useTicketStore } from '../stores/tickets'
 import StatusBadge from '../components/StatusBadge.vue'
 
@@ -14,6 +14,11 @@ const form = reactive({ title: '', description: '', priority: 'medium' })
 const editing = ref(null)
 const editError = ref('')
 const editForm = reactive({ title: '', description: '', priority: 'medium', status: 'open' })
+const actionError = ref('')
+const notice = ref('')
+const page = ref(1)
+const PAGE_SIZE = 20
+let noticeTimer = null
 
 const statusOptions = [
   { value: 'open', label: '待处理' },
@@ -39,9 +44,57 @@ const filtered = computed(() =>
   }),
 )
 
+const pageCount = computed(() => Math.max(1, Math.ceil(filtered.value.length / PAGE_SIZE)))
+const paged = computed(() => filtered.value.slice((page.value - 1) * PAGE_SIZE, page.value * PAGE_SIZE))
+
+watch([search, statusFilter, priorityFilter], () => {
+  page.value = 1
+})
+
+watch(pageCount, (value) => {
+  if (page.value > value) page.value = value
+})
+
+function flash(message) {
+  notice.value = message
+  clearTimeout(noticeTimer)
+  noticeTimer = setTimeout(() => {
+    notice.value = ''
+  }, 2500)
+}
+
+function resetForm() {
+  form.title = ''
+  form.description = ''
+  form.priority = 'medium'
+  formError.value = ''
+}
+
+function closeCreate() {
+  if (form.title.trim() || form.description.trim()) {
+    if (!window.confirm('放弃已填写的内容？')) return
+  }
+  resetForm()
+  showForm.value = false
+}
+
+function closeEdit() {
+  const changed =
+    editing.value &&
+    (editForm.title !== editing.value.title ||
+      editForm.description !== editing.value.description ||
+      editForm.priority !== editing.value.priority ||
+      editForm.status !== editing.value.status)
+  if (changed && !window.confirm('放弃未保存的修改？')) return
+  editing.value = null
+  editError.value = ''
+}
+
 onMounted(() => {
   if (!store.items.length) store.fetchAll()
 })
+
+onUnmounted(() => clearTimeout(noticeTimer))
 
 async function createTicket() {
   if (!form.title.trim()) {
@@ -68,18 +121,26 @@ async function createTicket() {
 }
 
 async function changeStatus(ticket, event) {
+  const previous = ticket.status
+  actionError.value = ''
   try {
     await store.update(ticket.id, { status: event.target.value })
+    flash(`已更新工单 #${ticket.id} 的状态`)
   } catch (error) {
-    alert(error.message)
+    event.target.value = previous
+    actionError.value = error.message
   }
 }
 
 async function changePriority(ticket, event) {
+  const previous = ticket.priority
+  actionError.value = ''
   try {
     await store.update(ticket.id, { priority: event.target.value })
+    flash(`已更新工单 #${ticket.id} 的优先级`)
   } catch (error) {
-    alert(error.message)
+    event.target.value = previous
+    actionError.value = error.message
   }
 }
 
@@ -114,10 +175,12 @@ async function saveEdit() {
 
 async function removeTicket(ticket) {
   if (!window.confirm(`删除工单 #${ticket.id}？`)) return
+  actionError.value = ''
   try {
     await store.remove(ticket.id)
+    flash(`已删除工单 #${ticket.id}`)
   } catch (error) {
-    alert(error.message)
+    actionError.value = error.message
   }
 }
 </script>
@@ -143,6 +206,8 @@ async function removeTicket(ticket) {
     </div>
 
     <p v-if="store.error" class="alert error">{{ store.error }}</p>
+    <p v-if="actionError" class="alert error">{{ actionError }}</p>
+    <p v-if="notice" class="alert">{{ notice }}</p>
 
     <article class="card">
       <div v-if="store.loading" class="muted">加载中…</div>
@@ -160,19 +225,19 @@ async function removeTicket(ticket) {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="ticket in filtered" :key="ticket.id">
+            <tr v-for="ticket in paged" :key="ticket.id">
               <td class="mono">#{{ ticket.id }}</td>
               <td>
                 <strong>{{ ticket.title }}</strong>
                 <p v-if="ticket.description" class="cell-sub">{{ ticket.description }}</p>
               </td>
               <td>
-                <select :value="ticket.priority" class="mini-select" @change="changePriority(ticket, $event)">
+                <select :value="ticket.priority" class="mini-select" :title="`修改工单 #${ticket.id} 的优先级`" :aria-label="`修改工单 #${ticket.id} 的优先级`" @change="changePriority(ticket, $event)">
                   <option v-for="item in priorityOptions" :key="item.value" :value="item.value">{{ item.label }}</option>
                 </select>
               </td>
               <td>
-                <select :value="ticket.status" class="mini-select" @change="changeStatus(ticket, $event)">
+                <select :value="ticket.status" class="mini-select" :title="`修改工单 #${ticket.id} 的状态`" :aria-label="`修改工单 #${ticket.id} 的状态`" @change="changeStatus(ticket, $event)">
                   <option v-for="item in statusOptions" :key="item.value" :value="item.value">{{ item.label }}</option>
                 </select>
               </td>
@@ -188,14 +253,20 @@ async function removeTicket(ticket) {
       </div>
     </article>
 
-    <div v-if="showForm" class="modal-mask" @click.self="showForm = false">
+    <div v-if="pageCount > 1" class="pager">
+      <button class="btn ghost" :disabled="page === 1" @click="page -= 1">上一页</button>
+      <span class="muted">第 {{ page }} / {{ pageCount }} 页</span>
+      <button class="btn ghost" :disabled="page === pageCount" @click="page += 1">下一页</button>
+    </div>
+
+    <div v-if="showForm" class="modal-mask" @click.self="closeCreate">
       <div class="modal card">
         <div class="card-head">
           <div>
             <h2>新建工单</h2>
             <p>创建后会立即出现在列表和仪表盘</p>
           </div>
-          <button class="icon-btn" @click="showForm = false">×</button>
+          <button class="icon-btn" @click="closeCreate">×</button>
         </div>
         <form class="stack-sm" @submit.prevent="createTicket">
           <label>
@@ -214,21 +285,21 @@ async function removeTicket(ticket) {
           </label>
           <p v-if="formError" class="alert error">{{ formError }}</p>
           <div class="modal-actions">
-            <button type="button" class="btn ghost" @click="showForm = false">取消</button>
+            <button type="button" class="btn ghost" @click="closeCreate">取消</button>
             <button class="btn" :disabled="submitting">{{ submitting ? '创建中…' : '创建' }}</button>
           </div>
         </form>
       </div>
     </div>
 
-    <div v-if="editing" class="modal-mask" @click.self="editing = null">
+    <div v-if="editing" class="modal-mask" @click.self="closeEdit">
       <div class="modal card">
         <div class="card-head">
           <div>
             <h2>编辑工单 #{{ editing.id }}</h2>
             <p>修改标题、描述、优先级和状态</p>
           </div>
-          <button class="icon-btn" @click="editing = null">×</button>
+          <button class="icon-btn" @click="closeEdit">×</button>
         </div>
         <form class="stack-sm" @submit.prevent="saveEdit">
           <label>
@@ -253,7 +324,7 @@ async function removeTicket(ticket) {
           </label>
           <p v-if="editError" class="alert error">{{ editError }}</p>
           <div class="modal-actions">
-            <button type="button" class="btn ghost" @click="editing = null">取消</button>
+            <button type="button" class="btn ghost" @click="closeEdit">取消</button>
             <button class="btn">保存</button>
           </div>
         </form>
@@ -261,3 +332,12 @@ async function removeTicket(ticket) {
     </div>
   </section>
 </template>
+
+<style scoped>
+.pager {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+</style>

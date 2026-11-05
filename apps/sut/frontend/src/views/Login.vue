@@ -1,22 +1,41 @@
 <script setup>
 import { ref } from 'vue'
-import { clearApiKey, getApiKey, setApiKey } from '../api/client'
+import { api, clearApiKey, getApiKey, setApiKey } from '../api/client'
 
 const key = ref(getApiKey())
 const saved = ref(false)
+const keyError = ref('')
+const checking = ref(false)
 
-function save() {
-  setApiKey(key.value.trim())
-  saved.value = true
-  setTimeout(() => {
-    window.location.hash = '#/'
-  }, 600)
+async function save() {
+  const value = key.value.trim()
+  saved.value = false
+  keyError.value = ''
+  if (!value) {
+    keyError.value = '请输入访问密钥'
+    return
+  }
+  checking.value = true
+  setApiKey(value)
+  try {
+    await api.verifyKey()
+    saved.value = true
+    setTimeout(() => {
+      window.location.hash = '#/'
+    }, 600)
+  } catch (error) {
+    clearApiKey()
+    keyError.value = `密钥验证失败：${error.message}`
+  } finally {
+    checking.value = false
+  }
 }
 
 function remove() {
   clearApiKey()
   key.value = ''
   saved.value = false
+  keyError.value = ''
 }
 </script>
 
@@ -26,18 +45,19 @@ function remove() {
       <p class="eyebrow">ACCESS KEY</p>
       <h2>访问密钥</h2>
       <p class="muted">
-        生产环境的写操作需要访问密钥。只读浏览不需要密钥；没有密钥时新建、修改、执行等操作会返回 401。
+        生产环境的写操作需要访问密钥；浏览页面和知识库问答不需要。没有有效密钥时，新建、修改、执行等操作会提示并保留当前输入。
         密钥只保存在本机浏览器 localStorage，不会上传到服务器。
       </p>
       <label class="auth-field">
         <span>APP_API_KEY</span>
-        <input v-model="key" type="password" placeholder="粘贴服务端配置的访问密钥" />
+        <input v-model="key" type="password" maxlength="512" placeholder="粘贴服务端配置的访问密钥" />
       </label>
       <div class="auth-actions">
-        <button class="btn" @click="save">保存</button>
+        <button class="btn" :disabled="checking" @click="save">{{ checking ? '验证中…' : '保存' }}</button>
         <button class="btn ghost" @click="remove">清除</button>
       </div>
-      <p v-if="saved" class="alert">已保存，正在返回首页…</p>
+      <p v-if="saved" class="alert">密钥已验证并保存，正在返回首页…</p>
+      <p v-if="keyError" class="alert error">{{ keyError }}</p>
     </article>
   </section>
 </template>

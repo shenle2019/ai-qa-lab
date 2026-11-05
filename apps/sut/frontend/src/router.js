@@ -12,6 +12,7 @@ const routes = [
   { path: '/testcases', component: () => import('./views/TestCases.vue'), meta: { title: '测试用例' } },
   { path: '/methodology', component: () => import('./views/Methodology.vue'), meta: { title: '方法论' } },
   { path: '/login', component: () => import('./views/Login.vue'), meta: { title: '访问密钥' } },
+  { path: '/:pathMatch(.*)*', component: () => import('./views/NotFound.vue'), meta: { title: '页面不存在' } },
 ]
 
 export default createRouter({

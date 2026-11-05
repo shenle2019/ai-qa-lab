@@ -40,6 +40,10 @@ Thumbs.db
 
 # Local private notes (not published)
 notes/private/
+notes/explore-article.txt
+
+# Exploratory-test screenshots are local evidence only (large binaries)
+docs/explore/**/screenshots/
 
 # Internal planning notes (not published)
 参考站对标与改进清单.md

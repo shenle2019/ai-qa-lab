@@ -4,7 +4,7 @@ const TIMEOUT_MS = 15000
 
 const ERROR_TEXT = {
   400: '请求参数不合法',
-  401: '需要访问密钥，请先在“访问密钥”页面填写',
+  401: '访问密钥无效或未填写，请到左侧“访问密钥”页面保存后重试',
   403: '没有权限执行该操作',
   404: '请求的资源不存在',
   409: '数据冲突，请刷新后重试',
@@ -26,13 +26,6 @@ export function setApiKey(value) {
 
 export function clearApiKey() {
   localStorage.removeItem(KEY_STORAGE)
-}
-
-function redirectToLogin() {
-  clearApiKey()
-  if (!window.location.hash.startsWith('#/login')) {
-    window.location.hash = '#/login'
-  }
 }
 
 async function fetchOnce(url, options) {
@@ -81,7 +74,9 @@ async function request(path, options = {}) {
     } catch {
       detail = ''
     }
-    if (response.status === 401) redirectToLogin()
+    // Keep the user on the current page so form input survives a 401. A wrong
+    // key is cleared here; the caller shows the message inline.
+    if (response.status === 401) clearApiKey()
     throw new Error(ERROR_TEXT[response.status] || detail || `${response.status} ${response.statusText}`)
   }
 
@@ -91,6 +86,7 @@ async function request(path, options = {}) {
 export const api = {
   health: () => request('/health'),
   ready: () => request('/ready'),
+  verifyKey: () => request('/api/auth/verify', { method: 'POST', body: {} }),
   listTickets: () => request('/api/tickets'),
   createTicket: (payload) => request('/api/tickets', { method: 'POST', body: payload }),
   updateTicket: (id, payload) =>

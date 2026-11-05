@@ -8,9 +8,11 @@ const online = ref(false)
 const checking = ref(true)
 const title = computed(() => route.meta.title || 'AI全栈测试开发平台-shenle')
 const showDocs = ['localhost', '127.0.0.1'].includes(window.location.hostname)
+const healthNotice = ref('')
 let healthTimer = null
+let noticeTimer = null
 
-async function checkHealth() {
+async function checkHealth(announce = false) {
   checking.value = true
   try {
     await api.health()
@@ -19,6 +21,13 @@ async function checkHealth() {
     online.value = false
   } finally {
     checking.value = false
+    if (announce) {
+      healthNotice.value = online.value ? '已刷新：SUT 在线' : '已刷新：SUT 离线'
+      clearTimeout(noticeTimer)
+      noticeTimer = setTimeout(() => {
+        healthNotice.value = ''
+      }, 2000)
+    }
   }
 }
 
@@ -29,6 +38,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (healthTimer) clearInterval(healthTimer)
+  clearTimeout(noticeTimer)
 })
 </script>
 
@@ -73,7 +83,8 @@ onUnmounted(() => {
           <h1>{{ title }}</h1>
         </div>
         <div class="topbar-actions">
-          <button class="btn ghost" :disabled="checking" @click="checkHealth">刷新状态</button>
+          <span v-if="healthNotice" class="muted">{{ healthNotice }}</span>
+          <button class="btn ghost" :disabled="checking" @click="checkHealth(true)">{{ checking ? '检测中…' : '刷新状态' }}</button>
           <a v-if="showDocs" class="btn" href="/docs" target="_blank" rel="noreferrer">API 文档</a>
         </div>
       </header>

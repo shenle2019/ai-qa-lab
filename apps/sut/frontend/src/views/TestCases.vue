@@ -58,7 +58,7 @@ onMounted(load)
       <div>
         <p class="eyebrow">TEST CATALOG</p>
         <h2>全部测试用例一览</h2>
-        <p class="muted">按类别、状态和关键字筛选；数据来自最近一次执行结果，不是手写清单。</p>
+        <p class="muted">按类别、状态和关键字筛选；数据来自最近一次执行结果，不是手写清单。这里的 196 条是目录化用例，完整 pytest 套件（393 条）见项目报告。</p>
       </div>
       <div class="hero-metrics">
         <div><strong>{{ summary.total }}</strong><span>用例总数</span></div>

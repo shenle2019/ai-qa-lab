@@ -17,9 +17,13 @@ def _settle(page):
 
 def _go_tickets(page, sut):
     page.goto(sut + "/ui/#/tickets")
-    expect(page.locator("h1")).to_have_text("工单管理")
+    # Hash navigation resolves before Vue renders the route, so wait for the
+    # toolbar and a paint instead of asserting on h1 immediately.
     page.wait_for_selector(".toolbar")
     _settle(page)
+    # Allow a cold start after a fresh build (disk scan can delay the first
+    # lazy-loaded route chunk beyond the default 5s).
+    expect(page.locator("h1")).to_have_text("工单管理", timeout=10.0)
 
 
 def _open_modal(page):
@@ -254,3 +258,30 @@ def test_data_persists_after_reload(page, sut):
 def test_navigation_pages(page, sut, route, heading):
     page.goto(sut + route)
     expect(page.locator("h1")).to_have_text(heading)
+
+
+def test_unknown_route_shows_not_found(page, sut):
+    page.goto(sut + "/ui/#/nope-not-exist")
+    page.wait_for_function("document.body.innerText.includes('页面不存在')")
+    assert page.evaluate("document.body.innerText.includes('返回仪表盘')")
+
+
+def test_platform_empty_project_shows_message(page, sut):
+    page.goto(sut + "/ui/#/platform")
+    page.wait_for_selector(".platform-form")
+    page.evaluate("document.querySelector('.platform-form').requestSubmit()")
+    page.wait_for_function("document.body.innerText.includes('请输入项目名称')")
+
+
+def test_login_empty_key_shows_error(page, sut):
+    page.goto(sut + "/ui/#/login")
+    page.wait_for_selector(".auth-actions")
+    page.click(".auth-actions button.btn")
+    page.wait_for_function("document.body.innerText.includes('请输入访问密钥')")
+    assert page.evaluate("!localStorage.getItem('sut_api_key')")
+
+
+def test_ticket_row_select_has_accessible_name(page, sut):
+    _go_tickets(page, sut)
+    label = page.evaluate("document.querySelector('tbody select').getAttribute('aria-label')")
+    assert label and "工单" in label

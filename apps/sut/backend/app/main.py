@@ -80,6 +80,16 @@ def root():
     return RedirectResponse(url="/ui/")
 
 
+@app.post("/api/auth/verify")
+def verify_api_key() -> dict:
+    """Return 200 only when the supplied key passes the auth guard.
+
+    The UI calls this right after saving a key so a typo is reported as a
+    wrong key instead of surfacing later as a failed write.
+    """
+    return {"ok": True}
+
+
 @app.get("/api/tickets", response_model=list[schemas.TicketOut])
 def list_tickets(
     limit: int = 100,

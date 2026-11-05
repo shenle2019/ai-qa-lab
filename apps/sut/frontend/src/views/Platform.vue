@@ -11,6 +11,10 @@ const defects = ref([])
 const loading = ref(false)
 const error = ref('')
 const notice = ref('')
+const projectError = ref('')
+const caseError = ref('')
+const planError = ref('')
+const defectError = ref('')
 const generating = ref(false)
 
 const projectForm = reactive({ name: '', description: '' })
@@ -23,6 +27,29 @@ const latestExecution = computed(() => executions.value[0] || null)
 
 function formatTime(value) {
   return value ? new Date(value).toLocaleString('zh-CN', { hour12: false }) : '-'
+}
+
+const MODULE_LABELS = { api: 'API', web: 'Web', app: 'App', perf: '性能' }
+const STATUS_LABELS = {
+  draft: '草稿',
+  pending_review: '待审核',
+  approved: '已通过',
+  rejected: '已驳回',
+  passed: '通过',
+  failed: '失败',
+  skipped: '跳过',
+  running: '执行中',
+  open: '未关闭',
+  closed: '已关闭',
+}
+const SEVERITY_LABELS = { low: '低', medium: '中', high: '高', critical: '严重' }
+
+function statusLabel(value) {
+  return STATUS_LABELS[value] || value
+}
+
+function severityLabel(value) {
+  return SEVERITY_LABELS[value] || value
 }
 
 async function refresh() {
@@ -64,19 +91,34 @@ async function seed() {
 }
 
 async function createProject() {
-  if (!projectForm.name.trim()) return
+  projectError.value = ''
+  if (!projectForm.name.trim()) {
+    projectError.value = '请输入项目名称'
+    notice.value = ''
+    return
+  }
   try {
     await api.createPlatformProject({ name: projectForm.name.trim(), description: projectForm.description.trim() })
     projectForm.name = ''
     projectForm.description = ''
     await refresh()
   } catch (err) {
-    error.value = err.message
+    projectError.value = err.message
   }
 }
 
 async function createCase() {
-  if (!caseForm.project_id || !caseForm.title.trim()) return
+  caseError.value = ''
+  if (!caseForm.project_id) {
+    caseError.value = '请先创建项目，再新建用例'
+    notice.value = ''
+    return
+  }
+  if (!caseForm.title.trim()) {
+    caseError.value = '请输入用例标题'
+    notice.value = ''
+    return
+  }
   try {
     await api.createPlatformCase({ ...caseForm, title: caseForm.title.trim() })
     caseForm.title = ''
@@ -84,7 +126,7 @@ async function createCase() {
     caseForm.expected = ''
     await refresh()
   } catch (err) {
-    error.value = err.message
+    caseError.value = err.message
   }
 }
 
@@ -152,24 +194,44 @@ async function executePlan(item) {
 }
 
 async function createPlan() {
-  if (!planForm.project_id || !planForm.name.trim()) return
+  planError.value = ''
+  if (!planForm.project_id) {
+    planError.value = '请先创建项目，再新建计划'
+    notice.value = ''
+    return
+  }
+  if (!planForm.name.trim()) {
+    planError.value = '请输入计划名称'
+    notice.value = ''
+    return
+  }
   try {
     await api.createPlatformPlan({ project_id: planForm.project_id, name: planForm.name.trim() })
     planForm.name = ''
     await refresh()
   } catch (err) {
-    error.value = err.message
+    planError.value = err.message
   }
 }
 
 async function createDefect() {
-  if (!defectForm.project_id || !defectForm.title.trim()) return
+  defectError.value = ''
+  if (!defectForm.project_id) {
+    defectError.value = '请先创建项目，再新建缺陷'
+    notice.value = ''
+    return
+  }
+  if (!defectForm.title.trim()) {
+    defectError.value = '请输入缺陷标题'
+    notice.value = ''
+    return
+  }
   try {
     await api.createPlatformDefect({ ...defectForm, title: defectForm.title.trim() })
     defectForm.title = ''
     await refresh()
   } catch (err) {
-    error.value = err.message
+    defectError.value = err.message
   }
 }
 
@@ -225,6 +287,7 @@ onMounted(refresh)
           <input v-model="projectForm.description" placeholder="描述（可选）" />
           <button class="btn">新建项目</button>
         </form>
+        <p v-if="projectError" class="alert error">{{ projectError }}</p>
         <div class="table-wrap">
           <table>
             <thead><tr><th>ID</th><th>项目</th><th>创建时间</th></tr></thead>
@@ -268,6 +331,7 @@ onMounted(refresh)
           </select>
           <button class="btn">新建用例</button>
         </form>
+        <p v-if="caseError" class="alert error">{{ caseError }}</p>
         <div class="table-wrap">
           <table>
             <thead><tr><th>ID</th><th>用例</th><th>模块</th><th>优先级</th><th>状态</th><th>操作</th></tr></thead>
@@ -279,9 +343,9 @@ onMounted(refresh)
                   <p class="cell-sub">{{ item.expected }}</p>
                   <p v-if="item.source === 'ai'" class="cell-sub">AI · {{ item.prompt_version }}</p>
                 </td>
-                <td>{{ item.module }}</td>
-                <td>{{ item.priority }}</td>
-                <td><span class="badge" :class="item.status === 'approved' ? 'module-done' : 'module-planned'">{{ item.status }}</span></td>
+                <td>{{ MODULE_LABELS[item.module] || item.module }}</td>
+                <td>{{ severityLabel(item.priority) }}</td>
+                <td><span class="badge" :class="item.status === 'approved' ? 'module-done' : 'module-planned'">{{ statusLabel(item.status) }}</span></td>
                 <td class="row-actions">
                   <button v-if="item.status === 'draft'" class="btn ghost" @click="submitReview(item)">提交审核</button>
                   <template v-else-if="item.status === 'pending_review'">
@@ -308,6 +372,7 @@ onMounted(refresh)
           <input v-model="planForm.name" placeholder="计划名称" />
           <button class="btn">新建计划</button>
         </form>
+        <p v-if="planError" class="alert error">{{ planError }}</p>
         <div class="table-wrap">
           <table>
             <thead><tr><th>ID</th><th>计划</th><th>状态</th><th>创建时间</th><th>操作</th></tr></thead>
@@ -315,7 +380,7 @@ onMounted(refresh)
               <tr v-for="item in plans" :key="item.id">
                 <td class="mono">#{{ item.id }}</td>
                 <td>{{ item.name }}</td>
-                <td><span class="badge" :class="item.status === 'failed' ? 'module-planned' : 'module-done'">{{ item.status }}</span></td>
+                <td><span class="badge" :class="item.status === 'failed' ? 'module-planned' : 'module-done'">{{ statusLabel(item.status) }}</span></td>
                 <td class="muted">{{ formatTime(item.created_at) }}</td>
                 <td><button class="btn ghost" @click="executePlan(item)">执行</button></td>
               </tr>
@@ -331,7 +396,7 @@ onMounted(refresh)
           <a v-if="latestExecution" class="btn ghost" :href="`/api/platform/executions/${latestExecution.id}/report`" target="_blank" rel="noreferrer">查看报告</a>
         </div>
         <div v-if="latestExecution" class="execution-summary">
-          <div><span>状态</span><strong>{{ latestExecution.status }}</strong></div>
+          <div><span>状态</span><strong>{{ statusLabel(latestExecution.status) }}</strong></div>
           <div><span>总数</span><strong>{{ latestExecution.total }}</strong></div>
           <div><span>通过</span><strong>{{ latestExecution.passed }}</strong></div>
           <div><span>失败</span><strong>{{ latestExecution.failed }}</strong></div>
@@ -344,7 +409,7 @@ onMounted(refresh)
             <tbody>
               <tr v-for="item in (latestExecution?.results || [])" :key="item.id">
                 <td>{{ item.case_name }}</td>
-                <td><span class="badge" :class="item.status === 'passed' ? 'module-done' : 'module-planned'">{{ item.status }}</span></td>
+                <td><span class="badge" :class="item.status === 'passed' ? 'module-done' : 'module-planned'">{{ statusLabel(item.status) }}</span></td>
                 <td>{{ item.duration_ms }} ms</td>
               </tr>
               <tr v-if="!latestExecution"><td colspan="3" class="empty">还没有执行记录。</td></tr>
@@ -368,6 +433,7 @@ onMounted(refresh)
         </select>
         <button class="btn">新建缺陷</button>
       </form>
+      <p v-if="defectError" class="alert error">{{ defectError }}</p>
       <div class="table-wrap">
         <table>
           <thead><tr><th>ID</th><th>缺陷</th><th>严重度</th><th>状态</th><th>操作</th></tr></thead>
@@ -375,8 +441,8 @@ onMounted(refresh)
             <tr v-for="item in defects" :key="item.id">
               <td class="mono">#{{ item.id }}</td>
               <td>{{ item.title }}</td>
-              <td>{{ item.severity }}</td>
-              <td><span class="badge" :class="item.status === 'open' ? 'module-planned' : 'module-done'">{{ item.status }}</span></td>
+              <td>{{ severityLabel(item.severity) }}</td>
+              <td><span class="badge" :class="item.status === 'open' ? 'module-planned' : 'module-done'">{{ statusLabel(item.status) }}</span></td>
               <td><button v-if="item.status === 'open'" class="btn ghost" @click="closeDefect(item)">关闭</button></td>
             </tr>
             <tr v-if="!defects.length"><td colspan="5" class="empty">还没有缺陷。</td></tr>
