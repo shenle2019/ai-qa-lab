@@ -61,6 +61,8 @@ def test_list_and_toggle_model():
 
 
 def test_connectivity_test_records_call(monkeypatch):
+    # CI has no DeepSeek key; the HTTP call is faked, so only presence matters.
+    monkeypatch.setenv("DEEPSEEK_API_KEY", "sk-test")
     model = _create_model()
 
     class FakeResponse:

@@ -15,12 +15,20 @@ def _settle(page):
     )
 
 
-def _go_tickets(page, sut):
-    page.goto(sut + "/ui/#/tickets")
-    # Hash navigation resolves before Vue renders the route, so wait for the
-    # toolbar and a paint instead of asserting on h1 immediately.
-    page.wait_for_selector(".toolbar")
+def _goto(page, sut, route):
+    """Load a route in a fresh document.
+
+    A pure hash change can be dropped while the SPA is still booting. A unique
+    query forces a full navigation, so the router always starts on the target
+    and tests do not leak route state into each other.
+    """
+    page.goto(f"{sut}/ui/?t={uuid4().hex[:8]}#{route}")
     _settle(page)
+
+
+def _go_tickets(page, sut):
+    _goto(page, sut, "/tickets")
+    page.wait_for_selector(".toolbar")
     # Allow a cold start after a fresh build (disk scan can delay the first
     # lazy-loaded route chunk beyond the default 5s).
     expect(page.locator("h1")).to_have_text("工单管理", timeout=10.0)
@@ -110,13 +118,13 @@ def test_sidebar_has_entries(page, sut):
 
 
 def test_dashboard_has_four_stat_cards(page, sut):
-    page.goto(sut + "/ui/#/")
+    _goto(page, sut, "/")
     page.wait_for_selector(".stat-card")
     assert page.evaluate("document.querySelectorAll('.stat-card').length") >= 4
 
 
 def test_dashboard_shows_total_label(page, sut):
-    page.goto(sut + "/ui/#/")
+    _goto(page, sut, "/")
     page.wait_for_selector(".stat-card")
     expect(page.locator("body")).to_contain_text("全部工单")
 
@@ -237,7 +245,7 @@ def test_delete_ticket(page, sut):
 
 def test_data_persists_after_reload(page, sut):
     title = _create(page, sut, title=f"persist {uuid4().hex[:6]}")
-    page.goto(sut + "/ui/#/tickets")
+    _goto(page, sut, "/tickets")
     page.wait_for_selector(".toolbar")
     expect(page.locator("body")).to_contain_text(title)
 
@@ -245,36 +253,36 @@ def test_data_persists_after_reload(page, sut):
 @pytest.mark.parametrize(
     ("route", "heading"),
     [
-        ("/ui/#/platform", "测试平台"),
-        ("/ui/#/models", "模型中心"),
-        ("/ui/#/testcases", "测试用例"),
-        ("/ui/#/login", "访问密钥"),
-        ("/ui/#/report", "项目报告"),
-        ("/ui/#/portfolio", "模块验收"),
-        ("/ui/#/methodology", "方法论"),
-        ("/ui/#/knowledge", "知识库问答"),
+        ("/platform", "测试平台"),
+        ("/models", "模型中心"),
+        ("/testcases", "测试用例"),
+        ("/login", "访问密钥"),
+        ("/report", "项目报告"),
+        ("/portfolio", "模块验收"),
+        ("/methodology", "方法论"),
+        ("/knowledge", "知识库问答"),
     ],
 )
 def test_navigation_pages(page, sut, route, heading):
-    page.goto(sut + route)
-    expect(page.locator("h1")).to_have_text(heading)
+    _goto(page, sut, route)
+    expect(page.locator("h1")).to_have_text(heading, timeout=10.0)
 
 
 def test_unknown_route_shows_not_found(page, sut):
-    page.goto(sut + "/ui/#/nope-not-exist")
+    _goto(page, sut, "/nope-not-exist")
     page.wait_for_function("document.body.innerText.includes('页面不存在')")
     assert page.evaluate("document.body.innerText.includes('返回仪表盘')")
 
 
 def test_platform_empty_project_shows_message(page, sut):
-    page.goto(sut + "/ui/#/platform")
+    _goto(page, sut, "/platform")
     page.wait_for_selector(".platform-form")
     page.evaluate("document.querySelector('.platform-form').requestSubmit()")
     page.wait_for_function("document.body.innerText.includes('请输入项目名称')")
 
 
 def test_login_empty_key_shows_error(page, sut):
-    page.goto(sut + "/ui/#/login")
+    _goto(page, sut, "/login")
     page.wait_for_selector(".auth-actions")
     page.click(".auth-actions button.btn")
     page.wait_for_function("document.body.innerText.includes('请输入访问密钥')")
