@@ -214,8 +214,8 @@ onMounted(loadBases)
 
     <div class="toolbar">
       <div class="toolbar-group">
-        <button class="btn" :disabled="loading" @click="loadBases">刷新</button>
-        <button class="btn ghost" @click="creating = true">新建知识库</button>
+        <button class="btn ghost" :disabled="loading" @click="loadBases">刷新</button>
+        <button class="btn" @click="creating = true">新建知识库</button>
       </div>
       <span v-if="selected" class="muted toolbar-note">
         当前：{{ selected.name }} · 分块 {{ selected.chunk_size }} / 重叠 {{ selected.chunk_overlap }}

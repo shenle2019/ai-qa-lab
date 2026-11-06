@@ -1,9 +1,11 @@
 <script setup>
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
-import { RouterLink, RouterView, useRoute } from 'vue-router'
+import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import { api } from './api/client'
+import NavIcon from './components/NavIcon.vue'
 
 const route = useRoute()
+const router = useRouter()
 const online = ref(false)
 const checking = ref(true)
 const menuOpen = ref(false)
@@ -11,12 +13,66 @@ const docsOnline = ref(false)
 const title = computed(() => route.meta.title || 'AI 测试平台')
 const healthNotice = ref('')
 const heroOwnsTitle = ref(false)
+const searchBox = ref(null)
+const query = ref('')
 let healthTimer = null
 let noticeTimer = null
 
+const NAV = [
+  {
+    group: '工作台',
+    items: [
+      { to: '/projects', icon: 'projects', label: '项目管理' },
+      { to: '/system-ai', icon: 'ai-config', label: '系统 AI 配置' },
+      { to: '/ai-logs', icon: 'logs', label: 'AI 调用日志' },
+      { to: '/users', icon: 'users', label: '用户管理' },
+    ],
+  },
+  { group: '当前项目', items: [{ to: '/overview', icon: 'overview', label: '项目概览' }] },
+  {
+    group: '测试',
+    items: [
+      { to: '/requirements', icon: 'requirements', label: '需求管理' },
+      { to: '/functional', icon: 'functional', label: '功能测试' },
+      { to: '/kb', icon: 'kb', label: '知识库' },
+    ],
+  },
+  {
+    group: '自动化',
+    items: [
+      { to: '/environments', icon: 'environments', label: '环境管理' },
+      { to: '/api-automation', icon: 'api', label: '接口自动化' },
+      { to: '/ui-automation', icon: 'ui', label: 'UI 自动化' },
+    ],
+  },
+  {
+    group: '项目',
+    items: [
+      { to: '/modules', icon: 'modules', label: '模块管理' },
+      { to: '/members', icon: 'members', label: '成员管理' },
+    ],
+  },
+  { group: '其他', items: [{ to: '/tools', icon: 'tools', label: '工具与旧版入口' }] },
+]
+
+const flatNav = NAV.flatMap((group) => group.items.map((item) => ({ ...item, group: group.group })))
+
+const currentGroup = computed(() => {
+  const hit = flatNav.find((item) => route.path === item.to)
+  return hit ? hit.group : '工作台'
+})
+
+const matches = computed(() => {
+  const keyword = query.value.trim().toLowerCase()
+  if (!keyword) return []
+  return flatNav
+    .filter((item) => item.label.toLowerCase().includes(keyword) || item.to.includes(keyword))
+    .slice(0, 6)
+})
+
 // Pages that render their own hero already show the page title. Keeping the
 // topbar title as well printed every heading twice, so the hero wins and the
-// topbar falls back to a quiet context strip.
+// topbar falls back to a breadcrumb.
 function detectHero() {
   heroOwnsTitle.value = Boolean(document.querySelector('.content .hero h1, .content .hero h2'))
 }
@@ -26,6 +82,7 @@ watch(
   async () => {
     await nextTick()
     detectHero()
+    query.value = ''
   },
 )
 
@@ -59,6 +116,20 @@ const showDocs = computed(
   () => ['localhost', '127.0.0.1'].includes(window.location.hostname) || docsOnline.value,
 )
 
+function go(item) {
+  query.value = ''
+  router.push(item.to)
+}
+
+function submitSearch() {
+  if (matches.value.length) {
+    go(matches.value[0])
+    return
+  }
+  const keyword = query.value.trim()
+  if (keyword) router.push({ path: '/projects', query: { q: keyword } })
+}
+
 function closeTopModal() {
   const masks = Array.from(document.querySelectorAll('.modal-mask')).filter(
     (node) => node.offsetParent !== null || getComputedStyle(node).position === 'fixed',
@@ -78,6 +149,10 @@ function closeTopModal() {
 
 function onKeydown(event) {
   if (event.key === 'Escape') closeTopModal()
+  if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+    event.preventDefault()
+    searchBox.value?.focus()
+  }
 }
 
 onMounted(() => {
@@ -101,47 +176,17 @@ onUnmounted(() => {
         <div class="brand-mark">QA</div>
         <div>
           <strong>AI 测试平台</strong>
-          <span style="text-transform: none; letter-spacing: 0">shenle</span>
+          <span class="brand-sub">shenle</span>
         </div>
       </div>
 
       <nav class="nav" @click="menuOpen = false">
-        <div class="nav-group">
-          <p class="nav-group-title">工作台</p>
-          <RouterLink to="/projects" class="nav-item"><span class="nav-icon">◫</span>项目管理</RouterLink>
-          <RouterLink to="/system-ai" class="nav-item"><span class="nav-icon">◍</span>系统 AI 配置</RouterLink>
-          <RouterLink to="/ai-logs" class="nav-item"><span class="nav-icon">◷</span>AI 调用日志</RouterLink>
-          <RouterLink to="/users" class="nav-item"><span class="nav-icon">☺</span>用户管理</RouterLink>
-        </div>
-
-        <div class="nav-group">
-          <p class="nav-group-title">当前项目</p>
-          <RouterLink to="/overview" class="nav-item"><span class="nav-icon">◉</span>项目概览</RouterLink>
-        </div>
-
-        <div class="nav-group">
-          <p class="nav-group-title">测试</p>
-          <RouterLink to="/requirements" class="nav-item"><span class="nav-icon">▤</span>需求管理</RouterLink>
-          <RouterLink to="/functional" class="nav-item"><span class="nav-icon">☑</span>功能测试</RouterLink>
-          <RouterLink to="/kb" class="nav-item"><span class="nav-icon">✦</span>知识库</RouterLink>
-        </div>
-
-        <div class="nav-group">
-          <p class="nav-group-title">自动化</p>
-          <RouterLink to="/environments" class="nav-item"><span class="nav-icon">⚙</span>环境管理</RouterLink>
-          <RouterLink to="/api-automation" class="nav-item"><span class="nav-icon">⌁</span>接口自动化</RouterLink>
-          <RouterLink to="/ui-automation" class="nav-item"><span class="nav-icon">▣</span>UI 自动化</RouterLink>
-        </div>
-
-        <div class="nav-group">
-          <p class="nav-group-title">项目</p>
-          <RouterLink to="/modules" class="nav-item"><span class="nav-icon">▦</span>模块管理</RouterLink>
-          <RouterLink to="/members" class="nav-item"><span class="nav-icon">⚇</span>成员管理</RouterLink>
-        </div>
-
-        <div class="nav-group">
-          <p class="nav-group-title">其他</p>
-          <RouterLink to="/tools" class="nav-item"><span class="nav-icon">⧉</span>工具与旧版入口</RouterLink>
+        <div v-for="group in NAV" :key="group.group" class="nav-group">
+          <p class="nav-group-title">{{ group.group }}</p>
+          <RouterLink v-for="item in group.items" :key="item.to" :to="item.to" class="nav-item">
+            <NavIcon :name="item.icon" />
+            <span>{{ item.label }}</span>
+          </RouterLink>
         </div>
       </nav>
 
@@ -150,39 +195,63 @@ onUnmounted(() => {
           <span class="dot" :class="online ? 'ok' : 'bad'"></span>
           {{ checking ? '检测中' : online ? 'SUT 在线' : 'SUT 离线' }}
         </div>
-        <RouterLink to="/login" class="nav-item"><span class="nav-icon">⚿</span>访问密钥</RouterLink>
-        <p>v1.2.1 · Raina 结构对齐</p>
+        <RouterLink to="/login" class="nav-item nav-key">
+          <NavIcon name="key" />
+          <span>访问密钥</span>
+        </RouterLink>
+        <p class="version">v1.2.1 · citrus-lab</p>
       </div>
     </aside>
 
     <div class="main" :class="{ 'has-hero': heroOwnsTitle }">
       <header class="topbar">
-        <div class="topbar-title">
-          <button
-            class="menu-toggle"
-            type="button"
-            :aria-expanded="menuOpen"
-            aria-label="切换导航菜单"
-            @click="menuOpen = !menuOpen"
-          >
-            ☰
-          </button>
-          <div v-if="!heroOwnsTitle">
-            <p class="eyebrow">AI QUALITY ENGINEERING</p>
-            <h1>{{ title }}</h1>
-          </div>
-          <p v-else class="topbar-crumb">
-            <span class="crumb-root">AI 测试平台</span>
-            <span class="crumb-sep">·</span>
-            <span class="crumb-hint">质量工程工作台</span>
-          </p>
+        <button
+          class="menu-toggle"
+          type="button"
+          :aria-expanded="menuOpen"
+          aria-label="切换导航菜单"
+          @click="menuOpen = !menuOpen"
+        >
+          ☰
+        </button>
+
+        <p class="crumbs">
+          <span>{{ currentGroup }}</span>
+          <span class="crumb-sep">/</span>
+          <b>{{ title }}</b>
+        </p>
+
+        <div class="search-wrap">
+          <label class="search">
+            <NavIcon name="search" :size="15" />
+            <input
+              ref="searchBox"
+              v-model="query"
+              type="search"
+              placeholder="搜索页面、用例、接口…"
+              @keydown.enter.prevent="submitSearch"
+              @keydown.esc="query = ''"
+            />
+            <span class="kbd">⌘K</span>
+          </label>
+          <ul v-if="matches.length" class="search-pop">
+            <li v-for="item in matches" :key="item.to">
+              <button type="button" @click="go(item)">
+                <NavIcon :name="item.icon" :size="14" />
+                <span>{{ item.label }}</span>
+                <em>{{ item.group }}</em>
+              </button>
+            </li>
+          </ul>
         </div>
+
         <div class="topbar-actions">
-          <span v-if="healthNotice" class="muted">{{ healthNotice }}</span>
+          <span v-if="healthNotice" class="health-note">{{ healthNotice }}</span>
+          <a v-if="showDocs" class="btn ghost" href="/docs" target="_blank" rel="noreferrer">API 文档</a>
           <button class="btn ghost" :disabled="checking" @click="checkHealth(true)">
             {{ checking ? '检测中…' : '检测服务' }}
           </button>
-          <a v-if="showDocs" class="btn" href="/docs" target="_blank" rel="noreferrer">API 文档</a>
+          <div class="avatar" title="沈乐">沈</div>
         </div>
       </header>
 
