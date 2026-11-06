@@ -22,8 +22,9 @@ const routes = [
   // Project
   { path: '/modules', component: () => import('./views/projects/ModulesView.vue'), meta: { title: '模块管理' } },
   { path: '/members', component: () => import('./views/projects/MembersView.vue'), meta: { title: '成员管理' } },
+  { path: '/tools', component: () => import('./views/ToolsView.vue'), meta: { title: '工具与旧版入口' } },
 
-  // Legacy pages (kept reachable; sidebar groups them under 开发工具)
+  // Legacy pages (kept reachable through /tools)
   { path: '/dashboard', component: () => import('./views/Dashboard.vue'), meta: { title: '仪表盘' } },
   { path: '/tickets', component: () => import('./views/Tickets.vue'), meta: { title: '工单管理' } },
   { path: '/knowledge', component: () => import('./views/Knowledge.vue'), meta: { title: '知识库问答' } },

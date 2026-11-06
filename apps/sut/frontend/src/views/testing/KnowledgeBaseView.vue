@@ -271,6 +271,9 @@ onMounted(loadBases)
           </div>
 
           <p v-if="!selected" class="empty">先选择一个知识库。</p>
+          <div v-else-if="loading && !documents.length" class="stack" style="gap: 8px">
+            <span v-for="n in 5" :key="`sk-${n}`" class="skeleton" style="height: 36px; display: block" />
+          </div>
           <p v-else-if="!documents.length" class="empty">这个知识库还没有文档。</p>
           <div v-else class="table-wrap">
             <table>

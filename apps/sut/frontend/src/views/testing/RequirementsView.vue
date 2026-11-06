@@ -260,6 +260,17 @@ onMounted(refresh)
               </tr>
             </thead>
             <tbody>
+              <template v-if="loading && !filtered.length">
+                <tr v-for="n in 6" :key="`sk-${n}`" class="skeleton-row">
+                  <td><span class="skeleton" style="width: 32px" /></td>
+                  <td><span class="skeleton" style="width: 72%" /></td>
+                  <td><span class="skeleton" style="width: 48px" /></td>
+                  <td><span class="skeleton" style="width: 44px" /></td>
+                  <td><span class="skeleton" style="width: 20px" /></td>
+                  <td><span class="skeleton" style="width: 84px" /></td>
+                  <td><span class="skeleton" style="width: 92px" /></td>
+                </tr>
+              </template>
               <tr v-for="item in filtered" :key="item.id">
                 <td class="mono">#{{ item.id }}</td>
                 <td>
@@ -279,7 +290,7 @@ onMounted(refresh)
                   <button class="btn ghost danger" @click="removeRequirement(item)">删除</button>
                 </td>
               </tr>
-              <tr v-if="!filtered.length"><td colspan="7" class="empty">还没有需求，点右上角「新建需求」。</td></tr>
+              <tr v-if="!filtered.length && !loading"><td colspan="7" class="empty">还没有需求，点右上角「新建需求」。</td></tr>
             </tbody>
           </table>
         </div>

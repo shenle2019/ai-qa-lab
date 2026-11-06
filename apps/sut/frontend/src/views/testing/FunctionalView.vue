@@ -280,6 +280,18 @@ onMounted(refresh)
               </tr>
             </thead>
             <tbody>
+              <template v-if="loading && !visibleCases.length">
+                <tr v-for="n in 6" :key="`sk-${n}`" class="skeleton-row">
+                  <td class="check-col"><span class="skeleton" style="width: 14px; height: 14px" /></td>
+                  <td><span class="skeleton" style="width: 32px" /></td>
+                  <td><span class="skeleton" style="width: 68%" /></td>
+                  <td><span class="skeleton" style="width: 44px" /></td>
+                  <td><span class="skeleton" style="width: 40px" /></td>
+                  <td><span class="skeleton" style="width: 52px" /></td>
+                  <td><span class="skeleton" style="width: 34px" /></td>
+                  <td><span class="skeleton" style="width: 96px" /></td>
+                </tr>
+              </template>
               <tr v-for="item in visibleCases" :key="item.id">
                 <td class="check-col">
                   <input type="checkbox" :checked="selected.includes(item.id)" @change="toggleOne(item.id)" />
@@ -297,7 +309,7 @@ onMounted(refresh)
                   </div>
                 </td>
               </tr>
-              <tr v-if="!visibleCases.length">
+              <tr v-if="!visibleCases.length && !loading">
                 <td colspan="8" class="empty">这个筛选条件下没有用例。</td>
               </tr>
             </tbody>
