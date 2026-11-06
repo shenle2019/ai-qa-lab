@@ -273,8 +273,8 @@ onMounted(refresh)
               </template>
               <tr v-for="item in filtered" :key="item.id">
                 <td class="mono">#{{ item.id }}</td>
-                <td>
-                  <button class="link" @click="open(item.id)">{{ item.title }}</button>
+                <td class="req-title" :class="`pr-${item.priority}`">
+                  <button class="link req-link" @click="open(item.id)">{{ item.title }}</button>
                   <div class="cell-sub">{{ item.body ? item.body.slice(0, 48) : '无正文' }}</div>
                 </td>
                 <td>

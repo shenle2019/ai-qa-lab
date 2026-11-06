@@ -211,23 +211,31 @@ onMounted(refresh)
 
 <template>
   <section class="stack">
-    <article class="hero card">
+    <article class="hero">
       <div>
         <p class="eyebrow">FUNCTIONAL TEST</p>
-        <h2>功能测试</h2>
+        <h1>功能测试</h1>
         <p class="muted">
           AI 先生成用例草稿，你确认后提交审核；用例可批量流转、可编辑，能力全部走 skill 注册。
         </p>
       </div>
-      <div class="hero-metrics">
-        <div><strong>{{ stats.total }}</strong><span>当前项目用例</span></div>
-        <div><strong>{{ stats.pending }}</strong><span>待审核</span></div>
-        <div><strong>{{ stats.approved }}</strong><span>已通过</span></div>
+      <div class="inline-stats">
+        <span class="stat-pill"><b>{{ stats.total }}</b> 当前项目用例</span>
+        <span class="stat-pill"><b>{{ stats.pending }}</b> 待审核</span>
+        <span class="stat-pill"><b>{{ stats.approved }}</b> 已通过</span>
       </div>
     </article>
 
     <p v-if="error" class="alert error">{{ error }}</p>
     <p v-if="notice" class="alert">{{ notice }}</p>
+
+    <div class="slim-banner">
+      <span>当前项目 {{ currentProject ? currentProject.name : '未选择' }}</span>
+      <span class="sep">·</span>
+      <span>{{ visibleCases.length }} 条命中</span>
+      <span class="sep">·</span>
+      <span>状态筛选可批量流转草稿 → 待审核 → 已通过</span>
+    </div>
 
     <div class="tabs">
       <button class="tab" :class="{ active: tab === 'manage' }" @click="tab = 'manage'">用例管理</button>
@@ -382,11 +390,12 @@ onMounted(refresh)
 
     <article class="card">
       <div class="card-head"><div><h2>已注册的 case skill</h2><p>前端按 category=case 拉取，不写死页面逻辑</p></div></div>
-      <ul class="feature-list">
-        <li v-for="item in skills" :key="item.id">
-          <strong class="mono">{{ item.id }}</strong> — {{ item.name }}：{{ item.description }}
-        </li>
-      </ul>
+      <div class="skill-chips">
+        <span v-for="item in skills" :key="item.id" class="skill-chip" :title="item.description">
+          <b>{{ item.name }}</b>
+          <em>{{ item.id }}</em>
+        </span>
+      </div>
     </article>
 
     <div v-if="editing" class="modal-mask" @click.self="editing = null">
