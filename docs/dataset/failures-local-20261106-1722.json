@@ -1,0 +1,163 @@
+{
+  "label": "local",
+  "base": "http://127.0.0.1:8000",
+  "created_at": "2026-11-06T17:22:05",
+  "runs": [
+    {
+      "project": "数据分析",
+      "case": "数据分析-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 85,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": false,
+      "plan": "数据分析 回归计划",
+      "plan_status": "failed",
+      "plan_failed": 1
+    },
+    {
+      "project": "客服工单",
+      "case": "客服工单-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 86,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": false,
+      "plan": "客服工单 回归计划",
+      "plan_status": "failed",
+      "plan_failed": 1
+    },
+    {
+      "project": "旅行预订",
+      "case": "旅行预订-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 87,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": false,
+      "plan": "旅行预订 回归计划",
+      "plan_status": "failed",
+      "plan_failed": 1
+    },
+    {
+      "project": "IoT 设备",
+      "case": "IoT 设备-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 88,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": false,
+      "plan": "IoT 设备 回归计划",
+      "plan_status": "failed",
+      "plan_failed": 1
+    },
+    {
+      "project": "SaaS 计费",
+      "case": "SaaS 计费-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 89,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": false,
+      "plan": "SaaS 计费 回归计划",
+      "plan_status": "failed",
+      "plan_failed": 1
+    },
+    {
+      "project": "招聘平台",
+      "case": "招聘平台-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 90,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": false,
+      "plan": "招聘平台 回归计划",
+      "plan_status": "failed",
+      "plan_failed": 1
+    },
+    {
+      "project": "金融风控",
+      "case": "金融风控-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 91,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": false,
+      "plan": "金融风控 回归计划",
+      "plan_status": "failed",
+      "plan_failed": 1
+    },
+    {
+      "project": "医疗预约",
+      "case": "医疗预约-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 92,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": false,
+      "plan": "医疗预约 回归计划",
+      "plan_status": "failed",
+      "plan_failed": 1
+    },
+    {
+      "project": "物流调度",
+      "case": "物流调度-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 93,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": false,
+      "plan": "物流调度 回归计划",
+      "plan_status": "failed",
+      "plan_failed": 1
+    },
+    {
+      "project": "在线教育",
+      "case": "在线教育-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 94,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": false,
+      "plan": "在线教育 回归计划",
+      "plan_status": "failed",
+      "plan_failed": 1
+    },
+    {
+      "project": "内容社区",
+      "case": "内容社区-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 95,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": false,
+      "plan": "内容社区 回归计划",
+      "plan_status": "failed",
+      "plan_failed": 1
+    },
+    {
+      "project": "电商后台",
+      "case": "电商后台-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 96,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": false,
+      "plan": "电商后台 回归计划",
+      "plan_status": "failed",
+      "plan_failed": 1
+    }
+  ],
+  "summary": {
+    "projects": 12,
+    "cases": 132,
+    "plans": 32,
+    "executions": 36,
+    "defects": 36,
+    "open_defects": 36,
+    "pass_rate": 0.0,
+    "results_passed": 0,
+    "results_failed": 10,
+    "results_total": 10
+  }
+}

@@ -1,0 +1,1283 @@
+{
+  "label": "remote",
+  "base": "https://ai-qa-lab-production.up.railway.app",
+  "started_at": "2026-11-06T17:16:14",
+  "finished_at": "2026-11-06T17:19:02",
+  "elapsed_seconds": 168.7,
+  "created": {
+    "executions": 19,
+    "api_scenarios": 19,
+    "runs_api": 76,
+    "searches": 57
+  },
+  "platform_summary": {
+    "projects": 19,
+    "cases": 204,
+    "plans": 43,
+    "executions": 24,
+    "defects": 61,
+    "open_defects": 61,
+    "pass_rate": 0.9667,
+    "results_passed": 58,
+    "results_failed": 2,
+    "results_total": 60
+  },
+  "skills": 19,
+  "tests": [
+    {
+      "kind": "plan_execution",
+      "project": "数据分析",
+      "plan": "数据分析 冒烟计划",
+      "status": "passed",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "duration_ms": 410
+    },
+    {
+      "kind": "plan_execution",
+      "project": "客服工单",
+      "plan": "客服工单 冒烟计划",
+      "status": "passed",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "duration_ms": 284
+    },
+    {
+      "kind": "plan_execution",
+      "project": "旅行预订",
+      "plan": "旅行预订 冒烟计划",
+      "status": "passed",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "duration_ms": 279
+    },
+    {
+      "kind": "plan_execution",
+      "project": "IoT 设备",
+      "plan": "IoT 设备 冒烟计划",
+      "status": "passed",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "duration_ms": 317
+    },
+    {
+      "kind": "plan_execution",
+      "project": "SaaS 计费",
+      "plan": "SaaS 计费 冒烟计划",
+      "status": "passed",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "duration_ms": 397
+    },
+    {
+      "kind": "plan_execution",
+      "project": "招聘平台",
+      "plan": "招聘平台 冒烟计划",
+      "status": "passed",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "duration_ms": 366
+    },
+    {
+      "kind": "plan_execution",
+      "project": "金融风控",
+      "plan": "金融风控 冒烟计划",
+      "status": "passed",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "duration_ms": 304
+    },
+    {
+      "kind": "plan_execution",
+      "project": "医疗预约",
+      "plan": "医疗预约 冒烟计划",
+      "status": "passed",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "duration_ms": 353
+    },
+    {
+      "kind": "plan_execution",
+      "project": "物流调度",
+      "plan": "物流调度 冒烟计划",
+      "status": "passed",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "duration_ms": 366
+    },
+    {
+      "kind": "plan_execution",
+      "project": "在线教育",
+      "plan": "在线教育 冒烟计划",
+      "status": "passed",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "duration_ms": 411
+    },
+    {
+      "kind": "plan_execution",
+      "project": "内容社区",
+      "plan": "内容社区 冒烟计划",
+      "status": "passed",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "duration_ms": 358
+    },
+    {
+      "kind": "plan_execution",
+      "project": "电商后台",
+      "plan": "电商后台 冒烟计划",
+      "status": "passed",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "duration_ms": 299
+    },
+    {
+      "kind": "plan_execution",
+      "project": "自动化回归项目-74130",
+      "plan": "自动化回归项目-74130 冒烟计划",
+      "status": "passed",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "duration_ms": 434
+    },
+    {
+      "kind": "plan_execution",
+      "project": "自动化回归项目",
+      "plan": "自动化回归项目 冒烟计划",
+      "status": "passed",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "duration_ms": 285
+    },
+    {
+      "kind": "plan_execution",
+      "project": "AI 质量平台演示",
+      "plan": "AI 质量平台演示 冒烟计划",
+      "status": "failed",
+      "total": 6,
+      "passed": 4,
+      "failed": 2,
+      "duration_ms": 420
+    },
+    {
+      "kind": "plan_execution",
+      "project": "test手工002",
+      "plan": "test手工002 冒烟计划",
+      "status": "passed",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "duration_ms": 233
+    },
+    {
+      "kind": "plan_execution",
+      "project": "test手工",
+      "plan": "test手工 冒烟计划",
+      "status": "passed",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "duration_ms": 375
+    },
+    {
+      "kind": "plan_execution",
+      "project": "线上闭环验收",
+      "plan": "线上闭环验收 冒烟计划",
+      "status": "passed",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "duration_ms": 397
+    },
+    {
+      "kind": "plan_execution",
+      "project": "线上验收项目",
+      "plan": "线上验收项目 冒烟计划",
+      "status": "passed",
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "duration_ms": 346
+    },
+    {
+      "kind": "api_case_run",
+      "project": "数据分析",
+      "case": "数据分析-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 126
+    },
+    {
+      "kind": "api_case_run",
+      "project": "数据分析",
+      "case": "数据分析-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 86
+    },
+    {
+      "kind": "api_case_run",
+      "project": "数据分析",
+      "case": "数据分析-GET /api/platform/models 返回 200",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 75
+    },
+    {
+      "kind": "api_scenario_run",
+      "project": "数据分析",
+      "case": "数据分析-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "steps": 2
+    },
+    {
+      "kind": "kb_search",
+      "project": "数据分析",
+      "kb": "数据分析测试规范库",
+      "query": "导出超过 5000 条怎么处理",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "kb_search",
+      "project": "数据分析",
+      "kb": "数据分析测试规范库",
+      "query": "普通角色访问管理接口",
+      "hits": 3,
+      "took_ms": 4
+    },
+    {
+      "kind": "kb_search",
+      "project": "数据分析",
+      "kb": "数据分析测试规范库",
+      "query": "深分页响应慢",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "api_case_run",
+      "project": "客服工单",
+      "case": "客服工单-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 91
+    },
+    {
+      "kind": "api_case_run",
+      "project": "客服工单",
+      "case": "客服工单-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 129
+    },
+    {
+      "kind": "api_case_run",
+      "project": "客服工单",
+      "case": "客服工单-GET /api/platform/models 返回 200",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 65
+    },
+    {
+      "kind": "api_scenario_run",
+      "project": "客服工单",
+      "case": "客服工单-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "steps": 2
+    },
+    {
+      "kind": "kb_search",
+      "project": "客服工单",
+      "kb": "客服工单测试规范库",
+      "query": "导出超过 5000 条怎么处理",
+      "hits": 3,
+      "took_ms": 2
+    },
+    {
+      "kind": "kb_search",
+      "project": "客服工单",
+      "kb": "客服工单测试规范库",
+      "query": "普通角色访问管理接口",
+      "hits": 3,
+      "took_ms": 3
+    },
+    {
+      "kind": "kb_search",
+      "project": "客服工单",
+      "kb": "客服工单测试规范库",
+      "query": "深分页响应慢",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "api_case_run",
+      "project": "旅行预订",
+      "case": "旅行预订-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 93
+    },
+    {
+      "kind": "api_case_run",
+      "project": "旅行预订",
+      "case": "旅行预订-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 97
+    },
+    {
+      "kind": "api_case_run",
+      "project": "旅行预订",
+      "case": "旅行预订-GET /api/platform/models 返回 200",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 65
+    },
+    {
+      "kind": "api_scenario_run",
+      "project": "旅行预订",
+      "case": "旅行预订-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "steps": 2
+    },
+    {
+      "kind": "kb_search",
+      "project": "旅行预订",
+      "kb": "旅行预订测试规范库",
+      "query": "导出超过 5000 条怎么处理",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "kb_search",
+      "project": "旅行预订",
+      "kb": "旅行预订测试规范库",
+      "query": "普通角色访问管理接口",
+      "hits": 3,
+      "took_ms": 5
+    },
+    {
+      "kind": "kb_search",
+      "project": "旅行预订",
+      "kb": "旅行预订测试规范库",
+      "query": "深分页响应慢",
+      "hits": 3,
+      "took_ms": 2
+    },
+    {
+      "kind": "api_case_run",
+      "project": "IoT 设备",
+      "case": "IoT 设备-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 198
+    },
+    {
+      "kind": "api_case_run",
+      "project": "IoT 设备",
+      "case": "IoT 设备-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 93
+    },
+    {
+      "kind": "api_case_run",
+      "project": "IoT 设备",
+      "case": "IoT 设备-GET /api/platform/models 返回 200",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 31
+    },
+    {
+      "kind": "api_scenario_run",
+      "project": "IoT 设备",
+      "case": "IoT 设备-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "steps": 2
+    },
+    {
+      "kind": "kb_search",
+      "project": "IoT 设备",
+      "kb": "IoT 设备测试规范库",
+      "query": "导出超过 5000 条怎么处理",
+      "hits": 3,
+      "took_ms": 4
+    },
+    {
+      "kind": "kb_search",
+      "project": "IoT 设备",
+      "kb": "IoT 设备测试规范库",
+      "query": "普通角色访问管理接口",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "kb_search",
+      "project": "IoT 设备",
+      "kb": "IoT 设备测试规范库",
+      "query": "深分页响应慢",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "api_case_run",
+      "project": "SaaS 计费",
+      "case": "SaaS 计费-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 147
+    },
+    {
+      "kind": "api_case_run",
+      "project": "SaaS 计费",
+      "case": "SaaS 计费-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 91
+    },
+    {
+      "kind": "api_case_run",
+      "project": "SaaS 计费",
+      "case": "SaaS 计费-GET /api/platform/models 返回 200",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 25
+    },
+    {
+      "kind": "api_scenario_run",
+      "project": "SaaS 计费",
+      "case": "SaaS 计费-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "steps": 2
+    },
+    {
+      "kind": "kb_search",
+      "project": "SaaS 计费",
+      "kb": "SaaS 计费测试规范库",
+      "query": "导出超过 5000 条怎么处理",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "kb_search",
+      "project": "SaaS 计费",
+      "kb": "SaaS 计费测试规范库",
+      "query": "普通角色访问管理接口",
+      "hits": 3,
+      "took_ms": 5
+    },
+    {
+      "kind": "kb_search",
+      "project": "SaaS 计费",
+      "kb": "SaaS 计费测试规范库",
+      "query": "深分页响应慢",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "api_case_run",
+      "project": "招聘平台",
+      "case": "招聘平台-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 95
+    },
+    {
+      "kind": "api_case_run",
+      "project": "招聘平台",
+      "case": "招聘平台-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 67
+    },
+    {
+      "kind": "api_case_run",
+      "project": "招聘平台",
+      "case": "招聘平台-GET /api/platform/models 返回 200",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 33
+    },
+    {
+      "kind": "api_scenario_run",
+      "project": "招聘平台",
+      "case": "招聘平台-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "steps": 2
+    },
+    {
+      "kind": "kb_search",
+      "project": "招聘平台",
+      "kb": "招聘平台测试规范库",
+      "query": "导出超过 5000 条怎么处理",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "kb_search",
+      "project": "招聘平台",
+      "kb": "招聘平台测试规范库",
+      "query": "普通角色访问管理接口",
+      "hits": 3,
+      "took_ms": 4
+    },
+    {
+      "kind": "kb_search",
+      "project": "招聘平台",
+      "kb": "招聘平台测试规范库",
+      "query": "深分页响应慢",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "api_case_run",
+      "project": "金融风控",
+      "case": "金融风控-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 134
+    },
+    {
+      "kind": "api_case_run",
+      "project": "金融风控",
+      "case": "金融风控-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 58
+    },
+    {
+      "kind": "api_case_run",
+      "project": "金融风控",
+      "case": "金融风控-GET /api/platform/models 返回 200",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 75
+    },
+    {
+      "kind": "api_scenario_run",
+      "project": "金融风控",
+      "case": "金融风控-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "steps": 2
+    },
+    {
+      "kind": "kb_search",
+      "project": "金融风控",
+      "kb": "金融风控测试规范库",
+      "query": "导出超过 5000 条怎么处理",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "kb_search",
+      "project": "金融风控",
+      "kb": "金融风控测试规范库",
+      "query": "普通角色访问管理接口",
+      "hits": 3,
+      "took_ms": 3
+    },
+    {
+      "kind": "kb_search",
+      "project": "金融风控",
+      "kb": "金融风控测试规范库",
+      "query": "深分页响应慢",
+      "hits": 3,
+      "took_ms": 4
+    },
+    {
+      "kind": "api_case_run",
+      "project": "医疗预约",
+      "case": "医疗预约-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 44
+    },
+    {
+      "kind": "api_case_run",
+      "project": "医疗预约",
+      "case": "医疗预约-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 52
+    },
+    {
+      "kind": "api_case_run",
+      "project": "医疗预约",
+      "case": "医疗预约-GET /api/platform/models 返回 200",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 20
+    },
+    {
+      "kind": "api_scenario_run",
+      "project": "医疗预约",
+      "case": "医疗预约-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "steps": 2
+    },
+    {
+      "kind": "kb_search",
+      "project": "医疗预约",
+      "kb": "医疗预约测试规范库",
+      "query": "导出超过 5000 条怎么处理",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "kb_search",
+      "project": "医疗预约",
+      "kb": "医疗预约测试规范库",
+      "query": "普通角色访问管理接口",
+      "hits": 3,
+      "took_ms": 4
+    },
+    {
+      "kind": "kb_search",
+      "project": "医疗预约",
+      "kb": "医疗预约测试规范库",
+      "query": "深分页响应慢",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "api_case_run",
+      "project": "物流调度",
+      "case": "物流调度-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 87
+    },
+    {
+      "kind": "api_case_run",
+      "project": "物流调度",
+      "case": "物流调度-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 128
+    },
+    {
+      "kind": "api_case_run",
+      "project": "物流调度",
+      "case": "物流调度-GET /api/platform/models 返回 200",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 65
+    },
+    {
+      "kind": "api_scenario_run",
+      "project": "物流调度",
+      "case": "物流调度-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "steps": 2
+    },
+    {
+      "kind": "kb_search",
+      "project": "物流调度",
+      "kb": "物流调度测试规范库",
+      "query": "导出超过 5000 条怎么处理",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "kb_search",
+      "project": "物流调度",
+      "kb": "物流调度测试规范库",
+      "query": "普通角色访问管理接口",
+      "hits": 3,
+      "took_ms": 4
+    },
+    {
+      "kind": "kb_search",
+      "project": "物流调度",
+      "kb": "物流调度测试规范库",
+      "query": "深分页响应慢",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "api_case_run",
+      "project": "在线教育",
+      "case": "在线教育-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 91
+    },
+    {
+      "kind": "api_case_run",
+      "project": "在线教育",
+      "case": "在线教育-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 164
+    },
+    {
+      "kind": "api_case_run",
+      "project": "在线教育",
+      "case": "在线教育-GET /api/platform/models 返回 200",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 22
+    },
+    {
+      "kind": "api_scenario_run",
+      "project": "在线教育",
+      "case": "在线教育-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "steps": 2
+    },
+    {
+      "kind": "kb_search",
+      "project": "在线教育",
+      "kb": "在线教育测试规范库",
+      "query": "导出超过 5000 条怎么处理",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "kb_search",
+      "project": "在线教育",
+      "kb": "在线教育测试规范库",
+      "query": "普通角色访问管理接口",
+      "hits": 3,
+      "took_ms": 4
+    },
+    {
+      "kind": "kb_search",
+      "project": "在线教育",
+      "kb": "在线教育测试规范库",
+      "query": "深分页响应慢",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "api_case_run",
+      "project": "内容社区",
+      "case": "内容社区-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 97
+    },
+    {
+      "kind": "api_case_run",
+      "project": "内容社区",
+      "case": "内容社区-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 132
+    },
+    {
+      "kind": "api_case_run",
+      "project": "内容社区",
+      "case": "内容社区-GET /api/platform/models 返回 200",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 61
+    },
+    {
+      "kind": "api_scenario_run",
+      "project": "内容社区",
+      "case": "内容社区-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "steps": 2
+    },
+    {
+      "kind": "kb_search",
+      "project": "内容社区",
+      "kb": "内容社区测试规范库",
+      "query": "导出超过 5000 条怎么处理",
+      "hits": 3,
+      "took_ms": 2
+    },
+    {
+      "kind": "kb_search",
+      "project": "内容社区",
+      "kb": "内容社区测试规范库",
+      "query": "普通角色访问管理接口",
+      "hits": 3,
+      "took_ms": 4
+    },
+    {
+      "kind": "kb_search",
+      "project": "内容社区",
+      "kb": "内容社区测试规范库",
+      "query": "深分页响应慢",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "api_case_run",
+      "project": "电商后台",
+      "case": "电商后台-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 96
+    },
+    {
+      "kind": "api_case_run",
+      "project": "电商后台",
+      "case": "电商后台-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 48
+    },
+    {
+      "kind": "api_case_run",
+      "project": "电商后台",
+      "case": "电商后台-GET /api/platform/models 返回 200",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 22
+    },
+    {
+      "kind": "api_scenario_run",
+      "project": "电商后台",
+      "case": "电商后台-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "steps": 2
+    },
+    {
+      "kind": "kb_search",
+      "project": "电商后台",
+      "kb": "电商后台测试规范库",
+      "query": "导出超过 5000 条怎么处理",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "kb_search",
+      "project": "电商后台",
+      "kb": "电商后台测试规范库",
+      "query": "普通角色访问管理接口",
+      "hits": 3,
+      "took_ms": 3
+    },
+    {
+      "kind": "kb_search",
+      "project": "电商后台",
+      "kb": "电商后台测试规范库",
+      "query": "深分页响应慢",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "api_case_run",
+      "project": "自动化回归项目-74130",
+      "case": "自动化回归项目-74130-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 126
+    },
+    {
+      "kind": "api_case_run",
+      "project": "自动化回归项目-74130",
+      "case": "自动化回归项目-74130-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 101
+    },
+    {
+      "kind": "api_case_run",
+      "project": "自动化回归项目-74130",
+      "case": "自动化回归项目-74130-GET /api/platform/models 返回 200",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 25
+    },
+    {
+      "kind": "api_scenario_run",
+      "project": "自动化回归项目-74130",
+      "case": "自动化回归项目-74130-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "steps": 2
+    },
+    {
+      "kind": "kb_search",
+      "project": "自动化回归项目-74130",
+      "kb": "自动化回归项目-74130测试规范库",
+      "query": "导出超过 5000 条怎么处理",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "kb_search",
+      "project": "自动化回归项目-74130",
+      "kb": "自动化回归项目-74130测试规范库",
+      "query": "普通角色访问管理接口",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "kb_search",
+      "project": "自动化回归项目-74130",
+      "kb": "自动化回归项目-74130测试规范库",
+      "query": "深分页响应慢",
+      "hits": 3,
+      "took_ms": 5
+    },
+    {
+      "kind": "api_case_run",
+      "project": "自动化回归项目",
+      "case": "自动化回归项目-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 88
+    },
+    {
+      "kind": "api_case_run",
+      "project": "自动化回归项目",
+      "case": "自动化回归项目-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 141
+    },
+    {
+      "kind": "api_case_run",
+      "project": "自动化回归项目",
+      "case": "自动化回归项目-GET /api/platform/models 返回 200",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 66
+    },
+    {
+      "kind": "api_scenario_run",
+      "project": "自动化回归项目",
+      "case": "自动化回归项目-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "steps": 2
+    },
+    {
+      "kind": "kb_search",
+      "project": "自动化回归项目",
+      "kb": "自动化回归项目测试规范库",
+      "query": "导出超过 5000 条怎么处理",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "kb_search",
+      "project": "自动化回归项目",
+      "kb": "自动化回归项目测试规范库",
+      "query": "普通角色访问管理接口",
+      "hits": 3,
+      "took_ms": 4
+    },
+    {
+      "kind": "kb_search",
+      "project": "自动化回归项目",
+      "kb": "自动化回归项目测试规范库",
+      "query": "深分页响应慢",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "api_case_run",
+      "project": "AI 质量平台演示",
+      "case": "AI 质量平台演示-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 87
+    },
+    {
+      "kind": "api_case_run",
+      "project": "AI 质量平台演示",
+      "case": "AI 质量平台演示-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 92
+    },
+    {
+      "kind": "api_case_run",
+      "project": "AI 质量平台演示",
+      "case": "AI 质量平台演示-GET /api/platform/models 返回 200",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 64
+    },
+    {
+      "kind": "api_scenario_run",
+      "project": "AI 质量平台演示",
+      "case": "AI 质量平台演示-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "steps": 2
+    },
+    {
+      "kind": "kb_search",
+      "project": "AI 质量平台演示",
+      "kb": "AI 质量平台演示测试规范库",
+      "query": "导出超过 5000 条怎么处理",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "kb_search",
+      "project": "AI 质量平台演示",
+      "kb": "AI 质量平台演示测试规范库",
+      "query": "普通角色访问管理接口",
+      "hits": 3,
+      "took_ms": 5
+    },
+    {
+      "kind": "kb_search",
+      "project": "AI 质量平台演示",
+      "kb": "AI 质量平台演示测试规范库",
+      "query": "深分页响应慢",
+      "hits": 3,
+      "took_ms": 6
+    },
+    {
+      "kind": "api_case_run",
+      "project": "test手工002",
+      "case": "test手工002-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 134
+    },
+    {
+      "kind": "api_case_run",
+      "project": "test手工002",
+      "case": "test手工002-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 54
+    },
+    {
+      "kind": "api_case_run",
+      "project": "test手工002",
+      "case": "test手工002-GET /api/platform/models 返回 200",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 61
+    },
+    {
+      "kind": "api_scenario_run",
+      "project": "test手工002",
+      "case": "test手工002-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "steps": 2
+    },
+    {
+      "kind": "kb_search",
+      "project": "test手工002",
+      "kb": "test手工002测试规范库",
+      "query": "导出超过 5000 条怎么处理",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "kb_search",
+      "project": "test手工002",
+      "kb": "test手工002测试规范库",
+      "query": "普通角色访问管理接口",
+      "hits": 3,
+      "took_ms": 4
+    },
+    {
+      "kind": "kb_search",
+      "project": "test手工002",
+      "kb": "test手工002测试规范库",
+      "query": "深分页响应慢",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "api_case_run",
+      "project": "test手工",
+      "case": "test手工-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 50
+    },
+    {
+      "kind": "api_case_run",
+      "project": "test手工",
+      "case": "test手工-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 103
+    },
+    {
+      "kind": "api_case_run",
+      "project": "test手工",
+      "case": "test手工-GET /api/platform/models 返回 200",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 72
+    },
+    {
+      "kind": "api_scenario_run",
+      "project": "test手工",
+      "case": "test手工-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "steps": 2
+    },
+    {
+      "kind": "kb_search",
+      "project": "test手工",
+      "kb": "test手工测试规范库",
+      "query": "导出超过 5000 条怎么处理",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "kb_search",
+      "project": "test手工",
+      "kb": "test手工测试规范库",
+      "query": "普通角色访问管理接口",
+      "hits": 3,
+      "took_ms": 4
+    },
+    {
+      "kind": "kb_search",
+      "project": "test手工",
+      "kb": "test手工测试规范库",
+      "query": "深分页响应慢",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "api_case_run",
+      "project": "线上闭环验收",
+      "case": "线上闭环验收-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 89
+    },
+    {
+      "kind": "api_case_run",
+      "project": "线上闭环验收",
+      "case": "线上闭环验收-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 47
+    },
+    {
+      "kind": "api_case_run",
+      "project": "线上闭环验收",
+      "case": "线上闭环验收-GET /api/platform/models 返回 200",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 74
+    },
+    {
+      "kind": "api_scenario_run",
+      "project": "线上闭环验收",
+      "case": "线上闭环验收-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "steps": 2
+    },
+    {
+      "kind": "kb_search",
+      "project": "线上闭环验收",
+      "kb": "线上闭环验收测试规范库",
+      "query": "导出超过 5000 条怎么处理",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "kb_search",
+      "project": "线上闭环验收",
+      "kb": "线上闭环验收测试规范库",
+      "query": "普通角色访问管理接口",
+      "hits": 3,
+      "took_ms": 3
+    },
+    {
+      "kind": "kb_search",
+      "project": "线上闭环验收",
+      "kb": "线上闭环验收测试规范库",
+      "query": "深分页响应慢",
+      "hits": 3,
+      "took_ms": 2
+    },
+    {
+      "kind": "api_case_run",
+      "project": "线上验收项目",
+      "case": "线上验收项目-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 140
+    },
+    {
+      "kind": "api_case_run",
+      "project": "线上验收项目",
+      "case": "线上验收项目-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 140
+    },
+    {
+      "kind": "api_case_run",
+      "project": "线上验收项目",
+      "case": "线上验收项目-GET /api/platform/models 返回 200",
+      "status": "passed",
+      "status_code": 200,
+      "duration_ms": 34
+    },
+    {
+      "kind": "api_scenario_run",
+      "project": "线上验收项目",
+      "case": "线上验收项目-创建项目后分页查询校验数据一致",
+      "status": "passed",
+      "steps": 2
+    },
+    {
+      "kind": "kb_search",
+      "project": "线上验收项目",
+      "kb": "线上验收项目测试规范库",
+      "query": "导出超过 5000 条怎么处理",
+      "hits": 3,
+      "took_ms": 1
+    },
+    {
+      "kind": "kb_search",
+      "project": "线上验收项目",
+      "kb": "线上验收项目测试规范库",
+      "query": "普通角色访问管理接口",
+      "hits": 3,
+      "took_ms": 4
+    },
+    {
+      "kind": "kb_search",
+      "project": "线上验收项目",
+      "kb": "线上验收项目测试规范库",
+      "query": "深分页响应慢",
+      "hits": 3,
+      "took_ms": 1
+    }
+  ],
+  "counts": {
+    "projects": 19,
+    "requirements": 190,
+    "cases": 204,
+    "knowledge_bases": 38,
+    "knowledge_documents": 760,
+    "api_assets": 19,
+    "api_endpoints": 190,
+    "api_cases": 228,
+    "api_runs": 152,
+    "ui_cases": 190,
+    "ui_runs": 0,
+    "environments": 76,
+    "modules": 76,
+    "members": 76,
+    "users": 10,
+    "models": 15,
+    "defects": 61,
+    "plans": 43
+  }
+}

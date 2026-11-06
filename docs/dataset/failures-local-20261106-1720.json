@@ -1,0 +1,143 @@
+{
+  "label": "local",
+  "base": "http://127.0.0.1:8000",
+  "created_at": "2026-11-06T17:20:19",
+  "runs": [
+    {
+      "project": "数据分析",
+      "case": "数据分析-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 61,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": true,
+      "ai_root_cause": "结论：断言写错（故障注入未生效，期望值不成立）。\n\n依据：\n1. 请求为普通 GET `/api/platform/summary`，headers、params、body 均为空，没有任何故障注入标记（如 header 或参数）。\n2. 响应 status_code=200，body 返回正常业务数据（projects=12、cases=120、pass_rate=1.0），说明服务端正常处理。\n3. 无鉴权头却返回 200，排除鉴权问题；数据完整，排除数据准备问题。\n\n修复建议：在请求中补上故障注入开关（如 header `X-Fault-Inject: summary-500` 或对应 query 参数），或将断言期望改为 200。",
+      "plan_error": "POST /api/platform/plans/32/execute -> 400 {\"detail\":\"没有已审核通过的用例可执行\"}"
+    },
+    {
+      "project": "客服工单",
+      "case": "客服工单-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 62,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": true,
+      "ai_root_cause": "结论：问题在数据准备/故障注入未生效，接口本身正常返回 200。\n\n依据：\n1. 请求为 GET /api/platform/summary，无任何故障注入参数或 header，服务端无从得知要返回 500。\n2. 响应 status_code 为 200，body 含正常业务数据（projects:12、cases:120、pass_rate:1.0），说明服务健康。\n3. 响应头 x-request-id 正常、content-type 为 application/json，无异常注入痕迹。\n\n修复建议：在请求中显式携带故障注入开关（如 header `X-Fault-Inject: summary-500` 或对应 query 参数），确认注入中间件已启用后再断言 500。",
+      "plan_error": "POST /api/platform/plans/30/execute -> 400 {\"detail\":\"没有已审核通过的用例可执行\"}"
+    },
+    {
+      "project": "旅行预订",
+      "case": "旅行预订-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 63,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": true,
+      "ai_root_cause": "结论：问题在断言写错（或故障注入未生效），接口本身正常返回 200。\n\n依据：\n1. 请求为普通 GET `/api/platform/summary`，无任何故障注入参数或特殊 header，服务端无从得知要返回 500。\n2. 响应 `status_code` 为 200，body 为正常业务数据（`projects:12`、`pass_rate:1.0`），无错误信息。\n3. 响应头 `server: uvicorn`、`x-request-id: d53f55cf628c` 表明服务正常处理，非异常路径。\n\n修复建议：确认故障注入开关/参数是否已随请求下发（如 header 或 query），否则将断言改为期望 200 并校验 body 字段。",
+      "plan_error": "POST /api/platform/plans/28/execute -> 400 {\"detail\":\"没有已审核通过的用例可执行\"}"
+    },
+    {
+      "project": "IoT 设备",
+      "case": "IoT 设备-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 64,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": true,
+      "ai_root_cause": "结论：问题在数据准备/故障注入未生效，接口本身正常返回 200。\n\n依据：\n1. 请求为 GET /api/platform/summary，无任何故障注入参数或 header，服务端无从得知要模拟 500。\n2. 响应 status_code=200，body 返回完整业务数据（projects=12、cases=120、pass_rate=1.0），说明服务健康。\n3. 响应头 x-request-id=1e3f643a97e2 正常，无异常标记，排除服务端崩溃。\n\n修复建议：在请求中显式携带故障注入开关（如 header X-Fault-Inject: summary-500 或 params fault=500），确认注入中间件已启用后再断言 500。",
+      "plan_error": "POST /api/platform/plans/26/execute -> 400 {\"detail\":\"没有已审核通过的用例可执行\"}"
+    },
+    {
+      "project": "SaaS 计费",
+      "case": "SaaS 计费-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 65,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": false,
+      "plan_error": "POST /api/platform/plans/24/execute -> 400 {\"detail\":\"没有已审核通过的用例可执行\"}"
+    },
+    {
+      "project": "招聘平台",
+      "case": "招聘平台-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 66,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": false,
+      "plan_error": "POST /api/platform/plans/22/execute -> 400 {\"detail\":\"没有已审核通过的用例可执行\"}"
+    },
+    {
+      "project": "金融风控",
+      "case": "金融风控-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 67,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": false,
+      "plan_error": "POST /api/platform/plans/20/execute -> 400 {\"detail\":\"没有已审核通过的用例可执行\"}"
+    },
+    {
+      "project": "医疗预约",
+      "case": "医疗预约-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 68,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": false,
+      "plan_error": "POST /api/platform/plans/18/execute -> 400 {\"detail\":\"没有已审核通过的用例可执行\"}"
+    },
+    {
+      "project": "物流调度",
+      "case": "物流调度-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 69,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": false,
+      "plan_error": "POST /api/platform/plans/16/execute -> 400 {\"detail\":\"没有已审核通过的用例可执行\"}"
+    },
+    {
+      "project": "在线教育",
+      "case": "在线教育-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 70,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": false,
+      "plan_error": "POST /api/platform/plans/14/execute -> 400 {\"detail\":\"没有已审核通过的用例可执行\"}"
+    },
+    {
+      "project": "内容社区",
+      "case": "内容社区-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 71,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": false,
+      "plan_error": "POST /api/platform/plans/12/execute -> 400 {\"detail\":\"没有已审核通过的用例可执行\"}"
+    },
+    {
+      "project": "电商后台",
+      "case": "电商后台-故障注入：概览接口期望 500（实际 200）",
+      "run_id": 72,
+      "status": "failed",
+      "status_code": 200,
+      "reason": "状态码期望 500，实际 200",
+      "diagnosed": false,
+      "plan_error": "POST /api/platform/plans/10/execute -> 400 {\"detail\":\"没有已审核通过的用例可执行\"}"
+    }
+  ],
+  "summary": {
+    "projects": 12,
+    "cases": 120,
+    "plans": 32,
+    "executions": 12,
+    "defects": 36,
+    "open_defects": 36,
+    "pass_rate": 1.0,
+    "results_passed": 60,
+    "results_failed": 0,
+    "results_total": 60
+  }
+}

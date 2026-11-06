@@ -52,6 +52,12 @@ docs/screenshots/
 # Playwright browsers installed into the repo (.pw-browsers, ~150MB)
 .pw-browsers/
 
+# Local DB backups made before reseeding
+sut.db.bak-*
+
+# Dataset screenshots (regenerate with scripts/dataset_shots.py)
+docs/dataset/shots/
+
 # Local uploads / UI run screenshots
 data/
 
