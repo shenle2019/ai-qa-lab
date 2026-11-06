@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 import { api } from './api/client'
 
@@ -10,8 +10,24 @@ const menuOpen = ref(false)
 const docsOnline = ref(false)
 const title = computed(() => route.meta.title || 'AI 测试平台')
 const healthNotice = ref('')
+const heroOwnsTitle = ref(false)
 let healthTimer = null
 let noticeTimer = null
+
+// Pages that render their own hero already show the page title. Keeping the
+// topbar title as well printed every heading twice, so the hero wins and the
+// topbar falls back to a quiet context strip.
+function detectHero() {
+  heroOwnsTitle.value = Boolean(document.querySelector('.content .hero h1, .content .hero h2'))
+}
+
+watch(
+  () => route.fullPath,
+  async () => {
+    await nextTick()
+    detectHero()
+  },
+)
 
 function announce(text) {
   healthNotice.value = text
@@ -68,6 +84,7 @@ onMounted(() => {
   checkHealth()
   healthTimer = setInterval(checkHealth, 30000)
   window.addEventListener('keydown', onKeydown)
+  nextTick(detectHero)
 })
 
 onUnmounted(() => {
@@ -147,7 +164,7 @@ onUnmounted(() => {
       </div>
     </aside>
 
-    <div class="main">
+    <div class="main" :class="{ 'has-hero': heroOwnsTitle }">
       <header class="topbar">
         <div class="topbar-title">
           <button
@@ -159,10 +176,15 @@ onUnmounted(() => {
           >
             ☰
           </button>
-          <div>
+          <div v-if="!heroOwnsTitle">
             <p class="eyebrow">AI QUALITY ENGINEERING</p>
             <h1>{{ title }}</h1>
           </div>
+          <p v-else class="topbar-crumb">
+            <span class="crumb-root">AI 测试平台</span>
+            <span class="crumb-sep">·</span>
+            <span class="crumb-hint">质量工程工作台</span>
+          </p>
         </div>
         <div class="topbar-actions">
           <span v-if="healthNotice" class="muted">{{ healthNotice }}</span>

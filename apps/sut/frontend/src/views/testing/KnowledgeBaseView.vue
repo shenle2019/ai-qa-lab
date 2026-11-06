@@ -25,6 +25,15 @@ const chunkView = reactive({ open: false, document: null, chunks: [] })
 const chunkLoading = ref(false)
 
 const selected = computed(() => bases.value.find((item) => item.id === selectedId.value) || null)
+const kbFilter = ref('')
+const visibleBases = computed(() => {
+  const term = kbFilter.value.trim().toLowerCase()
+  if (!term) return bases.value
+  return bases.value.filter(
+    (item) =>
+      item.name.toLowerCase().includes(term) || (item.description || '').toLowerCase().includes(term),
+  )
+})
 const totalDocs = computed(() => bases.value.reduce((sum, item) => sum + item.document_count, 0))
 const totalChunks = computed(() => bases.value.reduce((sum, item) => sum + item.chunk_count, 0))
 
@@ -219,12 +228,21 @@ onMounted(loadBases)
       <aside class="card kb-list">
         <div class="card-head">
           <h2>知识库</h2>
-          <span class="muted">{{ bases.length }} 个</span>
+          <span class="muted">{{ visibleBases.length }} / {{ bases.length }} 个</span>
         </div>
+        <input
+          v-model="kbFilter"
+          type="search"
+          class="kb-filter"
+          maxlength="60"
+          placeholder="搜索知识库名称"
+          aria-label="搜索知识库"
+        />
         <p v-if="!bases.length" class="empty">还没有知识库，先创建一个。</p>
+        <p v-else-if="!visibleBases.length" class="empty">没有匹配「{{ kbFilter }}」的知识库。</p>
         <ul class="kb-items">
           <li
-            v-for="item in bases"
+            v-for="item in visibleBases"
             :key="item.id"
             :class="['kb-item', { active: item.id === selectedId }]"
             @click="selectBase(item.id)"
@@ -393,6 +411,10 @@ onMounted(loadBases)
   grid-template-columns: 300px minmax(0, 1fr);
   gap: 18px;
   align-items: start;
+}
+.kb-filter {
+  width: 100%;
+  margin-bottom: 10px;
 }
 .kb-items {
   list-style: none;
