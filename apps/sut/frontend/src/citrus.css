@@ -1935,3 +1935,9 @@ td.req-title.pr-low {
   font-style: normal;
   color: var(--muted);
 }
+
+@media (max-width: 720px) {
+  .cat-chip {
+    justify-self: start;
+  }
+}
