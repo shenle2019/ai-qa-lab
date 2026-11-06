@@ -171,6 +171,7 @@ onUnmounted(() => {
 
 <template>
   <div class="shell" :class="{ 'menu-open': menuOpen }">
+    <div v-if="menuOpen" class="scrim" aria-hidden="true" @click="menuOpen = false" />
     <aside class="sidebar">
       <div class="brand">
         <div class="brand-mark">QA</div>

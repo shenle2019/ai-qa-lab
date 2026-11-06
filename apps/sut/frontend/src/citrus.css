@@ -1,4 +1,4 @@
-/* =========================================================================
+﻿/* =========================================================================
    Citrus Lab · 柠檬黄绿 + 暖白（2026-11-06 改版）
    ---------------------------------------------------------------------
    本文件替代 theme.css 作为唯一的亮色主题层，在 style.css / style-fixes.css
@@ -34,6 +34,8 @@
   /* 语义层 */
   --ok: #16a34a;
   --ok-soft: #e7f6ec;
+  /* --ok 用作填充/圆点；小字放 --ok-soft 上只有 2.95:1，文字另有 --ok-ink */
+  --ok-ink: #15803d;
   --warn: #b45309;
   --warn-soft: #fef3e2;
   --danger: #dc2626;
@@ -49,6 +51,11 @@
   --shadow-2: 0 10px 30px -12px rgba(77, 124, 15, 0.28);
 
   /* ---- 旧 token 别名：保证组件里 var(--xxx) 继续生效 ---- */
+  /* --text 是 style.css 深色主题的正文色（#e6edf7）。各视图的 scoped 样式仍在
+     用它，不remap 就会在白底上出现「几乎看不见的浅灰字」。 */
+  --text: var(--ink);
+  --panel-2: var(--panel);
+  --accent-2: var(--lime-deep);
   --line-bg: #f4f6f8;
   --accent: var(--lime-deep);
   --accent-strong: #3f660c;
@@ -488,6 +495,10 @@ a {
   color: var(--ink-2);
   font-size: 12px;
   font-weight: 700;
+}
+
+.scrim {
+  display: none;
 }
 
 /* =========================== 内容与 hero =========================== */
@@ -961,7 +972,7 @@ textarea:focus-visible {
 .badge.ready,
 .badge.active {
   background: var(--ok-soft);
-  color: var(--ok);
+  color: var(--ok-ink);
 }
 
 .badge.pending,
@@ -993,7 +1004,7 @@ textarea:focus-visible {
 /* 旧页面用 module-* 表达状态，这里映射到语义色 */
 .badge.module-done {
   background: var(--ok-soft);
-  color: var(--ok);
+  color: var(--ok-ink);
 }
 
 .badge.module-planned {
@@ -1010,19 +1021,16 @@ textarea:focus-visible {
 .badge.priority-high {
   background: var(--danger-soft);
   color: var(--danger);
-  box-shadow: inset 2px 0 0 var(--danger);
 }
 
 .badge.priority-medium {
   background: var(--warn-soft);
   color: var(--warn);
-  box-shadow: inset 2px 0 0 var(--warn);
 }
 
 .badge.priority-low {
   background: var(--bg);
   color: var(--muted);
-  box-shadow: inset 2px 0 0 var(--line-strong);
 }
 
 /* 文本型按钮（表格里的标题点击）——不定义就会继承深色主题的 #e6edf7 */
@@ -1396,6 +1404,16 @@ tbody td.empty::before {
 
   .menu-open .sidebar {
     transform: none;
+  }
+
+  .scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 35;
+    background: rgba(28, 38, 7, 0.28);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
   }
 
   .menu-toggle {
