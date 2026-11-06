@@ -32,8 +32,17 @@ COUNT_ROWS = [
 ]
 
 
+def _files(label: str) -> list[Path]:
+    return [
+        path
+        for path in OUT.glob(f"{label}-*.json")
+        if path.name.startswith(f"{label}-")
+        and not path.name.startswith("failures-")
+    ]
+
+
 def latest(label: str) -> dict | None:
-    files = sorted(OUT.glob(f"{label}-2*.json"), key=lambda path: path.stat().st_mtime)
+    files = sorted(_files(label), key=lambda path: path.stat().st_mtime)
     if not files:
         return None
     payload = json.loads(files[-1].read_text(encoding="utf-8"))
@@ -42,13 +51,28 @@ def latest(label: str) -> dict | None:
 
 
 def latest_with_tests(label: str) -> dict | None:
-    files = sorted(OUT.glob(f"{label}-2*.json"), key=lambda path: path.stat().st_mtime, reverse=True)
+    files = sorted(_files(label), key=lambda path: path.stat().st_mtime, reverse=True)
     for path in files:
         payload = json.loads(path.read_text(encoding="utf-8"))
         if payload.get("tests"):
             payload["_file"] = path.name
             return payload
     return None
+
+
+def latest_failures(label: str) -> dict | None:
+    files = sorted(OUT.glob(f"failures-{label}-*.json"), key=lambda path: path.stat().st_mtime)
+    if not files:
+        return None
+    best = None
+    best_score = -1
+    for path in files:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        score = sum(1 for item in payload.get("runs", []) if item.get("diagnosed"))
+        if score >= best_score:
+            best, best_score = payload, score
+            payload["_file"] = path.name
+    return best
 
 
 def test_bucket(tests: list[dict]) -> dict[str, dict[str, int]]:
@@ -140,6 +164,28 @@ def main() -> int:
             lines.append(f"| {KIND_TEXT.get(kind, kind)} | {detail} |")
         lines.append("")
 
+    lines.append("## 失败注入与 AI 归因")
+    lines.append("")
+    for key in ("local", "remote"):
+        payload = latest_failures(key)
+        if not payload:
+            continue
+        runs = payload["runs"]
+        failed = sum(1 for item in runs if item["status"] == "failed")
+        diagnosed = sum(1 for item in runs if item.get("diagnosed"))
+        lines.append(f"### {LABELS.get(key, key)}")
+        lines.append("")
+        lines.append(f"- 结果文件：`docs/dataset/{payload['_file']}`")
+        lines.append(f"- 注入用例：{len(runs)} 条，执行失败 {failed} 条，AI 归因 {diagnosed} 条")
+        sample = next((item for item in runs if item.get("ai_root_cause")), None)
+        if sample:
+            text = " ".join(sample["ai_root_cause"].split())[:160]
+            lines.append(f"- 归因样例（{sample['project']}）：{text}")
+        lines.append("")
+    lines.append("> 失败是故意造的：断言要求 `GET /api/platform/summary` 返回 500，实际返回 200，")
+    lines.append("> 用来验证「失败 → 记录 → AI 归因」这条链路，不代表产品缺陷。")
+    lines.append("")
+
     lines.append("## 每个项目都有什么")
     lines.append("")
     lines.append("每个项目都会补齐到下面这套结构（已存在的不重复创建）：")
@@ -165,8 +211,14 @@ def main() -> int:
     lines.append("# 本地（带 AI 分析与 UI 真跑）")
     lines.append(".venv\\Scripts\\python.exe scripts\\seed_dataset.py --base http://127.0.0.1:8000 --label local --ai --ai-limit 8 --ui-run --ui-limit 12")
     lines.append("")
-    lines.append("# 线上（写接口要带上 APP_API_KEY；生产没有 Chromium，跳过 UI 真跑）")
+    lines.append("# 线上（写接口要带 APP_API_KEY；生产没有 Chromium，UI 用例只建不跑）")
     lines.append(".venv\\Scripts\\python.exe scripts\\seed_dataset.py --base https://ai-qa-lab-production.up.railway.app --label remote --key <APP_API_KEY> --skip-plan-run")
+    lines.append("")
+    lines.append("# 失败注入 + 冒烟计划回归（让通过率有真实的分子分母）")
+    lines.append(".venv\\Scripts\\python.exe scripts\\seed_failures.py --base http://127.0.0.1:8000 --label local --diagnose 4")
+    lines.append("")
+    lines.append("# 采集当前库存快照（不重复造数据）")
+    lines.append(".venv\\Scripts\\python.exe scripts\\dataset_snapshot.py --label local")
     lines.append("")
     lines.append("# 重新生成本文件")
     lines.append(".venv\\Scripts\\python.exe scripts\\dataset_report.py")

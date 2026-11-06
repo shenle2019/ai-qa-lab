@@ -1,0 +1,39 @@
+{
+  "label": "local",
+  "base": "http://127.0.0.1:8000",
+  "elapsed_seconds": 0,
+  "created_at": "2026-11-06T17:34:24",
+  "platform_summary": {
+    "projects": 12,
+    "cases": 132,
+    "plans": 32,
+    "executions": 48,
+    "defects": 36,
+    "open_defects": 36,
+    "pass_rate": 0.875,
+    "results_passed": 70,
+    "results_failed": 10,
+    "results_total": 80
+  },
+  "counts": {
+    "projects": 12,
+    "requirements": 120,
+    "cases": 132,
+    "plans": 32,
+    "defects": 36,
+    "knowledge_bases": 24,
+    "api_assets": 12,
+    "api_endpoints": 120,
+    "api_cases": 144,
+    "api_runs": 96,
+    "ui_cases": 120,
+    "users": 10,
+    "models": 12,
+    "environments": 48,
+    "modules": 48,
+    "members": 48,
+    "ui_runs": 12,
+    "knowledge_documents": 480
+  },
+  "tests": []
+}

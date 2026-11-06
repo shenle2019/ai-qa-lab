@@ -8,15 +8,15 @@
 | --- | --- | --- |
 | 项目 | 12 | 19 |
 | 需求 | 120 | 190 |
-| 功能用例 | 120 | 204 |
+| 功能用例 | 132 | 223 |
 | 测试计划 | 32 | 43 |
 | 缺陷 | 36 | 61 |
 | 知识库 | 24 | 38 |
 | 知识库文档 | 480 | 760 |
 | 接口资产 | 12 | 19 |
 | 接口 | 120 | 190 |
-| 接口用例 | 132 | 228 |
-| 接口执行记录 | 48 | 152 |
+| 接口用例 | 144 | 247 |
+| 接口执行记录 | 96 | 171 |
 | UI 用例 | 120 | 190 |
 | UI 执行记录 | 12 | 0 |
 | 环境 | 48 | 76 |
@@ -30,12 +30,12 @@
 | 指标 | 本地（http://127.0.0.1:8000） | 线上（Railway） |
 | --- | --- | --- |
 | 项目数 | 12 | 19 |
-| 用例数 | 120 | 204 |
+| 用例数 | 132 | 223 |
 | 计划数 | 32 | 43 |
-| 执行次数 | 12 | 24 |
+| 执行次数 | 48 | 62 |
 | 缺陷数 | 36 | 61 |
-| 通过率 | 1.0 | 0.9667 |
-| 用例结果总数 | 60 | 60 |
+| 通过率 | 0.875 | 0.7791 |
+| 用例结果总数 | 80 | 86 |
 
 ## 测试执行记录
 
@@ -65,6 +65,22 @@
 | 接口场景执行 | passed 19 |
 | 知识库检索 | n/a 57 |
 
+## 失败注入与 AI 归因
+
+### 本地（http://127.0.0.1:8000）
+
+- 结果文件：`docs/dataset/failures-local-20261106-1721.json`
+- 注入用例：12 条，执行失败 12 条，AI 归因 4 条
+- 归因样例（数据分析）：结论：问题在数据准备层——故障注入未生效，接口正常返回 200。 依据： 1. 请求为普通 GET `/api/platform/summary`，headers 和 params 均为空，没有任何触发故障注入的参数或标记。 2. 响应 status_code 为 200，body 返回完整正常数据（projects:
+
+### 线上（Railway）
+
+- 结果文件：`docs/dataset/failures-remote-20261106-1723.json`
+- 注入用例：19 条，执行失败 19 条，AI 归因 0 条
+
+> 失败是故意造的：断言要求 `GET /api/platform/summary` 返回 500，实际返回 200，
+> 用来验证「失败 → 记录 → AI 归因」这条链路，不代表产品缺陷。
+
 ## 每个项目都有什么
 
 每个项目都会补齐到下面这套结构（已存在的不重复创建）：
@@ -89,8 +105,14 @@
 # 本地（带 AI 分析与 UI 真跑）
 .venv\Scripts\python.exe scripts\seed_dataset.py --base http://127.0.0.1:8000 --label local --ai --ai-limit 8 --ui-run --ui-limit 12
 
-# 线上（写接口要带上 APP_API_KEY；生产没有 Chromium，跳过 UI 真跑）
+# 线上（写接口要带 APP_API_KEY；生产没有 Chromium，UI 用例只建不跑）
 .venv\Scripts\python.exe scripts\seed_dataset.py --base https://ai-qa-lab-production.up.railway.app --label remote --key <APP_API_KEY> --skip-plan-run
+
+# 失败注入 + 冒烟计划回归（让通过率有真实的分子分母）
+.venv\Scripts\python.exe scripts\seed_failures.py --base http://127.0.0.1:8000 --label local --diagnose 4
+
+# 采集当前库存快照（不重复造数据）
+.venv\Scripts\python.exe scripts\dataset_snapshot.py --label local
 
 # 重新生成本文件
 .venv\Scripts\python.exe scripts\dataset_report.py

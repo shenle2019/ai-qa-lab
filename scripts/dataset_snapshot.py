@@ -28,7 +28,6 @@ LIST_ENDPOINTS = {
     "api_cases": "/api/platform/api-cases",
     "api_runs": "/api/platform/api-runs",
     "ui_cases": "/api/platform/ui-cases",
-    "ui_runs": "/api/platform/ui-runs",
     "users": "/api/platform/users",
     "models": "/api/platform/models",
 }
@@ -37,6 +36,7 @@ PER_PROJECT = {
     "environments": "/api/platform/environments",
     "modules": "/api/platform/modules",
     "members": "/api/platform/members",
+    "ui_runs": "/api/platform/ui-runs",
 }
 
 
