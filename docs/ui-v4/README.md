@@ -59,11 +59,15 @@
 | --- | --- | --- |
 | 构建 | `✓ built in 6–16s` | 部署 `Deploy complete` |
 | 后端测试 | `142 passed` | — |
-| 页面截图 | `docs/ui-v4/v4-*.png`（9 张） | `docs/ui-v4/prod-v4-*.png`（5 张） |
+| 页面截图 | `docs/ui-v4/v4-*.png`（17 张） | `docs/ui-v4/prod-v4-*.png`（5 张） |
 | console / pageerror | 0 | 0 |
 | 横向溢出 | 1024 / 480 均 0 | 同 |
 | `/health` | `auth: dev, docs: true` | `auth: production, docs: false, ui_automation: false` |
 | AI 连通 | 通过 | `ok: true, 1397ms` |
+
+深色残留是自动扫的，不靠眼睛：`scripts/ui_dark_sweep.py` 逐路由找「可见面积 > 4000px²、背景亮度 < 60、不透明」的元素，14 个路由全部 `dark: none`。
+
+弹窗与抽屉单独看：`scripts/ui_modal_check.py` 截了「新建需求」弹窗和接口调试抽屉，都是白底 + 浅色遮罩。
 
 ## 四、还没做的
 
