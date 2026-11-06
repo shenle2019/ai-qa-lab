@@ -773,6 +773,18 @@ input[type="radio"] {
   text-align: center;
 }
 
+/* 放进表格的空态单元格：.empty 的 flex 会让 colspan 失效，这里退回表格单元 */
+tbody td.empty,
+.table-wrap td.empty {
+  display: table-cell;
+  min-height: 0;
+  padding: 26px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--muted-2);
+  text-align: center;
+}
+
 .skeleton {
   position: relative;
   overflow: hidden;
