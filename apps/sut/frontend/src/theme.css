@@ -373,10 +373,12 @@ body {
   margin-bottom: var(--sp-5);
 }
 
-/* 6 张统计卡时，第二行两张各占两列，避免右半边空着 */
-.stats-grid > :nth-child(5):nth-last-child(2),
-.stats-grid > :nth-child(5):nth-last-child(2) ~ * {
-  grid-column: span 2;
+/* 6 张统计卡时，第二行两张各占两列，避免右半边空着（窄屏单列时不要生效） */
+@media (min-width: 641px) {
+  .stats-grid > :nth-child(5):nth-last-child(2),
+  .stats-grid > :nth-child(5):nth-last-child(2) ~ * {
+    grid-column: span 2;
+  }
 }
 
 .stat-card {
@@ -919,6 +921,10 @@ input[type="radio"] {
 }
 
 @media (max-width: 900px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   .topbar {
     display: flex;
     flex-direction: row;
@@ -984,6 +990,10 @@ input[type="radio"] {
 @media (max-width: 640px) {
   .stats-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stats-grid > * {
+    grid-column: auto;
   }
 
   .card {

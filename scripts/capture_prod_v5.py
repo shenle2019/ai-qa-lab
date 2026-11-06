@@ -23,7 +23,11 @@ def main() -> None:
         page.on("pageerror", lambda e: errors.append(str(e)))
         for name, path in PAGES:
             page.goto(BASE + path, wait_until="load")
-            page.wait_for_timeout(2200)
+            try:
+                page.wait_for_load_state("networkidle", timeout=15000)
+            except Exception:  # noqa: BLE001 - production can stay busy
+                pass
+            page.wait_for_timeout(2500)
             page.screenshot(path=str(OUT / f"prod-v5-{name}.png"), full_page=True)
         print(page.evaluate(JS))
         print("pageerrors", len(errors))
