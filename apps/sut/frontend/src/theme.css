@@ -1,47 +1,51 @@
 /* =========================================================================
-   v4 · 明亮主题（黄绿白）
+   v5 · 雾灰蓝底 + 靛蓝主色
    ---------------------------------------------------------------------
-   这一层接管视觉：令牌、背景、卡片、表格、按钮、表单、弹窗、响应式。
-   老代码里写死的深色值（rgba(4,8,16,.5) 之类）在本文件末尾统一覆盖，
-   避免逐个改 16 个组件的 scoped style。
+   页面是浅雾灰，白只留给卡片和弹窗；侧栏比页面深半阶；主色靛蓝只出现在
+   主按钮、链接、选中项和焦点环；状态色一律浅底深字，不用高饱和铺满。
+   不用渐变、不用重阴影。老组件里写死的深色值在本文件末尾统一覆盖。
    ========================================================================= */
 
 :root {
-  /* 底色：暖白 → 极浅的黄绿 */
-  --bg: #f4f7ea;
-  --bg-tint: #fbfdf3;
+  /* 背景与表面 */
+  --bg: #f4f6f8;
+  --bg-subtle: #eef1f5;
+  --bg-tint: #f7f9fc;
   --panel: #ffffff;
   --panel-flat: #ffffff;
-  --surface-2: #f5f8ea;
-  --surface-3: #eef3df;
+  --surface-2: #f7f9fc;
+  --surface-3: #f1f4f8;
 
   /* 文字 */
-  --text: #1e2414;
-  --text-soft: #414c35;
-  --muted: #5f6b4e;
-  --muted-2: #8a9580;
+  --text: #1e293b;
+  --text-soft: #334155;
+  --muted: #5b6778;
+  --muted-2: #8a94a6;
 
   /* 线条 */
-  --line: #e0e7d0;
-  --hairline: #e6ebd9;
-  --hairline-strong: #d3ddbd;
+  --line: #e2e8f0;
+  --hairline: #e2e8f0;
+  --hairline-strong: #cbd5e1;
 
-  /* 主色：黄绿 */
-  --accent: #6f9c1f;
-  --accent-strong: #5c8317;
-  --accent-2: #a8cc4a;
-  --accent-soft: #eef6d9;
-  --accent-soft-2: #e3f0c4;
+  /* 主色：靛蓝 */
+  --accent: #4f6bed;
+  --accent-strong: #334dbf;
+  --accent-2: #c7d2fe;
+  --accent-soft: #eef2ff;
+  --accent-soft-2: #e8edff;
+  --accent-hover: #3f5bd9;
 
-  /* 语义 */
-  --ok: #3f8f43;
-  --ok-soft: #e6f4e3;
-  --warn: #b8860b;
-  --warn-soft: #fdf3d7;
-  --danger: #c2453b;
-  --danger-soft: #fbe9e6;
-  --info: #3b7ea1;
-  --info-soft: #e6f1f7;
+  /* 语义：浅底 + 深字 */
+  --ok: #15803d;
+  --ok-soft: #e9f8ef;
+  --warn: #b45309;
+  --warn-soft: #fef3e2;
+  --danger: #b91c1c;
+  --danger-soft: #fdecec;
+  --info: #1d4ed8;
+  --info-soft: #e8f1ff;
+  --neutral: #6b7280;
+  --neutral-soft: #f1f3f5;
 
   /* 兼容旧令牌名 */
   --green: var(--ok);
@@ -56,7 +60,7 @@
   --fs-lg: 15px;
   --fs-xl: 19px;
   --fs-2xl: 24px;
-  --fs-3xl: 30px;
+  --fs-3xl: 28px;
 
   --sp-1: 4px;
   --sp-2: 8px;
@@ -67,19 +71,19 @@
   --sp-7: 36px;
   --sp-8: 48px;
 
-  --radius-sm: 8px;
-  --radius: 12px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
+  --radius-sm: 6px;
+  --radius: 8px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
 
-  --shadow-1: 0 1px 2px rgba(46, 58, 26, 0.05), 0 1px 3px rgba(46, 58, 26, 0.04);
-  --shadow-2: 0 8px 24px -12px rgba(46, 58, 26, 0.22);
+  --shadow-1: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.04);
+  --shadow-2: 0 12px 32px -16px rgba(15, 23, 42, 0.18);
   --font-mono: "JetBrains Mono", "Cascadia Mono", "SF Mono", Consolas, monospace;
 
   color-scheme: light;
 }
 
-/* ---------- 背景：暖白 + 极淡的黄绿光晕 + 点阵 ---------- */
+/* ---------- 背景：整页浅雾灰，不加纹理 ---------- */
 
 html,
 body,
@@ -90,20 +94,14 @@ body,
 body {
   margin: 0;
   color: var(--text);
-  background-color: var(--bg);
-  background-image:
-    radial-gradient(820px 420px at 8% -12%, rgba(168, 204, 74, 0.1), transparent 60%),
-    radial-gradient(700px 380px at 98% -6%, rgba(238, 206, 110, 0.09), transparent 58%),
-    radial-gradient(rgba(120, 140, 80, 0.08) 1px, transparent 1px);
-  background-size: auto, auto, 22px 22px;
-  background-attachment: fixed, fixed, fixed;
+  background: var(--bg);
   font-family: "Inter", "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: var(--accent-soft-2);
+  background: var(--accent-soft);
   color: var(--text);
 }
 
@@ -117,7 +115,7 @@ body {
   gap: 18px;
   padding: 20px 14px;
   border-right: 1px solid var(--hairline);
-  background: #eef4dd;
+  background: var(--bg-subtle);
 }
 
 .brand strong {
@@ -130,9 +128,9 @@ body {
 }
 
 .brand-mark {
-  background: linear-gradient(145deg, var(--accent-2), var(--accent));
+  background: var(--accent);
   color: #ffffff;
-  box-shadow: 0 4px 12px -6px rgba(111, 156, 31, 0.9);
+  box-shadow: none;
 }
 
 .nav-group-title {
@@ -157,7 +155,7 @@ body {
 
 .nav-item.router-link-exact-active,
 .nav-item.active {
-  background: var(--accent-soft);
+  background: var(--accent-soft-2);
   color: var(--accent-strong);
   border-left-color: var(--accent);
   font-weight: 650;
@@ -198,8 +196,7 @@ body {
   align-items: center;
   padding: 14px 32px;
   border-bottom: 1px solid var(--hairline);
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(14px);
+  background: #ffffff;
   position: sticky;
   top: 0;
   z-index: 20;
@@ -259,14 +256,7 @@ body {
 }
 
 .hero::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -1px;
-  width: 88px;
-  height: 2px;
-  border-radius: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  display: none;
 }
 
 .hero::after,
@@ -286,7 +276,7 @@ body {
 
 .hero .eyebrow {
   margin-bottom: 6px;
-  color: var(--accent);
+  color: var(--muted);
   font-size: var(--fs-2xs);
   font-weight: 700;
   letter-spacing: 0.16em;
@@ -391,7 +381,7 @@ body {
 
 .stat-card {
   position: relative;
-  padding: var(--sp-4) var(--sp-4) var(--sp-4) calc(var(--sp-4) + 6px);
+  padding: var(--sp-4);
   background: var(--panel);
   border: 1px solid var(--hairline);
   border-radius: var(--radius-lg);
@@ -399,23 +389,7 @@ body {
   overflow: hidden;
 }
 
-.stat-card::before {
-  content: "";
-  position: absolute;
-  inset: 12px auto 12px 0;
-  width: 3px;
-  border-radius: 0 3px 3px 0;
-  background: var(--accent-2);
-}
-
-.stat-card:nth-child(3n + 2)::before {
-  background: #e2b93b;
-}
-
-.stat-card:nth-child(3n + 3)::before {
-  background: var(--accent);
-}
-
+.stat-card::before,
 .stat-card::after {
   display: none;
 }
@@ -465,8 +439,8 @@ thead th,
   z-index: 1;
   padding: 10px 12px;
   background: var(--surface-3);
-  border-bottom: 1px solid var(--hairline-strong);
-  color: #4c5940;
+  border-bottom: 1px solid var(--hairline);
+  color: var(--muted);
   font-size: var(--fs-xs);
   font-weight: 700;
   letter-spacing: 0.03em;
@@ -488,7 +462,7 @@ tbody tr:last-child td {
 }
 
 tbody tr:nth-child(even) td {
-  background: rgba(247, 250, 240, 0.6);
+  background: var(--surface-2);
 }
 
 tbody tr:hover td {
@@ -532,36 +506,37 @@ td strong {
   font-weight: 600;
   line-height: 1.3;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(46, 58, 26, 0.08);
+  box-shadow: none;
   transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
 }
 
 .btn:hover {
-  background: var(--accent-strong);
+  background: var(--accent-hover);
   transform: none;
 }
 
 .btn:active {
-  transform: translateY(1px);
+  background: var(--accent-strong);
+  transform: none;
 }
 
 .btn.ghost {
   background: #ffffff;
   border-color: var(--hairline-strong);
-  color: var(--text-soft);
+  color: var(--text);
   box-shadow: none;
 }
 
 .btn.ghost:hover {
   background: var(--surface-2);
-  border-color: var(--accent-2);
+  border-color: var(--accent);
   color: var(--accent-strong);
 }
 
 .btn.danger,
 .btn.ghost.danger {
   background: #ffffff;
-  border-color: #efc8c3;
+  border-color: #f3cdcd;
   color: var(--danger);
 }
 
@@ -587,8 +562,11 @@ td strong {
 .btn:focus-visible,
 a:focus-visible,
 .nav-item:focus-visible,
-.tab:focus-visible {
-  outline: 2px solid var(--accent);
+.tab:focus-visible,
+select:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid rgba(79, 107, 237, 0.55);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
 }
@@ -600,10 +578,10 @@ a:focus-visible,
   align-items: center;
   gap: 4px;
   padding: 2px 8px;
-  border: 1px solid var(--hairline-strong);
+  border: 1px solid transparent;
   border-radius: 999px;
-  background: var(--surface-2);
-  color: var(--muted);
+  background: var(--neutral-soft);
+  color: var(--neutral);
   font-size: var(--fs-2xs);
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -617,7 +595,7 @@ a:focus-visible,
 .badge.ready,
 .badge.active {
   background: var(--ok-soft);
-  border-color: #cfe6c9;
+  border-color: transparent;
   color: var(--ok);
 }
 
@@ -625,14 +603,14 @@ a:focus-visible,
 .badge.open,
 .badge.draft_wait {
   background: var(--warn-soft);
-  border-color: #f0e0b6;
+  border-color: transparent;
   color: var(--warn);
 }
 
 .badge.running,
 .badge.info {
   background: var(--info-soft);
-  border-color: #cfe2ec;
+  border-color: transparent;
   color: var(--info);
 }
 
@@ -641,7 +619,7 @@ a:focus-visible,
 .badge.disabled,
 .badge.error {
   background: var(--danger-soft);
-  border-color: #f2cfc9;
+  border-color: transparent;
   color: var(--danger);
 }
 
@@ -716,7 +694,7 @@ select:focus,
 textarea:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft);
+  box-shadow: 0 0 0 3px rgba(79, 107, 237, 0.18);
 }
 
 input::placeholder,
@@ -756,26 +734,26 @@ input[type="radio"] {
 
 .alert {
   padding: 10px 12px;
-  border: 1px solid #f2cfc9;
+  border: 1px solid #f3cdcd;
   border-left: 3px solid var(--danger);
   border-radius: var(--radius-sm);
   background: var(--danger-soft);
-  color: #8f322a;
+  color: var(--danger);
   font-size: var(--fs-sm);
 }
 
 .alert.ok {
-  border-color: #cfe6c9;
+  border-color: #cdebd8;
   border-left-color: var(--ok);
   background: var(--ok-soft);
-  color: #2f6b33;
+  color: var(--ok);
 }
 
 .alert.info {
-  border-color: #cfe2ec;
+  border-color: #cfdffb;
   border-left-color: var(--info);
   background: var(--info-soft);
-  color: #2b5f79;
+  color: var(--info);
 }
 
 .empty {
@@ -878,7 +856,7 @@ input[type="radio"] {
 }
 
 .modal-mask {
-  background: rgba(38, 46, 24, 0.34);
+  background: rgba(15, 23, 42, 0.34);
   backdrop-filter: blur(3px);
 }
 
@@ -886,7 +864,7 @@ input[type="radio"] {
   background: var(--panel);
   border: 1px solid var(--hairline);
   border-radius: var(--radius-lg);
-  box-shadow: 0 24px 60px -24px rgba(38, 46, 24, 0.4);
+  box-shadow: var(--shadow-2);
 }
 
 .modal header h2 {
@@ -999,7 +977,7 @@ input[type="radio"] {
   }
 
   .sidebar {
-    background: #ffffff;
+    background: var(--bg-subtle);
   }
 }
 
@@ -1065,7 +1043,7 @@ input[type="file"] {
 }
 
 .kb-item.active {
-  background: var(--accent-soft) !important;
+  background: var(--accent-soft-2) !important;
   border-color: var(--accent-2) !important;
 }
 
@@ -1080,26 +1058,26 @@ pre {
   border-radius: var(--radius-sm);
 }
 
-/* HTTP 方法标签：旧组件用的是深色底的浅色文字，浅色主题下要反过来 */
+/* HTTP 方法标签：浅底深字，只用来区分方法 */
 .method.m-get {
-  background: #e8f4fb !important;
-  color: #22688c !important;
+  background: var(--info-soft) !important;
+  color: var(--info) !important;
 }
 
 .method.m-post {
-  background: #e7f5e6 !important;
-  color: #2f7a36 !important;
+  background: var(--ok-soft) !important;
+  color: var(--ok) !important;
 }
 
 .method.m-put,
 .method.m-patch {
-  background: #fdf3d7 !important;
-  color: #8a6410 !important;
+  background: var(--warn-soft) !important;
+  color: var(--warn) !important;
 }
 
 .method.m-delete {
-  background: #fbe9e6 !important;
-  color: #b03a32 !important;
+  background: var(--danger-soft) !important;
+  color: var(--danger) !important;
 }
 
 .badge-green {
@@ -1124,7 +1102,7 @@ pre {
 }
 
 .score-fill {
-  background: linear-gradient(90deg, var(--accent-2), var(--accent)) !important;
+  background: var(--accent) !important;
 }
 
 .score-track {
@@ -1136,6 +1114,6 @@ pre {
 }
 
 .cat-card.active {
-  background: var(--accent-soft) !important;
+  background: var(--accent-soft-2) !important;
   border-color: var(--accent-2) !important;
 }

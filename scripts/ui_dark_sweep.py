@@ -1,11 +1,13 @@
 """Sweep every route and look for panels that stayed dark after the light theme."""
 
+import os
+import sys
 from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
-BASE = "http://127.0.0.1:8000/ui/"
-OUT = Path("docs/ui-v4")
+BASE = os.environ.get("UI_BASE", "http://127.0.0.1:8000/ui/")
+OUT = Path(os.environ.get("UI_SHOT_DIR", "docs/ui-v4"))
 
 PAGES = [
     ("overview", "#/overview"),
