@@ -1,0 +1,59 @@
+{
+  "cleaned_projects": 1,
+  "import": {
+    "skipped": true,
+    "existing": 1
+  },
+  "endpoints": [
+    {
+      "id": 1,
+      "method": "GET",
+      "path": "/api/platform/summary"
+    },
+    {
+      "id": 2,
+      "method": "GET",
+      "path": "/api/platform/projects"
+    },
+    {
+      "id": 3,
+      "method": "POST",
+      "path": "/api/platform/projects"
+    },
+    {
+      "id": 4,
+      "method": "GET",
+      "path": "/api/platform/projects/{project_id}"
+    }
+  ],
+  "debug": {
+    "status": "passed",
+    "status_code": 200,
+    "run_id": 12
+  },
+  "generated": {
+    "skipped": true,
+    "ids": [
+      4,
+      3,
+      2,
+      1
+    ]
+  },
+  "scenario_run": {
+    "id": 5,
+    "status": "passed",
+    "error": null,
+    "steps": 2
+  },
+  "run_total": 16,
+  "failed_runs": [
+    14,
+    10,
+    9,
+    8,
+    6,
+    5,
+    3
+  ]
+}

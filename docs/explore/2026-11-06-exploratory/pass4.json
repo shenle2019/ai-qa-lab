@@ -1,0 +1,18 @@
+[
+  {
+    "probe": "focus-ring",
+    "observation": "{\"tag\": \"A\", \"cls\": \"nav-item\", \"outline\": \"rgb(16, 16, 16) auto 1px\", \"shadow\": \"none\"}"
+  },
+  {
+    "probe": "refresh-status",
+    "observation": "clicked; alert=none"
+  },
+  {
+    "probe": "requirements-empty-guidance",
+    "observation": "has_新建=True has_空态=0 first_rows=1"
+  },
+  {
+    "probe": "environments",
+    "observation": "no placeholder block"
+  }
+]

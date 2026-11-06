@@ -5,6 +5,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 class ModelConfigCreate(BaseModel):
     name: str = Field(min_length=1, max_length=80)
+    kind: str = "chat"
     provider: str = "deepseek"
     base_url: str = "https://api.deepseek.com"
     model_name: str = "deepseek-chat"
@@ -13,6 +14,7 @@ class ModelConfigCreate(BaseModel):
 
 class ModelConfigUpdate(BaseModel):
     name: str | None = Field(default=None, min_length=1, max_length=80)
+    kind: str | None = None
     provider: str | None = None
     base_url: str | None = None
     model_name: str | None = None
@@ -23,6 +25,7 @@ class ModelConfigOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
     name: str
+    kind: str = "chat"
     provider: str
     base_url: str
     model_name: str

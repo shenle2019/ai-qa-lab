@@ -11,9 +11,18 @@ from . import case_executor, case_generator, llm_client, llm_models, rate_limit,
 from . import platform_models as models
 from . import platform_schemas as schemas
 from .deps import get_db
+from .skills import SkillError, run_skill
 from .timeutils import utcnow
 
 router = APIRouter(prefix="/api/platform", tags=["platform"])
+
+
+def _run_skill(skill_id: str, payload: dict, db: Session) -> dict:
+    """Run a registered skill and turn its errors into HTTP errors."""
+    try:
+        return run_skill(skill_id, payload, {"db": db})
+    except SkillError as exc:
+        raise HTTPException(status_code=exc.status_code, detail=exc.message) from exc
 
 
 
@@ -102,6 +111,9 @@ def summary(db: Session = Depends(get_db)):
         defects=defects,
         open_defects=open_defects,
         pass_rate=round(pass_rate, 4),
+        results_passed=passed,
+        results_failed=failed,
+        results_total=passed + failed,
     )
 
 
@@ -167,6 +179,12 @@ def create_case(payload: schemas.CaseCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(case)
     return case
+
+
+@router.post("/cases/batch")
+def batch_cases(payload: dict, db: Session = Depends(get_db)):
+    """Batch review/delete flow. Declared before /cases/{case_id} to keep the path literal."""
+    return _run_skill("case.batch", payload, db)
 
 
 @router.post("/generate-cases", response_model=schemas.GeneratedCasesOut, status_code=201)
@@ -266,6 +284,32 @@ def list_case_reviews(case_id: int, db: Session = Depends(get_db)):
         .order_by(models.CaseReview.id.desc())
         .all()
     )
+
+
+@router.get("/cases/{case_id}", response_model=schemas.CaseOut)
+def get_case(case_id: int, db: Session = Depends(get_db)):
+    case = db.get(models.TestCase, case_id)
+    if case is None:
+        raise HTTPException(status_code=404, detail="case not found")
+    return case
+
+
+@router.patch("/cases/{case_id}", response_model=schemas.CaseOut)
+def update_case(case_id: int, payload: dict, db: Session = Depends(get_db)):
+    body = dict(payload)
+    body["case_id"] = case_id
+    result = _run_skill("case.update", body, db)
+    return db.get(models.TestCase, int(result["case"]["id"]))
+
+
+@router.delete("/cases/{case_id}", status_code=204)
+def delete_case(case_id: int, db: Session = Depends(get_db)):
+    case = db.get(models.TestCase, case_id)
+    if case is None:
+        raise HTTPException(status_code=404, detail="case not found")
+    db.delete(case)
+    db.commit()
+    return Response(status_code=204)
 
 
 @router.get("/plans", response_model=list[schemas.PlanOut])

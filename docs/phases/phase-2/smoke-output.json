@@ -1,0 +1,75 @@
+{
+  "base": "http://127.0.0.1:8000",
+  "steps": [
+    {
+      "create": 201,
+      "id": 20
+    },
+    {
+      "patch": 200,
+      "title": "phase2 冒烟：工单详情不存在返回 404"
+    },
+    {
+      "draft": {
+        "action": "draft",
+        "updated": 1,
+        "skipped": []
+      },
+      "submit": {
+        "action": "submit_review",
+        "updated": 1,
+        "skipped": []
+      },
+      "approve": {
+        "action": "approve",
+        "updated": 1,
+        "skipped": []
+      }
+    },
+    {
+      "generate": 200,
+      "requirement_id": 1
+    },
+    {
+      "delete": 204
+    }
+  ],
+  "health": {
+    "status": "ok",
+    "service": "sut",
+    "version": "1.1.0"
+  },
+  "project": {
+    "id": 2,
+    "name": "执行验证项目"
+  },
+  "reviews": {
+    "count": 1,
+    "first": {
+      "id": 3,
+      "case_id": 20,
+      "reviewer": "smoke",
+      "decision": "approved",
+      "comment": "ok",
+      "created_at": "2026-11-06T06:46:55.027473"
+    }
+  },
+  "generated": {
+    "model": "deepseek-chat",
+    "count": 4,
+    "first_titles": [
+      "管理员按状态筛选工单列表",
+      "非管理员请求导出接口返回无权限",
+      "管理员导出5000条直接下载"
+    ],
+    "has_steps": true,
+    "statuses": [
+      "draft"
+    ],
+    "cleanup": {
+      "action": "delete",
+      "updated": 4,
+      "skipped": []
+    }
+  }
+}

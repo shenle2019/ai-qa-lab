@@ -9,14 +9,36 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from . import kb, llm_models, models, platform_models, schemas, settings
+from . import (
+    api_models,
+    environment_models,
+    kb,
+    knowledge_models,
+    llm_models,
+    models,
+    platform_models,
+    project_content_models,
+    requirement_models,
+    schemas,
+    settings,
+    ui_models,
+    users_api,
+)
+from .api_api import router as api_router
 from .auth import auth_guard
 from .db import Base, engine
 from .deps import get_db
+from .environment_api import router as environment_router
+from .knowledge_api import router as knowledge_router
 from .middleware import request_context
 from .model_api import router as model_router
 from .platform_api import router as platform_router
+from .project_content_api import router as project_content_router
+from .requirement_api import router as requirement_router
 from .schema_migrations import ensure_columns
+from .skills_api import router as skills_router
+from .ui_api import router as ui_router
+from .users_api import router as users_router
 from .workbench import router as workbench_router
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -53,6 +75,14 @@ app.middleware("http")(request_context)
 app.include_router(workbench_router)
 app.include_router(platform_router)
 app.include_router(model_router)
+app.include_router(skills_router)
+app.include_router(requirement_router)
+app.include_router(knowledge_router)
+app.include_router(api_router)
+app.include_router(ui_router)
+app.include_router(project_content_router)
+app.include_router(users_router)
+app.include_router(environment_router)
 
 FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
 LEARNING_DIR = Path(__file__).resolve().parents[4] / "docs" / "learning"
@@ -60,9 +90,27 @@ PORTFOLIO_DIR = Path(__file__).resolve().parents[4] / "docs" / "portfolio"
 
 
 
+def _ui_automation_ready() -> bool:
+    """UI automation needs the playwright package plus a downloaded browser."""
+    try:
+        import playwright  # noqa: F401
+    except Exception:  # noqa: BLE001 - optional dependency
+        return False
+    from .ui_runner import BROWSERS
+
+    return (BROWSERS / "chromium-1248").exists() or (BROWSERS / "chromium_headless_shell-1248").exists()
+
+
 @app.get("/health")
 def health() -> dict:
-    return {"status": "ok", "service": "sut", "version": app.version}
+    return {
+        "status": "ok",
+        "service": "sut",
+        "version": app.version,
+        "auth": "production" if settings.is_production() else "dev",
+        "docs": settings.docs_enabled(),
+        "ui_automation": _ui_automation_ready(),
+    }
 
 
 @app.get("/ready")

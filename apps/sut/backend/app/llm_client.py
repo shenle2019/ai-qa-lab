@@ -151,3 +151,60 @@ def chat_json(
             error=str(exc),
         )
         raise LLMError(f"模型调用失败: {exc}") from exc
+
+
+def chat_text(
+    db: Session,
+    config: llm_models.ModelConfig,
+    messages: list[dict],
+    *,
+    purpose: str,
+    prompt_version: str = "v1",
+    timeout: float = 60.0,
+    max_tokens: int = 2000,
+    temperature: float = 0.3,
+) -> str:
+    """Free-form completion (no JSON constraint) for conversational agents."""
+    api_key = resolve_api_key(config)
+    if not api_key:
+        _record(config, purpose, prompt_version, 0, "error", error="missing api key")
+        raise LLMError("未配置 API Key")
+
+    url = config.base_url.rstrip("/") + "/chat/completions"
+    started = time.perf_counter()
+    try:
+        response = httpx.post(
+            url,
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+            json={
+                "model": config.model_name,
+                "messages": messages,
+                "temperature": temperature,
+                "max_tokens": max_tokens,
+            },
+            timeout=timeout,
+        )
+        response.raise_for_status()
+        payload = response.json()
+        content = payload["choices"][0]["message"]["content"] or ""
+        usage = payload.get("usage", {}) or {}
+        _record(
+            config,
+            purpose,
+            prompt_version,
+            int((time.perf_counter() - started) * 1000),
+            "ok",
+            prompt_tokens=int(usage.get("prompt_tokens", 0)),
+            completion_tokens=int(usage.get("completion_tokens", 0)),
+        )
+        return content.strip()
+    except Exception as exc:  # noqa: BLE001 - surface provider errors to the caller
+        _record(
+            config,
+            purpose,
+            prompt_version,
+            int((time.perf_counter() - started) * 1000),
+            "error",
+            error=str(exc),
+        )
+        raise LLMError(f"模型调用失败: {exc}") from exc

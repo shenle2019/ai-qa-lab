@@ -1,0 +1,55 @@
+{
+  "base": "http://127.0.0.1:8000",
+  "steps": [
+    {
+      "create": 201
+    },
+    {
+      "analyze": 200
+    },
+    {
+      "plan": 200
+    },
+    {
+      "chat": 200
+    }
+  ],
+  "health": {
+    "status": "ok",
+    "service": "sut",
+    "version": "1.1.0"
+  },
+  "project": {
+    "id": 2,
+    "name": "执行验证项目"
+  },
+  "requirement_id": 1,
+  "analysis": {
+    "summary": "在工单列表页增加状态筛选（全部/待处理/处理中/已关闭）、按创建时间正序/倒序切换，以及仅管理员可用的 CSV 导出功能；导出结果需与当前筛选一致，超过 5000 条时提示并转为后台任务，完成后站内信通知，文件使用 UTF-8 BOM 编码。",
+    "features": 9,
+    "ui": 3,
+    "clarifications": 7,
+    "risks": 8,
+    "first_feature": "状态筛选"
+  },
+  "plan": {
+    "person_days": 3.5,
+    "milestones": 4,
+    "test_plan": {
+      "id": 3,
+      "name": "工单列表支持状态筛选、排序与 CSV 导出 · 测试计划"
+    }
+  },
+  "chat": {
+    "reply_chars": 3179,
+    "analysis_updated": true,
+    "messages": 2,
+    "reply_head": "在待澄清项中补充后台任务失败重试策略的澄清点，同时把原「失败时是否有通知或重试机制」这条与新条目做区分：原条目聚焦失败反馈，新条目聚焦重试策略本身（重试次数、间隔、是否自动重试、重试耗尽后的处理）。\n\n```json\n{\"summary\": \"在工单列表页增加状态筛选（全部/待处理/处理中/已关闭）、按创建时间正序/倒"
+  },
+  "final": {
+    "status": "planned",
+    "has_analysis": true,
+    "has_plan": true,
+    "messages": 2
+  }
+}

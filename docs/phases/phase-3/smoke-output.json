@@ -1,0 +1,61 @@
+{
+  "base": "http://127.0.0.1:8000",
+  "source": "E:\\ailearning\\ai-qa-lab\\docs\\requirements\\2026-11-06-ai-test-platform-refactor.md",
+  "steps": [],
+  "health": {
+    "status": "ok",
+    "service": "sut",
+    "version": "1.1.0"
+  },
+  "kb": {
+    "id": 1,
+    "name": "平台重构方案库",
+    "chunk_size": 500
+  },
+  "upload": {
+    "id": 1,
+    "filename": "2026-11-06-ai-test-platform-refactor.md",
+    "char_count": 5567,
+    "chunk_count": 19,
+    "note": ""
+  },
+  "paste": 1,
+  "chunk_sample": [
+    {
+      "seq": 0,
+      "chars": 495
+    },
+    {
+      "seq": 1,
+      "chars": 102
+    },
+    {
+      "seq": 2,
+      "chars": 500
+    }
+  ],
+  "search": {
+    "took_ms": 2,
+    "hits": [
+      {
+        "filename": "接口约定.md",
+        "seq": 0,
+        "score": 0.375
+      },
+      {
+        "filename": "2026-11-06-ai-test-platform-refactor.md",
+        "seq": 9,
+        "score": 0.125
+      }
+    ],
+    "top_snippet": "工单导出接口 GET /api/tickets/export 返回 CSV，编码 UTF-8 BOM。 导出条数超过 5000 条时接口返回 202，转为后台任务，完成后站内信通知。 所有写接口需要 Bearer 访问密钥，匿名请求返回 401。"
+  },
+  "skill_search": {
+    "total": 2,
+    "context_head": "[接口约定.md#0] 工单导出接口 GET /api/tickets/export 返回 CSV，编码 UTF-8 BOM。 导出条数超过 5000 条时接口返回 202，转为后台任务，完成后站内信通知。 所有写接口需要 Bearer 访问密钥，匿名请求返回 401。\n\n[2026-11-06-ai-test-pla"
+  },
+  "counts": {
+    "documents": 2,
+    "chunks": 20
+  }
+}

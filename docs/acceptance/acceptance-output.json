@@ -1,0 +1,88 @@
+{
+  "project_id": 4,
+  "requirement_id": 2,
+  "kb_id": 2,
+  "elapsed_s": 24.7,
+  "platform_summary": {
+    "projects": 4,
+    "cases": 44,
+    "plans": 4,
+    "executions": 2,
+    "defects": 1,
+    "open_defects": 1,
+    "pass_rate": 0.75
+  },
+  "steps": [
+    {
+      "step": "project.create",
+      "ok": true,
+      "id": 4
+    },
+    {
+      "step": "requirement.create",
+      "ok": true,
+      "id": 2
+    },
+    {
+      "step": "requirement.analyze",
+      "ok": true,
+      "features": 9,
+      "clarifications": 7
+    },
+    {
+      "step": "requirement.plan",
+      "ok": true,
+      "person_days": 3.5
+    },
+    {
+      "step": "case.generate",
+      "ok": true,
+      "generated": 4
+    },
+    {
+      "step": "knowledge.reuse",
+      "ok": true,
+      "kb_id": 2
+    },
+    {
+      "step": "knowledge.search",
+      "ok": true,
+      "kb_id": 2,
+      "hits": 2,
+      "took_ms": 0
+    },
+    {
+      "step": "api.reuse",
+      "ok": true,
+      "asset_id": 2,
+      "endpoints": 3
+    },
+    {
+      "step": "api.debug",
+      "ok": true,
+      "status_code": 200
+    },
+    {
+      "step": "api.case.generate",
+      "ok": true,
+      "generated": 2
+    },
+    {
+      "step": "api.case.run",
+      "ok": true,
+      "status": "passed",
+      "status_code": 200
+    },
+    {
+      "step": "ui.explore",
+      "ok": true,
+      "steps": 4
+    },
+    {
+      "step": "ui.case.run",
+      "ok": true,
+      "status": "passed",
+      "ms": 186
+    }
+  ]
+}

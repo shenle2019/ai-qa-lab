@@ -1,0 +1,134 @@
+/* ---------------------------------------------------------------------------
+ * Exploratory round 2 fixes (2026-11-06)
+ * 5 focus ring / 13 narrow-screen drawer / 14 form controls / 3 legacy nav tag
+ * ------------------------------------------------------------------------- */
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.topbar-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.menu-toggle {
+  display: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: rgba(4, 8, 16, 0.6);
+  color: var(--text);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.nav-item.nav-legacy {
+  opacity: 0.72;
+}
+
+.nav-item.nav-legacy .nav-icon {
+  color: var(--muted);
+}
+
+.nav-badge {
+  margin-left: auto;
+  padding: 1px 6px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+
+/* Component scoped styles set `background:` shorthand, which wipes the chevron;
+   re-assert it here so every select keeps the same affordance. */
+select {
+  background-image: linear-gradient(45deg, transparent 50%, rgba(148, 163, 184, 0.9) 50%),
+    linear-gradient(135deg, rgba(148, 163, 184, 0.9) 50%, transparent 50%) !important;
+  background-position: calc(100% - 16px) calc(50% + 1px), calc(100% - 11px) calc(50% + 1px) !important;
+  background-size: 5px 5px, 5px 5px !important;
+  background-repeat: no-repeat !important;
+  padding-right: 32px !important;
+}
+
+body input[type='file'] {
+  color: var(--muted) !important;
+  font-size: 12.5px;
+}
+
+body input[type='file']::file-selector-button {
+  margin-right: 10px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  background: rgba(56, 189, 248, 0.12);
+  color: var(--accent);
+  font-size: 12.5px;
+  cursor: pointer;
+}
+
+.modal-alert {
+  margin: 0 0 12px;
+}
+
+.search-hint {
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 60;
+    width: 250px;
+    height: 100vh;
+    gap: 16px;
+    padding: 18px 16px;
+    overflow-y: auto;
+    border-right: 1px solid var(--line);
+    border-bottom: 0;
+    background: var(--bg);
+    transform: translateX(-100%);
+    transition: transform 0.18s ease;
+  }
+
+  .menu-open .sidebar {
+    transform: translateX(0);
+    box-shadow: 24px 0 60px rgba(2, 5, 12, 0.6);
+  }
+
+  .nav {
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+
+  .sidebar-foot {
+    display: block;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .topbar {
+    align-items: flex-start;
+    padding: 18px 20px 12px;
+  }
+
+  .content {
+    padding: 8px 20px 36px;
+  }
+}

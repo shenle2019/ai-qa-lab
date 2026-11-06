@@ -16,6 +16,7 @@ def _to_out(config: llm_models.ModelConfig) -> llm_schemas.ModelConfigOut:
     return llm_schemas.ModelConfigOut(
         id=config.id,
         name=config.name,
+        kind=getattr(config, "kind", "chat") or "chat",
         provider=config.provider,
         base_url=config.base_url,
         model_name=config.model_name,
@@ -26,13 +27,21 @@ def _to_out(config: llm_models.ModelConfig) -> llm_schemas.ModelConfigOut:
     )
 
 
+KINDS = {"chat", "embedding", "vision"}
+
+
 @router.get("/models", response_model=list[llm_schemas.ModelConfigOut])
-def list_models(db: Session = Depends(get_db)):
-    return [_to_out(item) for item in db.query(llm_models.ModelConfig).order_by(llm_models.ModelConfig.id).all()]
+def list_models(kind: str | None = None, db: Session = Depends(get_db)):
+    query = db.query(llm_models.ModelConfig)
+    if kind:
+        query = query.filter(llm_models.ModelConfig.kind == kind)
+    return [_to_out(item) for item in query.order_by(llm_models.ModelConfig.id).all()]
 
 
 @router.post("/models", response_model=llm_schemas.ModelConfigOut, status_code=201)
 def create_model(payload: llm_schemas.ModelConfigCreate, db: Session = Depends(get_db)):
+    if payload.kind not in KINDS:
+        raise HTTPException(status_code=400, detail=f"kind 只能是 {'/'.join(sorted(KINDS))}")
     existing = db.query(llm_models.ModelConfig).filter(llm_models.ModelConfig.name == payload.name).first()
     if existing:
         raise HTTPException(status_code=409, detail="model name already exists")
@@ -48,7 +57,10 @@ def update_model(model_id: int, payload: llm_schemas.ModelConfigUpdate, db: Sess
     config = db.get(llm_models.ModelConfig, model_id)
     if config is None:
         raise HTTPException(status_code=404, detail="model not found")
-    for key, value in payload.model_dump(exclude_unset=True).items():
+    data = payload.model_dump(exclude_unset=True)
+    if "kind" in data and data["kind"] not in KINDS:
+        raise HTTPException(status_code=400, detail=f"kind 只能是 {'/'.join(sorted(KINDS))}")
+    for key, value in data.items():
         setattr(config, key, value)
     db.commit()
     db.refresh(config)

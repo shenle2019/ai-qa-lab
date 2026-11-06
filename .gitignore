@@ -9,6 +9,8 @@ htmlcov/
 # Runtime data
 *.db
 *.sqlite3
+*.db-shm
+*.db-wal
 sut.db
 test_sut.db
 
@@ -44,6 +46,14 @@ notes/explore-article.txt
 
 # Exploratory-test screenshots are local evidence only (large binaries)
 docs/explore/**/screenshots/
+docs/explore/**/shots/
+docs/screenshots/
+
+# Playwright browsers installed into the repo (.pw-browsers, ~150MB)
+.pw-browsers/
+
+# Local uploads / UI run screenshots
+data/
 
 # Internal planning notes (not published)
 参考站对标与改进清单.md

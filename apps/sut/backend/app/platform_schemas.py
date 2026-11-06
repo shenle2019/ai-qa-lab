@@ -160,6 +160,9 @@ class SummaryOut(BaseModel):
     defects: int
     open_defects: int
     pass_rate: float
+    results_passed: int = 0
+    results_failed: int = 0
+    results_total: int = 0
 
 
 class ImportRequest(BaseModel):

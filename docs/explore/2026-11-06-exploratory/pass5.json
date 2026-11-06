@@ -1,0 +1,101 @@
+{
+  "results": [
+    {
+      "id": "1 modal-error-visible",
+      "ok": true,
+      "detail": "alert inside modal = 1"
+    },
+    {
+      "id": "6 esc-closes-modal",
+      "ok": true,
+      "detail": "modal after Esc = 0"
+    },
+    {
+      "id": "2a overview-no-dash",
+      "ok": true,
+      "detail": "hero label"
+    },
+    {
+      "id": "2b overview-passrate-label",
+      "ok": true,
+      "detail": "pass-rate + executions hints"
+    },
+    {
+      "id": "3 legacy-labelled",
+      "ok": true,
+      "detail": "summary=旧版页面（V1） legacy links=10"
+    },
+    {
+      "id": "16 icons-unique",
+      "ok": true,
+      "detail": "13 icons"
+    },
+    {
+      "id": "8 health-feedback",
+      "ok": true,
+      "detail": "notice=服务正常 · 16:23:40"
+    },
+    {
+      "id": "15 docs-link",
+      "ok": true,
+      "detail": "docs links = 1"
+    },
+    {
+      "id": "4 404-target",
+      "ok": true,
+      "detail": "button=返回项目概览 url=/overview"
+    },
+    {
+      "id": "5 environments-real",
+      "ok": true,
+      "detail": "no placeholder text, form present"
+    },
+    {
+      "id": "10 shared-project",
+      "ok": true,
+      "detail": "selected project=2"
+    },
+    {
+      "id": "10b busy-default",
+      "ok": true,
+      "detail": "default project without memory=2"
+    },
+    {
+      "id": "9 single-agent-disabled",
+      "ok": true,
+      "detail": "generate disabled with no endpoint"
+    },
+    {
+      "id": "11 debug-baseurl-hint",
+      "ok": true,
+      "detail": "留空则用接口资产地址，例如 http://127.0.0.1:8000"
+    },
+    {
+      "id": "12 search-maxlength",
+      "ok": true,
+      "detail": "maxlength=80"
+    },
+    {
+      "id": "7 focus-ring",
+      "ok": true,
+      "detail": "{\"tag\": \"BUTTON\", \"color\": \"rgb(56, 189, 248)\", \"width\": \"2px\", \"shadow\": \"none\"}"
+    },
+    {
+      "id": "13 narrow-drawer",
+      "ok": true,
+      "detail": "toggle=True hidden=True opened=True"
+    },
+    {
+      "id": "14 file-input-themed",
+      "ok": true,
+      "detail": "color=rgb(143, 161, 186) (must not be the bright text colour)"
+    },
+    {
+      "id": "no-console-errors",
+      "ok": true,
+      "detail": "0 console errors"
+    }
+  ],
+  "passed": 19,
+  "total": 19
+}

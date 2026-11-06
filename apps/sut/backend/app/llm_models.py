@@ -12,6 +12,7 @@ class ModelConfig(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     name: Mapped[str] = mapped_column(String(80), nullable=False, unique=True)
+    kind: Mapped[str] = mapped_column(String(20), default="chat", index=True)
     provider: Mapped[str] = mapped_column(String(40), default="deepseek")
     base_url: Mapped[str] = mapped_column(String(240), default="https://api.deepseek.com")
     model_name: Mapped[str] = mapped_column(String(80), default="deepseek-chat")

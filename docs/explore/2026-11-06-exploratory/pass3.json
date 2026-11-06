@@ -1,0 +1,46 @@
+[
+  {
+    "probe": "unknown-route",
+    "observation": "links=['▤\\n项目管理', '◎\\n系统 AI 配置', '◷\\nAI 调用日志', '☺\\n用户管理', '○\\n项目概览', '▥\\n需求管理', '☑\\n功能测试', '✦\\n知识库', '⚙\\n环境管理', '⌁\\n接口自动化']"
+  },
+  {
+    "probe": "keyboard-tab",
+    "observation": "[{\"tag\": \"A\", \"label\": \"▤\\n项目管理\", \"outline\": \"auto/0px\", \"shadow\": \"rgb(56, 189, 248) 2px 0p\"}, {\"tag\": \"A\", \"label\": \"◎\\n系统 AI 配置\", \"outline\": \"auto/0px\", \"shadow\": \"none\"}, {\"tag\": \"A\", \"label\": \"◷\\nAI 调用日志\", \"outline\": \"auto/0px\", \"shadow\": \"none\"}, {\"tag\": \"A\", \"label\": \"☺\\n用户管理\", \"outline\": \"auto/0px\", \"shadow\": \"none\"}, {\"tag\": \"A\", \"label\": \"○\\n项目概览\", \"outline\": \"auto/0px\", \"shadow\": \"none\"}, {\"tag\": \"A\", \"label\": \"▥\\n需求管理\", \"outline\": \"auto/0px\", \"shadow\": \"none\"}, {\"tag\": \"A\", \"label\": \"☑\\n功能测试\", \"outline\": \"auto/0px\", \"shadow\": \"none\"}, {\"tag\": \"A\", \"label\": \"✦\\n知识库\", \"outline\": \"auto/0px\", \"shadow\": \"none\"}]"
+  },
+  {
+    "probe": "long-search-text",
+    "observation": "overflow=0px rows=1"
+  },
+  {
+    "probe": "kb-modal-open",
+    "observation": "mask=1"
+  },
+  {
+    "probe": "kb-modal-esc",
+    "observation": "after Esc mask=1"
+  },
+  {
+    "probe": "kb-modal-maskclick",
+    "observation": "after mask click mask=0"
+  },
+  {
+    "probe": "req-modal-title",
+    "observation": "no header"
+  },
+  {
+    "probe": "req-empty-submit",
+    "observation": "modal still open=1 alerts_inside_modal=0 alerts_total=1"
+  },
+  {
+    "probe": "api-doc-link",
+    "observation": "href=/docs target=_blank"
+  },
+  {
+    "probe": "devtools-group",
+    "observation": "开发工具组内链接数=10"
+  },
+  {
+    "probe": "single-agent",
+    "observation": "generate buttons=[['AI 生成用例', False]]"
+  }
+]

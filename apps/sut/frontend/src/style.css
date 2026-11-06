@@ -1208,3 +1208,78 @@ tbody tr:hover {
     grid-template-columns: 1fr;
   }
 }
+
+/* ---- Grouped sidebar (Raina-aligned, Phase 0) ---- */
+.sidebar {
+  gap: 16px;
+  padding: 20px 16px;
+}
+
+.nav {
+  flex: 1;
+  gap: 2px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-bottom: 8px;
+}
+
+.nav-group-title {
+  margin: 0 0 2px;
+  padding: 0 12px;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+.nav-group.nav-more {
+  margin-bottom: 2px;
+}
+
+.nav-group.nav-more > summary {
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+}
+
+.nav-group.nav-more > summary::-webkit-details-marker {
+  display: none;
+}
+
+.nav-item {
+  padding: 7px 12px;
+  font-size: 12.5px;
+}
+
+.feature-list {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.feature-list li::marker {
+  color: var(--accent);
+}
+
+
+/* Native dropdowns ignore the dark background on Windows Chrome; render our own chevron. */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 32px;
+  background-color: rgba(7, 11, 20, 0.72);
+  background-image: linear-gradient(45deg, transparent 50%, rgba(148, 163, 184, 0.9) 50%),
+    linear-gradient(135deg, rgba(148, 163, 184, 0.9) 50%, transparent 50%);
+  background-position: calc(100% - 16px) calc(50% + 1px), calc(100% - 11px) calc(50% + 1px);
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}

@@ -4,8 +4,23 @@ Kept dependency-free so tests can change env vars without reloading modules.
 """
 
 import os
+from pathlib import Path
 
 PRODUCTION_VALUES = {"production", "prod"}
+
+
+def _load_dotenv() -> None:
+    """Load the repo-root .env once. Real environment variables always win."""
+    try:
+        from dotenv import load_dotenv
+    except Exception:  # pragma: no cover - dotenv is optional
+        return
+    env_path = Path(__file__).resolve().parents[4] / ".env"
+    if env_path.exists():
+        load_dotenv(env_path, override=False)
+
+
+_load_dotenv()
 
 
 def app_env() -> str:
