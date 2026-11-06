@@ -35,16 +35,17 @@ v4 的黄绿主题偏暖、卡片和页面几乎同色，层次靠光晕撑。�
 
 ## 三、验证
 
-| 项 | 结果 |
-| --- | --- |
-| 构建 | `✓ built in 7.7s` |
-| 后端测试 | `142 passed` |
-| 深色残留扫描（14 路由） | 全部 `dark: none` |
-| pageerror | 0 |
-| 弹窗 / 抽屉 | `v5-modal-requirement.png`、`v5-drawer-debug.png`，白底 + 浅色遮罩 |
-| 计算样式抽查 | `body #F4F6F8`、`--accent #4F6BED`、表头 `#F1F4F8` |
+| 项 | 本地 | 线上 |
+| --- | --- | --- |
+| 构建 | `✓ built in 7.7s` | `Deploy complete` |
+| 后端测试 | `142 passed` | — |
+| 深色残留扫描（14 路由） | 全部 `dark: none` | 全部 `dark: none` |
+| pageerror | 0 | 0 |
+| 计算样式抽查 | `body #F4F6F8`、`--accent #4F6BED` | `rgb(244,246,248)`、`#4f6bed` |
+| 弹窗 / 抽屉 | `v5-modal-requirement.png`、`v5-drawer-debug.png` | — |
+| `/health` | `auth: dev` | `auth: production, docs: false` |
 
-截图在 `docs/ui-v5/`，v4 的全套图保留在 `docs/ui-v4/` 作为历史对照。
+截图：本地 `docs/ui-v5/v4-*.png`，线上 `docs/ui-v5/prod-v5-*.png`；v4 的黄绿全套保留在 `docs/ui-v4/` 作对照。
 
 ## 四、没做
 
