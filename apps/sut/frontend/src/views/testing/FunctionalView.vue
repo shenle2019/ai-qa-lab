@@ -1,6 +1,8 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
 import { api } from '../../api/client'
+import EmptyState from '../../components/EmptyState.vue'
+import RowMenu from '../../components/RowMenu.vue'
 
 const tab = ref('manage')
 const projects = ref([])
@@ -312,13 +314,23 @@ onMounted(refresh)
                 <td class="muted">{{ item.source === 'ai' ? 'AI' : '手工' }}</td>
                 <td>
                   <div class="row-actions">
-                    <button class="btn ghost" @click="openEdit(item)">编辑</button>
-                    <button class="btn ghost" @click="removeCase(item)">删除</button>
+                    <button class="btn" @click="openEdit(item)">编辑</button>
+                    <RowMenu :items="[{ label: '删除用例', danger: true, run: () => removeCase(item) }]" />
                   </div>
                 </td>
               </tr>
               <tr v-if="!visibleCases.length && !loading">
-                <td colspan="8" class="empty">这个筛选条件下没有用例。</td>
+                <td colspan="8">
+                  <EmptyState
+                    icon="functional"
+                    title="这个筛选条件下没有用例"
+                    hint="换个项目或状态试试，或者到「AI 生成」按需求生成一批草稿。"
+                  >
+                    <template #action>
+                      <button class="btn tiny" type="button" @click="tab = 'generate'">去生成用例</button>
+                    </template>
+                  </EmptyState>
+                </td>
               </tr>
             </tbody>
           </table>

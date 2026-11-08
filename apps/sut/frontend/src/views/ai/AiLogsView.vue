@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { api } from '../../api/client'
+import EmptyState from '../../components/EmptyState.vue'
 
 const calls = ref([])
 const loading = ref(false)
@@ -72,7 +73,15 @@ onMounted(refresh)
               <td>{{ item.duration_ms }} ms</td>
               <td>{{ item.prompt_tokens + item.completion_tokens }}</td>
             </tr>
-            <tr v-if="!calls.length && !loading"><td colspan="6" class="empty">还没有调用记录。</td></tr>
+            <tr v-if="!calls.length && !loading">
+              <td colspan="6">
+                <EmptyState
+                  icon="logs"
+                  title="还没有调用记录"
+                  hint="跑一次需求分析、用例生成或 AI 归因，这里就会记录模型、耗时和 token。"
+                />
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>

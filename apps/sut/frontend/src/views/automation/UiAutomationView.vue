@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
 import { api } from '../../api/client'
+import EmptyState from '../../components/EmptyState.vue'
 import { pickProject, saveProjectId } from '../../utils/project'
 
 const PROJECT_KEY = 'aiqa.ui.project'
@@ -358,7 +359,19 @@ onMounted(async () => {
                 <button class="btn ghost tiny danger" @click="removeCase(item)">删除</button>
               </td>
             </tr>
-            <tr v-if="!cases.length"><td colspan="9" class="empty">还没有用例，先去「AI 探索」生成一条。</td></tr>
+            <tr v-if="!cases.length">
+              <td colspan="9">
+                <EmptyState
+                  icon="ui"
+                  title="还没有 UI 用例"
+                  hint="给页面地址和一句目标，AI 会抓快照生成可执行的 Playwright 步骤。"
+                >
+                  <template #action>
+                    <button class="btn tiny" type="button" @click="tab = 'explore'">去 AI 探索</button>
+                  </template>
+                </EmptyState>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>

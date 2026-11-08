@@ -1941,3 +1941,22 @@ td.req-title.pr-low {
     justify-self: start;
   }
 }
+
+/* 只让直接子级的主操作实心，⋯ 菜单按钮保持 ghost */
+.row-actions > .btn:first-child {
+  background: linear-gradient(135deg, var(--lime), var(--yellow));
+  border-color: transparent;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.row-actions .row-menu .btn {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+  font-weight: 700;
+}
+
+.row-actions .row-menu .btn:hover {
+  background: var(--bg);
+}

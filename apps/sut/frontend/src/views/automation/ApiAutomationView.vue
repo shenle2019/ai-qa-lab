@@ -1,6 +1,8 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
 import { api } from '../../api/client'
+import EmptyState from '../../components/EmptyState.vue'
+import RowMenu from '../../components/RowMenu.vue'
 import { pickProject, saveProjectId } from '../../utils/project'
 
 const tabs = [
@@ -567,8 +569,17 @@ onMounted(async () => {
           </option>
         </select>
       </div>
-      <div v-if="!endpoints.length" class="empty">没有匹配的接口。</div>
-      <div v-else class="table-wrap">
+      <EmptyState
+        v-if="!endpoints.length && !loading"
+        icon="api"
+        title="没有匹配的接口"
+        hint="先到「接口资产」导入 OpenAPI 文档，或者手动新建一个接口。"
+      >
+        <template #action>
+          <button class="btn tiny" type="button" @click="openEndpoint()">新建接口</button>
+        </template>
+      </EmptyState>
+      <div v-else-if="endpoints.length" class="table-wrap">
         <table>
           <thead>
             <tr>
@@ -582,6 +593,17 @@ onMounted(async () => {
             </tr>
           </thead>
           <tbody>
+            <template v-if="loading && !endpoints.length">
+              <tr v-for="n in 5" :key="`sk-${n}`" class="skeleton-row">
+                <td><span class="skeleton" style="width: 48px" /></td>
+                <td><span class="skeleton" style="width: 220px" /></td>
+                <td><span class="skeleton" style="width: 120px" /></td>
+                <td><span class="skeleton" style="width: 88px" /></td>
+                <td><span class="skeleton" style="width: 32px" /></td>
+                <td><span class="skeleton" style="width: 64px" /></td>
+                <td><span class="skeleton" style="width: 150px" /></td>
+              </tr>
+            </template>
             <tr v-for="item in endpoints" :key="item.id">
               <td><span class="method" :class="methodClass(item.method)">{{ item.method }}</span></td>
               <td class="mono">{{ item.path }}</td>
@@ -589,10 +611,12 @@ onMounted(async () => {
               <td class="cell-sub">{{ item.module }}</td>
               <td>{{ item.case_count }}</td>
               <td class="cell-sub">{{ item.source === 'openapi' ? '文档同步' : '手工' }}</td>
-              <td class="row-actions">
-                <button class="btn ghost tiny" @click="openEndpoint(item)">编辑</button>
-                <button class="btn ghost tiny" @click="openDebug(item)">调试</button>
-                <button class="btn ghost tiny danger" @click="removeEndpoint(item)">删除</button>
+              <td>
+                <div class="row-actions">
+                  <button class="btn" @click="openDebug(item)">调试</button>
+                  <button class="btn ghost tiny" @click="openEndpoint(item)">编辑</button>
+                  <RowMenu :items="[{ label: '删除接口', danger: true, run: () => removeEndpoint(item) }]" />
+                </div>
               </td>
             </tr>
           </tbody>

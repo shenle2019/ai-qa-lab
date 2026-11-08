@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
 import { api } from '../../api/client'
+import EmptyState from '../../components/EmptyState.vue'
 
 const view = ref('list')
 const projects = ref([])
@@ -290,7 +291,19 @@ onMounted(refresh)
                   <button class="btn ghost danger" @click="removeRequirement(item)">删除</button>
                 </td>
               </tr>
-              <tr v-if="!filtered.length && !loading"><td colspan="7" class="empty">还没有需求，点右上角「新建需求」。</td></tr>
+              <tr v-if="!filtered.length && !loading">
+                <td colspan="7">
+                  <EmptyState
+                    icon="requirements"
+                    title="还没有需求"
+                    hint="上传一份需求文档，或直接粘贴正文，AI 能拆出功能清单、界面描述和待澄清项。"
+                  >
+                    <template #action>
+                      <button class="btn tiny" type="button" @click="creating = true">新建需求</button>
+                    </template>
+                  </EmptyState>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
