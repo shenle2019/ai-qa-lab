@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
 import { api } from '../../api/client'
 import { askConfirm } from '../../composables/confirm'

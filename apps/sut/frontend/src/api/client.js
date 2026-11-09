@@ -1,4 +1,4 @@
-﻿const API_BASE = (import.meta.env.VITE_API_BASE || '').replace(/\/$/, '')
+const API_BASE = (import.meta.env.VITE_API_BASE || '').replace(/\/$/, '')
 const KEY_STORAGE = 'sut_api_key'
 const TIMEOUT_MS = 15000
 

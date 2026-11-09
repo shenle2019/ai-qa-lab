@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { nextTick, ref, watch } from 'vue'
 import { confirmState, settleConfirm } from '../composables/confirm'
 

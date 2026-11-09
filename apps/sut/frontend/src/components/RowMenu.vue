@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import { onBeforeUnmount, ref, watch } from 'vue'
 
 defineProps({

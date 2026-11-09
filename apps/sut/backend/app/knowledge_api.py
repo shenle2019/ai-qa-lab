@@ -1,4 +1,4 @@
-﻿"""Knowledge base API: libraries, documents, chunks and retrieval trials."""
+"""Knowledge base API: libraries, documents, chunks and retrieval trials."""
 
 from __future__ import annotations
 
