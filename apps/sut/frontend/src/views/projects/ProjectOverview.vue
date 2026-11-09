@@ -23,9 +23,18 @@ const donut = computed(() => {
   }
 })
 
+const PLACEHOLDER_STATS = [
+  { key: 'projects', label: '项目', hint: '全平台项目数' },
+  { key: 'cases', label: '用例', hint: '含 AI 生成草稿' },
+  { key: 'plans', label: '测试计划', hint: '按项目组织' },
+  { key: 'executions', label: '执行记录', hint: '累计执行次数' },
+  { key: 'defects', label: '缺陷', hint: '未关闭缺陷' },
+]
+
 const stats = computed(() => {
   const s = summary.value
-  if (!s) return []
+  // 数据未回来时先占位，避免先闪一排 0 再跳成真实值
+  if (!s) return PLACEHOLDER_STATS.map((item) => ({ ...item, value: null }))
   return [
     { key: 'projects', label: '项目', value: s.projects, hint: '全平台项目数' },
     { key: 'cases', label: '用例', value: s.cases, hint: '含 AI 生成草稿' },
@@ -108,19 +117,26 @@ onMounted(refresh)
     <div class="stats-grid">
       <div v-for="item in stats" :key="item.key" class="stat-card">
         <p class="stat-label">{{ item.label }}</p>
-        <strong class="stat-value">{{ item.value }}</strong>
+        <strong class="stat-value">
+          <span v-if="item.value === null" class="skeleton stat-skeleton" aria-hidden="true" />
+          <template v-else>{{ item.value }}</template>
+        </strong>
         <span class="stat-hint">{{ item.hint }}</span>
       </div>
 
       <div class="stat-card donut-card">
         <div>
           <p class="stat-label">通过率</p>
-          <strong class="stat-value">{{ passRate }}%</strong>
+          <strong class="stat-value">
+            <span v-if="!summary" class="skeleton stat-skeleton" aria-hidden="true" />
+            <template v-else>{{ passRate }}%</template>
+          </strong>
           <span class="stat-hint">
-            {{ summary?.results_passed ?? 0 }} 通过 / {{ summary?.results_failed ?? 0 }} 失败
+            <span v-if="!summary" class="skeleton stat-hint-skeleton" aria-hidden="true" />
+            <template v-else>{{ summary.results_passed }} 通过 / {{ summary.results_failed }} 失败</template>
           </span>
         </div>
-        <svg class="donut" viewBox="0 0 42 42" aria-hidden="true">
+        <svg v-if="summary" class="donut" viewBox="0 0 42 42" aria-hidden="true">
           <circle class="donut-track" cx="21" cy="21" r="16" />
           <circle
             class="donut-value"
@@ -184,6 +200,20 @@ onMounted(refresh)
 </template>
 
 <style scoped>
+.stat-skeleton {
+  display: block;
+  width: 62px;
+  height: 30px;
+  border-radius: 8px;
+}
+
+.stat-hint-skeleton {
+  display: block;
+  width: 120px;
+  height: 10px;
+  border-radius: 4px;
+}
+
 .donut-card {
   display: flex;
   align-items: center;

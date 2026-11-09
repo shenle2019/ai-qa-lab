@@ -1,6 +1,7 @@
-<script setup>
+﻿<script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
 import { api } from '../../api/client'
+import { askConfirm } from '../../composables/confirm'
 
 const bases = ref([])
 const selectedId = ref(null)
@@ -36,6 +37,9 @@ const visibleBases = computed(() => {
 })
 const totalDocs = computed(() => bases.value.reduce((sum, item) => sum + item.document_count, 0))
 const totalChunks = computed(() => bases.value.reduce((sum, item) => sum + item.chunk_count, 0))
+// 单个知识库分块数过高时提示重建：通常是文档体量与分块参数不匹配
+const CHUNK_WARN_LIMIT = 5000
+const heavyBases = computed(() => bases.value.filter((item) => item.chunk_count > CHUNK_WARN_LIMIT))
 
 function shortDate(value) {
   if (!value) return '—'
@@ -104,7 +108,7 @@ async function createBase() {
 }
 
 async function removeBase(item) {
-  if (!window.confirm(`删除知识库「${item.name}」及其全部文档与分块？`)) return
+  if (!(await askConfirm({ message: `删除知识库「${item.name}」及其全部文档与分块？` }))) return
   try {
     await api.deleteKnowledgeBase(item.id)
     if (selectedId.value === item.id) selectedId.value = null
@@ -146,7 +150,7 @@ async function addPastedText() {
 }
 
 async function removeDocument(document) {
-  if (!window.confirm(`删除文档「${document.filename}」？`)) return
+  if (!(await askConfirm({ message: `删除文档「${document.filename}」？` }))) return
   try {
     await api.deleteKnowledgeDocument(document.id)
     await loadBases()
@@ -223,6 +227,10 @@ onMounted(loadBases)
     </div>
 
     <p v-if="error" class="alert">{{ error }}</p>
+    <p v-if="heavyBases.length" class="alert">
+      检测到 {{ heavyBases.length }} 个知识库分块异常（{{ heavyBases[0].name }} 有 {{ heavyBases[0].chunk_count }} 个分块）。
+      这通常是文档体量远大于分块长度造成的：建议删除该库后调大分块长度重建，否则检索结果会被它独占。
+    </p>
 
     <div class="kb-grid">
       <aside class="card kb-list">
@@ -249,7 +257,10 @@ onMounted(loadBases)
           >
             <div class="kb-item-main">
               <strong>{{ item.name }}</strong>
-              <span class="cell-sub">{{ item.document_count }} 文档 · {{ item.chunk_count }} 分块</span>
+              <span class="cell-sub">
+                {{ item.document_count }} 文档 · {{ item.chunk_count }} 分块
+                <span v-if="item.chunk_count > CHUNK_WARN_LIMIT" class="badge module-failed">分块异常</span>
+              </span>
             </div>
             <button class="btn ghost tiny" @click.stop="removeBase(item)">删除</button>
           </li>

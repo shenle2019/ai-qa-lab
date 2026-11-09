@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
 import { api } from '../../api/client'
 import EmptyState from '../../components/EmptyState.vue'
@@ -14,6 +14,7 @@ const generating = ref(false)
 const saving = ref(false)
 const error = ref('')
 const notice = ref('')
+const keyMissing = ref(false)
 
 const filter = reactive({ project_id: '', status: '', keyword: '' })
 const genForm = reactive({ project_id: '', requirement_id: '', requirement: '', max_cases: 10 })
@@ -80,12 +81,19 @@ async function refresh() {
 
 async function loadCases() {
   if (!filter.project_id) return
+  keyMissing.value = false
   try {
-    const result = await api.runPlatformSkill('case.list', { project_id: Number(filter.project_id) })
-    cases.value = result.result?.cases || []
+    const rows = await api.platformCases(Number(filter.project_id))
+    cases.value = rows || []
     selected.value = selected.value.filter((id) => cases.value.some((c) => c.id === id))
   } catch (err) {
-    error.value = err.message
+    if (err.status === 401) {
+      // 只读列表不该因为缺少写权限密钥而报错，按空列表 + 中性提示处理
+      cases.value = []
+      keyMissing.value = true
+    } else {
+      error.value = err.message
+    }
   }
 }
 
@@ -229,6 +237,7 @@ onMounted(refresh)
     </article>
 
     <p v-if="error" class="alert error">{{ error }}</p>
+    <p v-if="keyMissing" class="alert">访问密钥无效或已过期，列表按空处理。到左侧“访问密钥”页面重新保存即可。</p>
     <p v-if="notice" class="alert">{{ notice }}</p>
 
     <div class="slim-banner">

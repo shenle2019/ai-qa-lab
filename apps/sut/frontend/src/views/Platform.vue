@@ -454,7 +454,8 @@ onMounted(refresh)
 </template>
 
 <style scoped>
-.platform-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.platform-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.platform-columns > * { min-width: 0; }
 .platform-form { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
 .platform-form input, .platform-form select, .platform-form textarea { min-width: 120px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: rgba(4, 8, 16, 0.5); color: var(--text); }
 .platform-form textarea { flex: 1 1 100%; font-family: inherit; resize: vertical; }

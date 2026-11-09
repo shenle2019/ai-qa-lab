@@ -2,6 +2,7 @@
 import { computed, onMounted, reactive, ref } from 'vue'
 import { api } from '../../api/client'
 import { pickProjectSmart, saveProjectId } from '../../utils/project'
+import { askConfirm } from '../../composables/confirm'
 
 const PROJECT_KEY = 'aiqa.modules.project'
 
@@ -86,7 +87,7 @@ async function saveEdit() {
 }
 
 async function remove(item) {
-  if (!window.confirm(`删除模块「${item.name}」？`)) return
+  if (!(await askConfirm({ message: `删除模块「${item.name}」？` }))) return
   error.value = ''
   try {
     await api.deleteProjectModule(item.id)

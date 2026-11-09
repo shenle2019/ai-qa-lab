@@ -2,6 +2,7 @@
 import { computed, onMounted, reactive, ref } from 'vue'
 import { api } from '../../api/client'
 import { pickProjectSmart, saveProjectId } from '../../utils/project'
+import { askConfirm } from '../../composables/confirm'
 
 const PROJECT_KEY = 'aiqa.environments.project'
 const KINDS = [
@@ -151,7 +152,7 @@ async function saveEdit() {
 }
 
 async function remove(item) {
-  if (!window.confirm(`删除环境「${item.name}」？`)) return
+  if (!(await askConfirm({ message: `删除环境「${item.name}」？` }))) return
   try {
     await api.deleteEnvironment(item.id)
     notice.value = '环境已删除'

@@ -1,9 +1,10 @@
-<script setup>
+﻿<script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
 import { api } from '../../api/client'
 import EmptyState from '../../components/EmptyState.vue'
 import RowMenu from '../../components/RowMenu.vue'
 import { pickProject, saveProjectId } from '../../utils/project'
+import { askConfirm } from '../../composables/confirm'
 
 const tabs = [
   { key: 'agents', label: '场景 Agent' },
@@ -39,6 +40,7 @@ const debugForm = reactive({
   expect_status: 200,
 })
 const debugResult = ref(null)
+const debugError = ref('')
 const debugBusy = ref(false)
 
 const caseDrawer = ref(null)
@@ -188,7 +190,7 @@ async function submitImport() {
 }
 
 async function removeAsset(item) {
-  if (!confirm(`删除接口资产「${item.name}」？它导入的接口会一起删掉。`)) return
+  if (!(await askConfirm({ message: `删除接口资产「${item.name}」？它导入的接口会一起删掉。` }))) return
   try {
     await api.deleteApiAsset(item.id)
     flash('接口资产已删除')
@@ -237,7 +239,7 @@ async function saveEndpoint() {
 }
 
 async function removeEndpoint(item) {
-  if (!confirm(`删除接口「${item.method} ${item.path}」？`)) return
+  if (!(await askConfirm({ message: `删除接口「${item.method} ${item.path}」？` }))) return
   try {
     await api.deleteApiEndpoint(item.id)
     flash('接口已删除')
@@ -250,6 +252,7 @@ async function removeEndpoint(item) {
 function openDebug(item) {
   debugTarget.value = item
   debugResult.value = null
+  debugError.value = ''
   debugForm.headers = '{\n  "Authorization": "Bearer "\n}'
   debugForm.params = '{}'
   debugForm.body = ''
@@ -274,6 +277,7 @@ async function sendDebug() {
   if (!debugTarget.value) return
   debugBusy.value = true
   debugResult.value = null
+  debugError.value = ''
   error.value = ''
   try {
     const payload = {
@@ -284,9 +288,10 @@ async function sendDebug() {
       expect_status: debugForm.expect_status || null,
     }
     debugResult.value = await api.debugApiEndpoint(debugTarget.value.id, payload)
+    debugError.value = ''
     await loadRuns()
   } catch (err) {
-    error.value = err.message
+    debugError.value = err.message || '请求失败，请检查访问密钥与接口地址'
   } finally {
     debugBusy.value = false
   }
@@ -383,7 +388,7 @@ async function runCase(item) {
 }
 
 async function removeCase(item) {
-  if (!confirm(`删除用例「${item.title}」？`)) return
+  if (!(await askConfirm({ message: `删除用例「${item.title}」？` }))) return
   try {
     await api.deleteApiCase(item.id)
     flash('用例已删除')
@@ -931,6 +936,7 @@ onMounted(async () => {
         <textarea v-model="debugForm.body" rows="5" class="mono" />
         <label class="form-label">期望状态码</label>
         <input v-model.number="debugForm.expect_status" type="number" placeholder="200" />
+        <p v-if="debugError" class="alert error modal-alert">{{ debugError }}</p>
         <footer>
           <button class="btn ghost" @click="debugOpen = false">关闭</button>
           <button class="btn" :disabled="debugBusy" @click="sendDebug">

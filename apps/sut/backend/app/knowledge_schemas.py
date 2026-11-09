@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from datetime import datetime
 
@@ -50,7 +50,7 @@ class KnowledgeBaseOut(BaseModel):
 
 class TextDocumentIn(BaseModel):
     filename: str = Field(default="pasted.txt", max_length=255)
-    text: str = Field(min_length=1)
+    text: str = Field(min_length=1, max_length=2_000_000)
 
 
 class ChunkOut(BaseModel):

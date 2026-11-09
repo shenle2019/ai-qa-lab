@@ -1,4 +1,4 @@
-const API_BASE = (import.meta.env.VITE_API_BASE || '').replace(/\/$/, '')
+﻿const API_BASE = (import.meta.env.VITE_API_BASE || '').replace(/\/$/, '')
 const KEY_STORAGE = 'sut_api_key'
 const TIMEOUT_MS = 15000
 
@@ -83,7 +83,9 @@ async function request(path, options = {}) {
     // Keep the user on the current page so form input survives a 401. A wrong
     // key is cleared here; the caller shows the message inline.
     if (response.status === 401) clearApiKey()
-    throw new Error(ERROR_TEXT[response.status] || detail || `${response.status} ${response.statusText}`)
+    const failure = new Error(ERROR_TEXT[response.status] || detail || `${response.status} ${response.statusText}`)
+    failure.status = response.status
+    throw failure
   }
 
   return response.status === 204 ? null : response.json()
@@ -105,7 +107,8 @@ export const api = {
   platformProjects: () => request('/api/platform/projects'),
   createPlatformProject: (payload) =>
     request('/api/platform/projects', { method: 'POST', body: payload }),
-  platformCases: () => request('/api/platform/cases'),
+  platformCases: (projectId) =>
+    request(`/api/platform/cases${projectId ? `?project_id=${projectId}` : ''}`),
   platformCase: (id) => request(`/api/platform/cases/${id}`),
   updatePlatformCase: (id, payload) =>
     request(`/api/platform/cases/${id}`, { method: 'PATCH', body: payload }),

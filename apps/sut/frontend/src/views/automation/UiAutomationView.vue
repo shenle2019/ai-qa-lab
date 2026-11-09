@@ -3,6 +3,7 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import { api } from '../../api/client'
 import EmptyState from '../../components/EmptyState.vue'
 import { pickProject, saveProjectId } from '../../utils/project'
+import { askConfirm } from '../../composables/confirm'
 
 const PROJECT_KEY = 'aiqa.ui.project'
 
@@ -177,7 +178,7 @@ async function saveEdit() {
 }
 
 async function removeCase(item) {
-  if (!window.confirm(`删除用例 #${item.id}「${item.title}」？`)) return
+  if (!(await askConfirm({ message: `删除用例 #${item.id}「${item.title}」？` }))) return
   error.value = ''
   try {
     await api.deleteUiCase(item.id)

@@ -1,8 +1,9 @@
-<script setup>
+﻿<script setup>
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import { api } from './api/client'
 import NavIcon from './components/NavIcon.vue'
+import ConfirmDialog from './components/ConfirmDialog.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -10,6 +11,7 @@ const online = ref(false)
 const checking = ref(true)
 const menuOpen = ref(false)
 const docsOnline = ref(false)
+const serverVersion = ref('')
 const title = computed(() => route.meta.title || 'AI 测试平台')
 const healthNotice = ref('')
 const heroOwnsTitle = ref(false)
@@ -100,6 +102,7 @@ async function checkHealth(announceResult = false) {
     const body = await api.health()
     online.value = true
     docsOnline.value = Boolean(body?.docs)
+    serverVersion.value = body?.version || ''
   } catch {
     online.value = false
     docsOnline.value = false
@@ -200,7 +203,7 @@ onUnmounted(() => {
           <NavIcon name="key" />
           <span>访问密钥</span>
         </RouterLink>
-        <p class="version">v1.2.1 · citrus-lab</p>
+        <p class="version">v{{ serverVersion || '1.2.1' }} · citrus-lab</p>
       </div>
     </aside>
 
@@ -260,5 +263,6 @@ onUnmounted(() => {
         <RouterView />
       </main>
     </div>
+    <ConfirmDialog />
   </div>
 </template>

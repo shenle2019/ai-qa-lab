@@ -1,5 +1,5 @@
-<script setup>
-import { onBeforeUnmount, ref } from 'vue'
+﻿<script setup>
+import { onBeforeUnmount, ref, watch } from 'vue'
 
 defineProps({
   items: { type: Array, required: true },
@@ -20,13 +20,25 @@ function onDocClick(event) {
   if (!root.value?.contains(event.target)) close()
 }
 
+function onKeydown(event) {
+  if (event.key === 'Escape') close()
+}
+
+watch(open, (value) => {
+  if (value) window.addEventListener('keydown', onKeydown)
+  else window.removeEventListener('keydown', onKeydown)
+})
+
 document.addEventListener('click', onDocClick)
-onBeforeUnmount(() => document.removeEventListener('click', onDocClick))
+onBeforeUnmount(() => {
+  document.removeEventListener('click', onDocClick)
+  window.removeEventListener('keydown', onKeydown)
+})
 </script>
 
 <template>
   <div ref="root" class="row-menu">
-    <button class="btn ghost tiny" type="button" :aria-expanded="open" @click.stop="toggle">⋯</button>
+    <button class="btn ghost tiny" type="button" :aria-expanded="open" aria-haspopup="menu" @click.stop="toggle">⋯</button>
     <ul v-if="open" class="row-menu-pop">
       <li v-for="item in items" :key="item.label">
         <button type="button" :class="{ danger: item.danger }" @click.stop="close(); item.run()">

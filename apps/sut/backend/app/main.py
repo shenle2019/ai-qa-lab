@@ -1,4 +1,4 @@
-import logging
+﻿import logging
 import os
 from pathlib import Path
 
@@ -53,7 +53,7 @@ if settings.seed_enabled():
 
 app = FastAPI(
     title="AI Knowledge Ops SUT",
-    version="1.1.0",
+    version="1.2.1",
     docs_url="/docs" if settings.docs_enabled() else None,
     redoc_url="/redoc" if settings.docs_enabled() else None,
     openapi_url="/openapi.json" if settings.docs_enabled() else None,

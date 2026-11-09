@@ -1,4 +1,4 @@
-"""Knowledge base API: libraries, documents, chunks and retrieval trials."""
+﻿"""Knowledge base API: libraries, documents, chunks and retrieval trials."""
 
 from __future__ import annotations
 
@@ -19,6 +19,10 @@ router = APIRouter(prefix="/api/platform", tags=["knowledge"])
 
 UPLOAD_ROOT = Path(__file__).resolve().parents[4] / "data" / "uploads" / "knowledge"
 MAX_UPLOAD_BYTES = 20 * 1024 * 1024
+# 单次写入的正文上限，避免一次粘贴把知识库塞进几万个分块
+MAX_TEXT_CHARS = 2_000_000
+# 单个文档的分块上限：超过说明分块参数与文档体量不匹配，应当拒绝并提示
+MAX_CHUNKS_PER_DOCUMENT = 5000
 
 
 def _get_kb(db: Session, kb_id: int) -> models.KnowledgeBase:
@@ -64,9 +68,22 @@ def ingest_text(
     clean = (text or "").strip()
     if not clean:
         raise HTTPException(status_code=400, detail="文档没有可用文本，无法分块")
+    if len(clean) > MAX_TEXT_CHARS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"文档过长：{len(clean)} 字，超过单次写入上限 {MAX_TEXT_CHARS} 字，请拆分后再上传",
+        )
     pieces = chunk_text(clean, kb.chunk_size, kb.chunk_overlap)
     if not pieces:
         raise HTTPException(status_code=400, detail="分块结果为空，请检查文档内容")
+    if len(pieces) > MAX_CHUNKS_PER_DOCUMENT:
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"分块过多：按当前参数（{kb.chunk_size} 字 / 重叠 {kb.chunk_overlap}）会产生 {len(pieces)} 个分块，"
+                f"超过单文档上限 {MAX_CHUNKS_PER_DOCUMENT}。请调大分块长度或拆分文档后再试。"
+            ),
+        )
     document = models.KnowledgeDocument(
         kb_id=kb.id,
         filename=filename or "untitled.txt",

@@ -2,6 +2,7 @@
 import { computed, onMounted, reactive, ref } from 'vue'
 import { api } from '../../api/client'
 import EmptyState from '../../components/EmptyState.vue'
+import { askConfirm } from '../../composables/confirm'
 
 const view = ref('list')
 const projects = ref([])
@@ -199,7 +200,7 @@ async function removeAttachment(attachmentId) {
 }
 
 async function removeRequirement(item) {
-  if (!window.confirm(`删除需求「${item.title}」？分析结果和对话记录会一起删除。`)) return
+  if (!(await askConfirm({ message: `删除需求「${item.title}」？分析结果和对话记录会一起删除。` }))) return
   try {
     await api.deletePlatformRequirement(item.id)
     if (active.value?.id === item.id) back()

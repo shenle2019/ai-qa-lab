@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { useTicketStore } from '../stores/tickets'
 import StatusBadge from '../components/StatusBadge.vue'
+import { askConfirm } from '../composables/confirm'
 
 const store = useTicketStore()
 const search = ref('')
@@ -70,22 +71,22 @@ function resetForm() {
   formError.value = ''
 }
 
-function closeCreate() {
+async function closeCreate() {
   if (form.title.trim() || form.description.trim()) {
-    if (!window.confirm('放弃已填写的内容？')) return
+    if (!(await askConfirm({ message: '放弃已填写的内容？' }))) return
   }
   resetForm()
   showForm.value = false
 }
 
-function closeEdit() {
+async function closeEdit() {
   const changed =
     editing.value &&
     (editForm.title !== editing.value.title ||
       editForm.description !== editing.value.description ||
       editForm.priority !== editing.value.priority ||
       editForm.status !== editing.value.status)
-  if (changed && !window.confirm('放弃未保存的修改？')) return
+  if (changed && !(await askConfirm({ message: '放弃未保存的修改？' }))) return
   editing.value = null
   editError.value = ''
 }
@@ -174,7 +175,7 @@ async function saveEdit() {
 }
 
 async function removeTicket(ticket) {
-  if (!window.confirm(`删除工单 #${ticket.id}？`)) return
+  if (!(await askConfirm({ message: `删除工单 #${ticket.id}？` }))) return
   actionError.value = ''
   try {
     await store.remove(ticket.id)
