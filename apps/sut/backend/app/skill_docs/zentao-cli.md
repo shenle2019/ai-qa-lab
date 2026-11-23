@@ -1,6 +1,6 @@
 ---
 name: zentao-cli
-description: 通过 zentao 命令行工具查询和操作禅道（ZenTao）数据，覆盖项目集、产品、项目、执行、需求、Bug、任务、测试用例、测试单、产品计划、版本、发布、反馈、工单、应用、用户、附件等模块的增删改查及状态流转。当用户提到禅道、zentao、查询项目进展、获取 Bug 列表、创建任务、更新需求状态等项目管理操作时使用本技能。
+description: "使用场景：用 zentao CLI 查询与操作禅道（项目集 / 产品 / 项目 / 执行 / 需求 / Bug / 任务 / 用例 / 测试单），含增删改查与状态流转。当用户提到禅道、zentao、查 Bug、建任务时触发。"
 license: MIT
 metadata:
   author: Sun Hao <sunhao@chandao.com>
@@ -184,69 +184,12 @@ zentao bug --product=1 --limit=10       # 只取前 10 条
 
 ## 常用操作示例
 
-### 查看进行中的项目和执行
+完整命令示例已拆到 references/commands.md，动手前 MANDATORY 先读它；本节只留最小示例。
 
-```bash
-zentao project --filter='status:doing' --pick=id,name,status
-zentao execution --project=5 --pick=id,name,status
-```
-
-### 创建需求并关联计划
-
-```bash
-zentao story create --product=1 --title="需求标题" --assignedTo=admin --pri=3
-zentao story update 11 --title="需求标题" --plan=1
-```
-
-### 创建并解决 Bug
-
-```bash
-zentao bug create --product=1 --title="Bug标题" --severity=2 --pri=2 --type=codeerror --openedBuild=trunk
-zentao bug resolve 42
-```
-
-### 创建、启动并完成任务
-
-```bash
-zentao task create --execution=1 --name="任务名" --type=devel --assignedTo=admin --estimate=4
-zentao task start 100
-zentao task finish 100 --consumed=4
-```
-
-### 查看帮助
-
-```bash
-zentao bug help          # 查看 Bug 模块的参数和操作
-zentao story update help # 查看需求更新操作的参数和操作
-zentao help              # 查看所有命令
-```
-
-## 意图识别
-
-| 用户意图 | CLI 命令 |
-|---------|---------|
-| 所有产品/项目/项目集 | `zentao product` / `zentao project` / `zentao program` |
-| 进行中的项目 | `zentao project --filter='status:doing'` |
-| 某产品的 Bug | `zentao bug --product=<id>` |
-| 某执行的任务 | `zentao task --execution=<id>` |
-| 创建/新增 Bug | `zentao bug create ...` |
-| 解决 Bug | `zentao bug resolve <id>` |
-| 关闭 Bug | `zentao bug close <id>` |
-| 激活 Bug | `zentao bug activate <id>` |
-| 创建需求 | `zentao story create ...` |
-| 变更/关闭/激活需求 | `zentao story change/close/activate <id>` |
-| 业务需求 | `zentao epic ...`（同 story） |
-| 用户需求 | `zentao requirement ...`（同 story） |
-| 创建/启动/完成/关闭任务 | `zentao task create/start/finish/close ...` |
-| 测试用例 | `zentao testcase ...` |
-| 测试单 | `zentao testtask ...` |
-| 产品计划 | `zentao productplan ...` |
-| 版本/Build | `zentao build ...` |
-| 发布 | `zentao release ...` |
-| 反馈 | `zentao feedback ...` |
-| 工单 | `zentao ticket ...` |
-| 用户列表 | `zentao user` |
-| 当前用户信息 | `zentao profile` |
+`ash
+zentao bug list --product 1 --status active
+zentao bug view --id 42
+`
 
 ## 错误处理
 
@@ -265,3 +208,60 @@ zentao help              # 查看所有命令
 - 不确定模块参数时，先执行 `zentao <module> help` 查看帮助，不确定操作参数时，先执行 `zentao <module> <action> help` 查看帮助
 - `browseType` 常用值：`all`（全部）、`doing`（进行中）、`closed`（已关闭）
 - 多账号切换：`zentao profile` 查看和切换账号
+
+<!-- hardened:six-shapes -->
+## 执行顺序
+
+1. 先确认登录状态与目标产品/项目 ID，没登录过的先跑登录。
+2. 再补全资源 ID：产品 → 项目 → 执行 → 需求/Bug 的层级要一层层取。
+3. 然后只读查询，拿到目标对象当前状态。
+4. 接着执行写操作，一次只改一个对象，改完立刻回读确认。
+5. 最后把改动记进变更日志：对象、旧值、新值、时间。
+
+## 判断与选择
+
+| 情形 | 选哪条 | 为什么 |
+| --- | --- | --- |
+| 不知道 ID | 先列表再按名称匹配 | 猜 ID 会改错对象 |
+| 批量改状态 | 逐条改并回读 | 批量接口失败时不告诉你哪条没成 |
+| 只查不改 | 用只读命令 | 少一次写就少一次事故 |
+| 要关联需求与用例 | 先建关联再改状态 | 顺序反了会丢关联 |
+| 名称重名 | 用 ID 二次确认 | 同名对象在禅道很常见 |
+
+## 反模式
+
+- **NEVER** 凭名称直接写操作 —— 因为重名会把改动落到别人的对象上。
+- **NEVER** 跳过回读 —— 因为接口返回成功不等于状态真的变了。
+- **NEVER** 批量改而不记录 —— 因为出问题无法回滚。
+- **NEVER** 把账号密码写进命令历史 —— 因为会被 shell 记录。
+- **NEVER** 在生产项目上试命令 —— 因为禅道没有回收站。
+- **NEVER** 一次改多个字段 —— 因为失败时分不清是哪个字段被拒。
+
+## 失败兜底
+
+- 登录过期：重新登录后重放命令，写操作前先回读确认没生效。
+- 接口报错：保留原文错误码，先查权限再查参数，不反复重试写操作。
+- 批量中途中止：列出已成功与未执行的条目，逐条补齐。
+
+## 一页速查
+
+| 问题 | 怎么做 |
+| --- | --- |
+| 不知道对象 ID | 先列表按名匹配 |
+| 写操作怎么确认 | 立刻回读 |
+| 批量失败 | 逐条 + 记录 |
+| 判断要不要写 | 只读够用就不写 |
+| 重名怎么办 | 用 ID 二次确认 |
+| 出错先查哪里 | 先权限后参数 |
+| 交付前查什么 | 变更日志齐全 |
+
+## 示例
+
+```bash
+# 查产品下的 Bug 列表
+zentao bug list --product 1 --status active
+
+# 改一条 Bug 的状态并回读
+zentao bug resolve --id 42 --resolution fixed
+zentao bug view --id 42
+```

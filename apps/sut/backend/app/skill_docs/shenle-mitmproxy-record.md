@@ -1,6 +1,6 @@
 ---
 name: shenle-mitmproxy-record
-description: "用 mitmproxy 代理录制 HTTP/HTTPS 流量，产出可归档的请求清单与接口资产；适用于抓包、复现请求、补接口文档"
+description: "使用场景：用 mitmproxy 代理录制 HTTP/HTTPS 流量，产出可归档的请求清单（.json）与接口资产，供接口文档与用例生成使用。当用户说「录一下流量」「抓包归档」时触发。"
 version: 0.1.0
 ---
 重点：请使用中文沟通！！
@@ -193,3 +193,61 @@ python .claude/skills/shenle-mitmproxy-record/scripts/inspect_recording.py
 | `shenle-api-record` | Web SPA（XHR/Fetch） | Playwright CDP，浏览器内拦截 |
 | `shenle-web-record` | Web 页面（含 DOM/截图） | Playwright CDP，全网络 |
 | `shenle-mitmproxy-record` | 桌面/APP/手机 H5 | **mitmproxy 系统代理** |
+
+<!-- hardened:six-shapes -->
+动手前 MANDATORY 先读 references/record-checklist.md（证书、filter、脱敏三步的自检单）。
+
+## 执行顺序
+
+1. 先确认录制目标（App / Web / 小程序）与代理方式，证书没装好先装。
+2. 再起 mitmproxy 与客户端代理，只录目标域名，别把所有流量都存下来。
+3. 然后操作被测流程，一次只跑一条业务链路，跑完就停。
+4. 接着导出：按接口聚合，产出请求清单 JSON，敏感头做脱敏。
+5. 最后自检：清单里没有 token、没有手机号明文，条目数与操作步数对得上。
+
+## 判断与选择
+
+| 情形 | 选哪条 | 为什么 |
+| --- | --- | --- |
+| HTTPS 抓不到 | 先查证书信任 | 90% 的抓不到都是证书问题 |
+| 只关心某域名 | 用 filter 限定 | 全量录制会让清单不可用 |
+| 有加密体 | 只录密文并标注 | 解密需要密钥，不在录制范围 |
+| 多端并行 | 分端口分实例 | 混在一起分不清来源 |
+| 要复现某请求 | 导出为可重放格式 | 只存原始流量后续难用 |
+
+## 反模式
+
+- **NEVER** 把带 token 的原始流量提交进仓库 —— 因为等于泄露账号。
+- **NEVER** 录制时跑多个业务链路 —— 因为清单条目无法归因。
+- **NEVER** 忽略证书错误继续录 —— 因为看到的可能是不完整流量。
+- **NEVER** 只存 pcap 不存结构化清单 —— 因为下游无法直接消费。
+- **NEVER** 在生产环境长时间挂着代理 —— 因为会影响别人排障。
+- **NEVER** 录完不校验条数 —— 因为漏录比录错更难发现。
+
+## 失败兜底
+
+- 证书装不上：退回支持明文的环境录制，并在清单里标注来源。
+- 录制中断：保留已完成部分，重录只补缺失链路。
+- 脱敏遗漏：导出脚本二次扫描 token / 手机号 / 身份证模式，命中就失败。
+
+## 一页速查
+
+| 问题 | 怎么做 |
+| --- | --- |
+| 抓不到 HTTPS | 查证书 |
+| 只录某站 | filter 限定 |
+| 加密体 | 记密文 + 标注意 |
+| 脱敏 | 导出时扫描替换 |
+| 判断条目够不够 | 与操作步数对照 |
+| 多端 | 分实例 |
+| 交付前查什么 | 无明文密钥 |
+
+## 示例
+
+```bash
+# 只录目标域名
+mitmdump -p 8080 --set save_stream_file=capture/session.flow -f "~d example.com"
+
+# 导出结构化清单并脱敏
+python scripts/flow_to_list.py capture/session.flow --out capture/requests.json --mask
+```
