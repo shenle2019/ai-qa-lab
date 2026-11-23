@@ -6,8 +6,10 @@ import re
 from pathlib import Path
 
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import FileResponse
 
 DOCS_DIR = Path(__file__).resolve().parent / "skill_docs"
+ZIP_DIR = DOCS_DIR / "zips"
 TITLE_RE = re.compile(r"^#\s+(.+)$", re.M)
 FRONTMATTER_RE = re.compile(r"\A---\s*\n.*?\n---\s*\n", re.S)
 
@@ -44,6 +46,7 @@ def list_skill_docs() -> list[dict]:
                 "slug": _slug(path),
                 "title": _title(text, _slug(path)),
                 "chars": len(text),
+                "has_zip": (ZIP_DIR / f"{_slug(path)}.zip").is_file(),
             }
         )
     return items
@@ -56,3 +59,14 @@ def get_skill_doc(slug: str) -> dict:
         raise HTTPException(status_code=404, detail="没有这篇文档")
     text = _clean(path.read_text(encoding="utf-8", errors="replace"))
     return {"slug": slug, "title": _title(text, slug), "markdown": text}
+
+
+@router.get("/skill-docs/{slug}/download")
+def download_skill_doc(slug: str) -> FileResponse:
+    """Hand back the packaged skill folder (SKILL.md + references) as a zip."""
+    if not re.fullmatch(r"[A-Za-z0-9._-]+", slug):
+        raise HTTPException(status_code=400, detail="技能名不合法")
+    archive = ZIP_DIR / f"{slug}.zip"
+    if not archive.is_file():
+        raise HTTPException(status_code=404, detail="这个技能没有可下载的压缩包")
+    return FileResponse(archive, media_type="application/zip", filename=f"{slug}.zip")

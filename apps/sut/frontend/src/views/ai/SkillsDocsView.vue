@@ -134,6 +134,10 @@ async function open(slug) {
   }
 }
 
+function downloadUrl(slug) {
+  return `/api/platform/skill-docs/${encodeURIComponent(slug)}/download`
+}
+
 async function load() {
   loading.value = true
   error.value = ''
@@ -179,6 +183,17 @@ onMounted(load)
       </aside>
 
       <article class="card doc-body">
+        <div class="doc-head">
+          <span class="doc-head-title mono">{{ title }}</span>
+          <a
+            v-if="active"
+            class="btn ghost small"
+            :href="downloadUrl(active)"
+            :download="`${active}.zip`"
+          >
+            下载 zip
+          </a>
+        </div>
         <p v-if="loading" class="muted">读取中…</p>
         <div v-else class="markdown" v-html="rendered"></div>
       </article>
@@ -187,6 +202,17 @@ onMounted(load)
 </template>
 
 <style scoped>
+.doc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--line, rgba(0,0,0,.08));
+}
+.doc-head-title { font-size: 13px; color: var(--muted); }
+
 .doc-grid {
   display: grid;
   grid-template-columns: 260px minmax(0, 1fr);
