@@ -9,8 +9,14 @@ from fastapi import APIRouter, HTTPException
 
 DOCS_DIR = Path(__file__).resolve().parent / "skill_docs"
 TITLE_RE = re.compile(r"^#\s+(.+)$", re.M)
+FRONTMATTER_RE = re.compile(r"\A---\s*\n.*?\n---\s*\n", re.S)
 
 router = APIRouter(prefix="/api/platform", tags=["skill-docs"])
+
+
+def _clean(text: str) -> str:
+    """Drop the YAML frontmatter so the page starts at the title."""
+    return FRONTMATTER_RE.sub("", text, count=1).lstrip("\n")
 
 
 def _title(text: str, fallback: str) -> str:
@@ -25,14 +31,14 @@ def _slug(path: Path) -> str:
 def _docs() -> list[Path]:
     if not DOCS_DIR.is_dir():
         return []
-    return sorted(DOCS_DIR.glob("*.md"))
+    return [p for p in sorted(DOCS_DIR.glob("*.md")) if p.stem != "index"]
 
 
 @router.get("/skill-docs")
 def list_skill_docs() -> list[dict]:
     items = []
     for path in _docs():
-        text = path.read_text(encoding="utf-8", errors="replace")
+        text = _clean(path.read_text(encoding="utf-8", errors="replace"))
         items.append(
             {
                 "slug": _slug(path),
@@ -48,5 +54,5 @@ def get_skill_doc(slug: str) -> dict:
     path = DOCS_DIR / f"{slug}.md"
     if not path.is_file():
         raise HTTPException(status_code=404, detail="没有这篇文档")
-    text = path.read_text(encoding="utf-8", errors="replace")
+    text = _clean(path.read_text(encoding="utf-8", errors="replace"))
     return {"slug": slug, "title": _title(text, slug), "markdown": text}
