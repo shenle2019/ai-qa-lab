@@ -7,6 +7,7 @@ const routes = [
   { path: '/overview', component: () => import('./views/projects/ProjectOverview.vue'), meta: { title: '项目概览' } },
   { path: '/system-ai', component: () => import('./views/ai/SystemAiView.vue'), meta: { title: '系统 AI 配置' } },
   { path: '/ai-logs', component: () => import('./views/ai/AiLogsView.vue'), meta: { title: 'AI 调用日志' } },
+  { path: '/skill-docs', component: () => import('./views/ai/SkillsDocsView.vue'), meta: { title: 'Skills 手册' } },
   { path: '/users', component: () => import('./views/ai/UsersView.vue'), meta: { title: '用户管理' } },
 
   // Testing

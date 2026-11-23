@@ -334,4 +334,6 @@ export const api = {
   updateEnvironment: (id, payload) =>
     request(`/api/platform/environments/${id}`, { method: 'PATCH', body: payload }),
   deleteEnvironment: (id) => request(`/api/platform/environments/${id}`, { method: 'DELETE' }),
+  skillDocs: () => request('/api/platform/skill-docs'),
+  skillDoc: (slug) => request(`/api/platform/skill-docs/${encodeURIComponent(slug)}`),
 }

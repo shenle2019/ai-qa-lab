@@ -29,6 +29,7 @@ from .auth import auth_guard
 from .db import Base, engine
 from .deps import get_db
 from .environment_api import router as environment_router
+from .skill_docs_api import router as skill_docs_router
 from .knowledge_api import router as knowledge_router
 from .middleware import request_context
 from .model_api import router as model_router
@@ -83,6 +84,7 @@ app.include_router(ui_router)
 app.include_router(project_content_router)
 app.include_router(users_router)
 app.include_router(environment_router)
+app.include_router(skill_docs_router)
 
 FRONTEND_DIST = Path(__file__).resolve().parents[2] / "frontend" / "dist"
 LEARNING_DIR = Path(__file__).resolve().parents[4] / "docs" / "learning"
