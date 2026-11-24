@@ -16,16 +16,24 @@ title: shenle-android-cli
 
 ## 核心功能
 
-- `-s SERIAL` 指定设备，`--debug` 打印定位过程
-- `--input-method` 可选 clipboard / adbkeyboard 解决中文输入
-- 支持滑动、按键、区域内容读取
+- 设备：`devices` 列表、`start` 选定设备（`-s SERIAL` 或环境变量），`--debug` 打印定位过程
+- 应用：`launch` / `close`（回桌面）/ `stop`（force-stop，冷启动测试）/ `current-app` / `appinfo`
+- 看：`screenshot` / `get`（4 段结构化描述）/ `dump-ui`（uiautomator XML）
+- 动：`click` / `input` / `longpress` / `swipe` / `swipe-to` / `zoom` / `pinch` / `scroll` 系列
+- 系统：`keyevent`（30+ 别名）/ `recents` / `notifications` / `shell`（adb shell 透传）
+- `batch` 一次截图 + 一次 AI 识别 + 顺序多动作；`--input-method` 可选 clipboard / adbkeyboard 解决中文输入
 
 ## 怎么用
 
 ```bash
-shenle-android-cli devices
-shenle-android-cli -s <serial> screenshot
+shenle-android-cli devices                       # 列设备
+shenle-android-cli -s <serial> start             # 选定设备，后续命令复用
+shenle-android-cli -s <serial> launch com.example.app/.MainActivity
+shenle-android-cli -s <serial> screenshot out/s1.png
 shenle-android-cli -s <serial> click "登录按钮"
+shenle-android-cli -s <serial> input "账号输入框" "qa_user"
+shenle-android-cli -s <serial> get "页面底部状态区"   # 4 段结构化读回
+shenle-android-cli -s <serial> stop com.example.app    # 冷启动前先杀进程
 ```
 
 ## 产物与判读

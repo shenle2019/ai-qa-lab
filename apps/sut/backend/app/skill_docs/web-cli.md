@@ -16,7 +16,7 @@ title: shenle-web-cli
 
 ## 核心功能
 
-- 子命令：`start / navigate / screenshot / click / input / get / scroll / url / title / close`
+- 子命令：`start / close / navigate / screenshot / click / input / scroll / get / url / title / batch`（`batch` 一次截图 + 一次识别 + 顺序多动作）
 - `start --headless --port N` 起后台浏览器并把端口写进 state.json，后续命令自动复用
 - `click "描述"` / `input "描述" "文本"` 收自然语言，不写选择器
 
