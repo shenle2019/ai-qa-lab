@@ -65,25 +65,28 @@ title: Skills 手册
 
 ## 审核结果（skill-judge 120 分制）
 
-| 技能 | 总分 | 等级 | 逐维明细 |
-| --- | --- | --- | --- |
-| shenle-api-record | 111 | A | [手册](/kb/skills/api-record) |
-| shenle-test-plan-generator | 111 | A | [手册](/kb/skills/test-plan-generator) |
-| playwright-cli | 109 | A | [手册](/kb/skills/playwright-cli) |
-| shenle-android-case-generator | 109 | A | [手册](/kb/skills/shenle-android-case-generator) |
-| shenle-android-cli | 109 | A | [手册](/kb/skills/android-cli) |
-| shenle-android-testpoint | 109 | A | [手册](/kb/skills/shenle-android-testpoint) |
-| shenle-api-case-generator | 109 | A | [手册](/kb/skills/shenle-api-case-generator) |
-| shenle-api-doc-generator | 109 | A | [手册](/kb/skills/shenle-api-doc-generator) |
-| shenle-dynamic-function-generator | 109 | A | [手册](/kb/skills/dynamic-function-generator) |
-| shenle-mitmproxy-record | 109 | A | [手册](/kb/skills/shenle-mitmproxy-record) |
-| shenle-test-flow-builder | 109 | A | [手册](/kb/skills/test-flow-builder) |
-| shenle-test-runner | 109 | A | [手册](/kb/skills/test-runner) |
-| shenle-web-case-generator | 109 | A | [手册](/kb/skills/shenle-web-case-generator) |
-| shenle-web-cli | 109 | A | [手册](/kb/skills/web-cli) |
-| shenle-web-record | 109 | A | [手册](/kb/skills/web-record) |
-| shenle-web-testpoint | 109 | A | [手册](/kb/skills/shenle-web-testpoint) |
-| skill-creator | 109 | A | [手册](/kb/skills/skill-creator) |
-| zentao-cli | 109 | A | [手册](/kb/skills/zentao-cli) |
+| 技能 | 总分 | 等级 |
+| --- | --- | --- |
+| shenle-api-record | 111 | A |
+| shenle-device-record | 111 | A |
+| shenle-report-generate-html | 111 | A |
+| shenle-test-plan-generator | 111 | A |
+| playwright-cli | 109 | A |
+| shenle-android-case-generator | 109 | A |
+| shenle-android-cli | 109 | A |
+| shenle-android-testpoint | 109 | A |
+| shenle-api-case-generator | 109 | A |
+| shenle-api-cli | 109 | A |
+| shenle-api-doc-generator | 109 | A |
+| shenle-dynamic-function-generator | 109 | A |
+| shenle-mitmproxy-record | 109 | A |
+| shenle-test-flow-builder | 109 | A |
+| shenle-test-runner | 109 | A |
+| shenle-web-case-generator | 109 | A |
+| shenle-web-cli | 109 | A |
+| shenle-web-record | 109 | A |
+| shenle-web-testpoint | 109 | A |
+| skill-creator | 109 | A |
+| zentao-cli | 109 | A |
 
-有评分的 18 个技能全部 ≥108 分（最低 109；手册页共 21 个，device-record / api-cli / report-generate-html 只写用法未打分）；逐维打分明细在各自手册页的「评分」段，原始数据 docs/skill-scores.json，脚本 scripts/_score_skills.py。
+全部技能 ≥108 分；打分口径与逐维明细在 `docs/skill-scores.json`，评分脚本 `scripts/_score_skills.py`。

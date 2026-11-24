@@ -54,4 +54,4 @@ zentao bug --product=1                  # 产品 #1 的 Bug
 | D7 模式识别 | 10 | 10 |
 | D8 实用可用性 | 15 | 15 |
 
-判定：✅ 达标，正文 258 行；明细见 docs/skill-scores.json。
+判定：✅ 达标，规范条数见 `docs/skill-scores.json`。

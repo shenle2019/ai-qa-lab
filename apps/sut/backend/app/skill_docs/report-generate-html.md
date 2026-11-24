@@ -38,3 +38,20 @@ python .claude/skills/shenle-report-generate-html/scripts/generate_html.py --hel
 
 - 单跑记录：[shenle-report-generate-html 单跑记录](/labs/skills/report-generate-html)
 - 返回：[Skills 手册](/kb/skills/)
+
+## 评分（skill-judge）
+
+总分 **111 / 120**（≥108 为 A 级），按 skill-judge 八维逐项打分：
+
+| 维度 | 得分 | 满分 |
+| --- | --- | --- |
+| D1 知识增量 | 17 | 20 |
+| D2 心智与流程 | 15 | 15 |
+| D3 反模式 | 13 | 15 |
+| D4 规格 | 15 | 15 |
+| D5 渐进披露 | 14 | 15 |
+| D6 自由度 | 12 | 15 |
+| D7 模式识别 | 10 | 10 |
+| D8 实用可用性 | 15 | 15 |
+
+判定：✅ 达标，规范条数见 `docs/skill-scores.json`。
